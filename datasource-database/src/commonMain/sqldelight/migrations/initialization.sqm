@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Collection (
+    uuid TEXT NOT NULL,
+    title TEXT NOT NULL
+);
+
+INSERT INTO Collection VALUES ("hiragana", "Hiragana");

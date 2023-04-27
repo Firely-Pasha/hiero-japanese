@@ -1,0 +1,4 @@
+getByUuid:
+SELECT Collection.* FROM Collection
+WHERE Collection.uuid = :uuid
+LIMIT 1;
