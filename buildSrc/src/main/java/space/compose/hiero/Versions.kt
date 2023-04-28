@@ -10,4 +10,5 @@ object Versions {
     const val Essenty = "1.1.0"
     const val SqlDelight = "2.0.0-alpha05"
     const val Koin = "3.2.0"
+    const val Arrow = "1.2.0-RC"
 }

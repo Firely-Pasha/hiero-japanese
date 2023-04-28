@@ -47,6 +47,8 @@ kotlin {
                 api(Dependencies.MviKotlin.Main)
                 implementation(Dependencies.MviKotlin.Extensions.Coroutines)
                 implementation(Dependencies.KotlinX.Coroutines.Core)
+                implementation(Dependencies.Koin.Core)
+                implementation(Dependencies.Arrow.Core)
 
             }
         }

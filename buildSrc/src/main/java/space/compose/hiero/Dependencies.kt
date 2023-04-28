@@ -59,4 +59,11 @@ object Dependencies {
         const val Android = "io.insert-koin:koin-android:${Versions.Koin}"
         const val AndroidCompat = "io.insert-koin:koin-android-compat:${Versions.Koin}"
     }
+
+    object Arrow {
+        const val Core = "io.arrow-kt:arrow-core:${Versions.Arrow}"
+        object FX {
+            const val Coroutines = "io.arrow-kt:arrow-fx-coroutines:${Versions.Arrow}"
+        }
+    }
 }

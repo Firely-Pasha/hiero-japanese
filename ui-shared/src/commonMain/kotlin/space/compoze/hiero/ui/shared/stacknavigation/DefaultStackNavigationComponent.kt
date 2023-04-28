@@ -28,7 +28,7 @@ class DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         this,
-                        "1",
+                        "hiragana",
                     )
                 )
 

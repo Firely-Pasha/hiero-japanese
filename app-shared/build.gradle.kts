@@ -33,6 +33,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(Modules.Datasource.Database))
+                implementation(project(Modules.Data))
+                implementation(project(Modules.Domain))
+
                 implementation(Dependencies.Koin.Core)
             }
         }

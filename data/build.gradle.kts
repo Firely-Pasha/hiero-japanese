@@ -28,7 +28,11 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(Modules.Datasource.Database))
                 implementation(project(Modules.Domain))
+
+                implementation(Dependencies.Arrow.Core)
+                implementation(Dependencies.Arrow.FX.Coroutines)
             }
         }
         val commonTest by getting {
