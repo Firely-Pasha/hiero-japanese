@@ -37,7 +37,7 @@ class DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         this,
-                        "2"
+                        "katakana"
                     )
                 )
 

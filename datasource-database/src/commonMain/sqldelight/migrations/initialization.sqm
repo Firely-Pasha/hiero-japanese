@@ -4,3 +4,5 @@ CREATE TABLE IF NOT EXISTS Collection (
 );
 
 INSERT INTO Collection VALUES ("hiragana", "Hiragana");
+
+INSERT INTO Collection VALUES ("katakana", "Katakana");
