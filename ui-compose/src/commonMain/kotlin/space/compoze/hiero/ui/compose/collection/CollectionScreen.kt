@@ -6,9 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -78,25 +81,9 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            component.navigateBack()
-                        }
-                    ) {
-                        Icon(Icons.Default.ArrowBack, "Add item")
-                    }
-                },
                 title = {
                     Text(state.collection.title)
                 },
-                actions = {
-                    IconButton({
-                        component.addItem()
-                    }) {
-                        Icon(Icons.Default.Add, "Add item")
-                    }
-                }
             )
         }
     ) {
@@ -120,27 +107,40 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
                 key = { state.items[it].id }
             ) {
                 val item = state.items[it]
-                if (item.type == CollectionItemType.HIEROGLYPH) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(vertical = 6.dp),
-                        elevation = CardDefaults.cardElevation(6.dp),
-                        onClick = {
-                            component.navigateToItemDetails()
-                        }
-                    ) {
-                        Box(
-                            modifier = Modifier.padding(6.dp)
-                                .align(Alignment.CenterHorizontally),
+                Box(
+                    modifier = Modifier
+                ) {
+                    if (item.type == CollectionItemType.HIEROGLYPH) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(vertical = 6.dp),
+                            elevation = CardDefaults.cardElevation(6.dp),
+                            onClick = {
+                                component.navigateToItemDetails()
+                            }
                         ) {
-                            Text(
-                                item.value,
-                                modifier = Modifier.align(Alignment.Center),
-                                fontSize = 24.sp
-                            )
+                            Box(
+                                modifier = Modifier.padding(6.dp)
+                                    .align(Alignment.CenterHorizontally),
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        item.value,
+                                        fontSize = 32.sp
+                                    )
+                                    Text(
+                                        item.transcription,
+                                        fontSize = 16.sp
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+
             }
         }
     }
