@@ -24,19 +24,53 @@ CREATE TABLE IF NOT EXISTS CollectionItem (
 );
 
 INSERT INTO CollectionItem(collectionId, type, value, transcription, sort) VALUES
-    ("hiragana", "hieroglyph", "あ", "a", 10),
-    ("hiragana", "hieroglyph", "い", "i", 20),
-    ("hiragana", "hieroglyph", "う", "u", 30),
-    ("hiragana", "hieroglyph", "え", "e", 40),
-    ("hiragana", "hieroglyph", "お", "o", 50),
-    ("hiragana", "hieroglyph", "か", "ka", 60),
-    ("hiragana", "hieroglyph", "き", "ki", 70),
-    ("hiragana", "hieroglyph", "く", "ku", 80),
-    ("hiragana", "hieroglyph", "け", "ke", 90),
-    ("hiragana", "hieroglyph", "こ", "ko", 100),
-    ("hiragana", "hieroglyph", "さ", "sa", 110),
-    ("hiragana", "hieroglyph", "し", "si", 120),
-    ("hiragana", "hieroglyph", "す", "su", 130),
-    ("hiragana", "hieroglyph", "せ", "se", 140),
-    ("hiragana", "hieroglyph", "そ", "so", 150)
+
+    ("hiragana",    "hieroglyph",  "あ",     "a",    10),
+    ("hiragana",    "hieroglyph",  "い",     "i",    20),
+    ("hiragana",    "hieroglyph",  "う",     "u",    30),
+    ("hiragana",    "hieroglyph",  "え",     "e",    40),
+    ("hiragana",    "hieroglyph",  "お",     "o",    50),
+
+    ("hiragana",    "hieroglyph",   "か",    "ka",   60),
+    ("hiragana",    "hieroglyph",   "き",    "ki",   70),
+    ("hiragana",    "hieroglyph",   "く",    "ku",   80),
+    ("hiragana",    "hieroglyph",   "け",    "ke",   90),
+    ("hiragana",    "hieroglyph",   "こ",    "ko",   100),
+
+    ("hiragana",    "hieroglyph",   "さ",    "sa",   110),
+    ("hiragana",    "hieroglyph",   "し",    "si",   120),
+    ("hiragana",    "hieroglyph",   "す",    "su",   130),
+    ("hiragana",    "hieroglyph",   "せ",    "se",   140),
+    ("hiragana",    "hieroglyph",   "そ",    "so",   150),
+
+    ("hiragana",    "hieroglyph",   "た",    "ta",   110),
+    ("hiragana",    "hieroglyph",   "ち",    "ti",   120),
+    ("hiragana",    "hieroglyph",   "つ",    "tsu",  130),
+    ("hiragana",    "hieroglyph",   "て",    "te",   140),
+    ("hiragana",    "hieroglyph",   "と",    "to",   150),
+
+    ("hiragana",    "hieroglyph",   "な",    "na",   110),
+    ("hiragana",    "hieroglyph",   "に",    "ni",   120),
+    ("hiragana",    "hieroglyph",   "ぬ",    "nu",   130),
+    ("hiragana",    "hieroglyph",   "ね",    "ne",   140),
+    ("hiragana",    "hieroglyph",   "の",    "no",   150),
+
+    ("hiragana",    "hieroglyph",   "は",    "ha",   110),
+    ("hiragana",    "hieroglyph",   "ひ",    "hi",   120),
+    ("hiragana",    "hieroglyph",   "ふ",    "fu",   130),
+    ("hiragana",    "hieroglyph",   "へ",    "he",   140),
+    ("hiragana",    "hieroglyph",   "ほ",    "ho",   150),
+
+    ("hiragana",    "hieroglyph",   "ま",    "ma",   110),
+    ("hiragana",    "hieroglyph",   "み",    "mi",   120),
+    ("hiragana",    "hieroglyph",   "む",    "mu",   130),
+    ("hiragana",    "hieroglyph",   "め",    "me",   140),
+    ("hiragana",    "hieroglyph",   "も",    "mo",   150),
+
+    ("hiragana",    "hieroglyph",   "や",    "ya",   110),
+    ("hiragana",    "empty",        "",      "mi",   120),
+    ("hiragana",    "hieroglyph",   "ゆ",    "yu",   130),
+    ("hiragana",    "empty",        "",      "",     140),
+    ("hiragana",    "hieroglyph",   "よ",    "yo",   150)
+
 ;
