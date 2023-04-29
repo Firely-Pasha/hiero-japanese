@@ -58,7 +58,7 @@ dependencies {
     implementation(Dependencies.AndroidX.Compose.Tooling)
     implementation(Dependencies.AndroidX.Compose.Preview)
     implementation(Dependencies.AndroidX.Compose.Foundation)
-    implementation(Dependencies.AndroidX.Compose.Material)
+    implementation(Dependencies.AndroidX.Compose.Material3)
     implementation(Dependencies.AndroidX.Activity.Compose)
     implementation(Dependencies.AndroidX.Navigation.Compose)
 }

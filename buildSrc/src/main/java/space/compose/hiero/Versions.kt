@@ -3,6 +3,7 @@ package space.compose.hiero
 object Versions {
     const val Coroutines = "1.6.4"
     const val AndroidCompose = "1.4.0"
+    const val AndroidComposeMaterial3 = "1.1.0-rc01"
     const val AndroidActivityCompose = "1.7.0"
     const val AndroidNavigation = "2.5.3"
     const val Decompose = "2.0.0-compose-experimental-alpha-02"
