@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.collection.CollectionComponent
 import space.compoze.hiero.ui.shared.collection.CollectionState
@@ -119,23 +120,25 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
                 key = { state.items[it].id }
             ) {
                 val item = state.items[it]
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(vertical = 6.dp),
-                    elevation = CardDefaults.cardElevation(6.dp),
-                    onClick = {
-                        component.navigateToItemDetails()
-                    }
-                ) {
-                    Box(
-                        modifier = Modifier.padding(6.dp)
-                            .align(Alignment.CenterHorizontally),
+                if (item.type == CollectionItemType.HIEROGLYPH) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        elevation = CardDefaults.cardElevation(6.dp),
+                        onClick = {
+                            component.navigateToItemDetails()
+                        }
                     ) {
-                        Text(
-                            item.value,
-                            modifier = Modifier.align(Alignment.Center),
-                            fontSize = 24.sp
-                        )
+                        Box(
+                            modifier = Modifier.padding(6.dp)
+                                .align(Alignment.CenterHorizontally),
+                        ) {
+                            Text(
+                                item.value,
+                                modifier = Modifier.align(Alignment.Center),
+                                fontSize = 24.sp
+                            )
+                        }
                     }
                 }
             }
