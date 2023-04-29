@@ -1,8 +1,42 @@
 CREATE TABLE IF NOT EXISTS Collection (
-    uuid TEXT NOT NULL,
+    id TEXT PRIMARY KEY,
     title TEXT NOT NULL
 );
 
 INSERT INTO Collection VALUES ("hiragana", "Hiragana");
 
 INSERT INTO Collection VALUES ("katakana", "Katakana");
+
+CREATE TABLE IF NOT EXISTS CollectionItemType(
+    code TEXT PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO CollectionItemType VALUES ("hieroglyph", "Hieroglyph");
+
+CREATE TABLE IF NOT EXISTS CollectionItem (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    collectionId TEXT NOT NULL,
+    type TEXT NOT NULL REFERENCES CollectionItemType(code),
+    value TEXT NOT NULL,
+    transcription TEXT NOT NULL,
+    sort INTEGER NOT NULL
+);
+
+INSERT INTO CollectionItem(collectionId, type, value, transcription, sort) VALUES
+    ("hiragana", "hieroglyph", "あ", "a", 10),
+    ("hiragana", "hieroglyph", "い", "i", 20),
+    ("hiragana", "hieroglyph", "う", "u", 30),
+    ("hiragana", "hieroglyph", "え", "e", 40),
+    ("hiragana", "hieroglyph", "お", "o", 50),
+    ("hiragana", "hieroglyph", "か", "ka", 60),
+    ("hiragana", "hieroglyph", "き", "ki", 70),
+    ("hiragana", "hieroglyph", "く", "ku", 80),
+    ("hiragana", "hieroglyph", "け", "ke", 90),
+    ("hiragana", "hieroglyph", "こ", "ko", 100),
+    ("hiragana", "hieroglyph", "さ", "sa", 110),
+    ("hiragana", "hieroglyph", "し", "si", 120),
+    ("hiragana", "hieroglyph", "す", "su", 130),
+    ("hiragana", "hieroglyph", "せ", "se", 140),
+    ("hiragana", "hieroglyph", "そ", "so", 150)
+;

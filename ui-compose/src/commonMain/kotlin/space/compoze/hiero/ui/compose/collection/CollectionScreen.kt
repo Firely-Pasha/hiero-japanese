@@ -97,7 +97,10 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            items(state.items.size) {
+            items(
+                count = state.items.size,
+                key = { state.items[it].id }
+            ) {
                 val item = state.items[it]
                 Card(
                     modifier = Modifier.fillMaxWidth()
@@ -110,7 +113,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
                     Box(
                         modifier = Modifier.padding(6.dp),
                     ) {
-                        Text(item)
+                        Text(item.value)
                     }
                 }
             }

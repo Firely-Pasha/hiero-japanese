@@ -1,0 +1,3 @@
+getOfCollection:
+SELECT * FROM CollectionItem
+WHERE CollectionItem.collectionId = :collectionId;

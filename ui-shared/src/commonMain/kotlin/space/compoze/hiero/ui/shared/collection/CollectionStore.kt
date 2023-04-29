@@ -3,6 +3,7 @@ package space.compoze.hiero.ui.shared.collection
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.model.CollectionModel
+import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
 import kotlin.random.Random
 
 
@@ -10,7 +11,7 @@ sealed interface CollectionState {
     object Loading : CollectionState
     data class Content(
         val collection: CollectionModel,
-        val items: List<String>,
+        val items: List<CollectionItemModel>,
     ) : CollectionState
 
     data class Error(
@@ -24,7 +25,7 @@ sealed interface CollectionIntent {
 
 sealed interface CollectionMessage {
     data class AddItem(
-        val item: String,
+        val item: CollectionItemModel,
     ) : CollectionMessage
 
     data class Error(
@@ -32,7 +33,12 @@ sealed interface CollectionMessage {
     ) : CollectionMessage
 
     data class SetCollection(
-        val collection: CollectionModel
+        val collection: CollectionModel,
+    ) : CollectionMessage
+
+    data class InitCollection(
+        val collection: CollectionModel,
+        val items: List<CollectionItemModel>,
     ) : CollectionMessage
 }
 
@@ -45,6 +51,7 @@ sealed interface CollectionLabel {
 sealed interface CollectionAction {
     data class Loaded(
         val collection: CollectionModel,
+        val items: List<CollectionItemModel>,
     ) : CollectionAction
 
     data class LoadingError(
