@@ -67,7 +67,7 @@ class CollectionStoreProvider(
                             CollectionMessage.AddItem(
                                 CollectionItemModel(
                                     id = state.items.size.toLong() + 1000L,
-                                    collectionId = "KEK",
+                                    sectionId = "KEK",
                                     type = "word",
                                     value = "Item ${state.items.size}",
                                     transcription = "",

@@ -1,3 +1,5 @@
 getOfCollection:
-SELECT * FROM CollectionItem
-WHERE CollectionItem.collectionId = :collectionId;
+SELECT CollectionItem.* FROM CollectionItem
+    JOIN Section ON Section.id = CollectionItem.sectionId
+    WHERE Section.collectionId = :collectionId
+;
