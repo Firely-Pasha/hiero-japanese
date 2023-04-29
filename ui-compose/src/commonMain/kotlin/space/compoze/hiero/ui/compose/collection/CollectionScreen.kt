@@ -1,10 +1,14 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @file:Suppress("NAME_SHADOWING")
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,8 +27,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.collection.CollectionComponent
 import space.compoze.hiero.ui.shared.collection.CollectionState
@@ -91,11 +99,20 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
             )
         }
     ) {
+        val containerPadding = remember {
+            val padding = 16.dp
+            PaddingValues(
+                start = it.calculateStartPadding(LayoutDirection.Ltr) + padding,
+                top = it.calculateTopPadding() + padding,
+                end = it.calculateEndPadding(LayoutDirection.Ltr) + padding,
+                bottom = it.calculateBottomPadding() + padding,
+            )
+        }
         LazyVerticalGrid(
-            contentPadding = PaddingValues(4.dp),
-            columns = GridCells.Fixed(4),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = containerPadding,
+            columns = GridCells.Fixed(5),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(
                 count = state.items.size,
@@ -104,16 +121,21 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
                 val item = state.items[it]
                 Card(
                     modifier = Modifier.fillMaxWidth()
-                        .padding(vertical = 6.dp)
-                        .clickable {
-                            component.navigateToItemDetails()
-                        },
-                    elevation = CardDefaults.cardElevation(6.dp)
+                        .padding(vertical = 6.dp),
+                    elevation = CardDefaults.cardElevation(6.dp),
+                    onClick = {
+                        component.navigateToItemDetails()
+                    }
                 ) {
                     Box(
-                        modifier = Modifier.padding(6.dp),
+                        modifier = Modifier.padding(6.dp)
+                            .align(Alignment.CenterHorizontally),
                     ) {
-                        Text(item.value)
+                        Text(
+                            item.value,
+                            modifier = Modifier.align(Alignment.Center),
+                            fontSize = 24.sp
+                        )
                     }
                 }
             }
