@@ -98,7 +98,7 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             for (section in content.sections) {
-                section(component, content, section)
+                section(component, content, section, showTitle = content.sections.size > 1)
             }
         }
     }
@@ -107,19 +107,22 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
 private fun LazyGridScope.section(
     component: SectionComponent,
     content: SectionState.Content,
-    section: SectionModel
+    section: SectionModel,
+    showTitle: Boolean
 ) {
-    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-        val sectionHeaderStyle = remember {
-            TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+    if (showTitle) {
+        item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+            val sectionHeaderStyle = remember {
+                TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Text(
+                section.title,
+                style = sectionHeaderStyle
             )
         }
-        Text(
-            section.title,
-            style = sectionHeaderStyle
-        )
     }
     val items = content.items[section.id].orEmpty()
     items(
