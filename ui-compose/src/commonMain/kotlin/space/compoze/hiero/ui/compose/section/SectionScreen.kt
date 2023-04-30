@@ -125,7 +125,7 @@ private fun LazyGridScope.section(
     items(
         count = items.size,
         key = { items[it].id },
-        span = { GridItemSpan(if (section.id == "basic") 3 else 5) }
+        span = { GridItemSpan(if (section.id == "basic" || section.id == "voiced") 3 else 5) }
     ) {
         val item = items[it]
         Box(

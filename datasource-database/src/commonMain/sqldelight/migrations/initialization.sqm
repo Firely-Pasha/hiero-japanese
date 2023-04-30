@@ -125,5 +125,35 @@ INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
 
     ("combo",    "hieroglyph",   "りゃ",    "rya",   710),
     ("combo",    "hieroglyph",   "りゅ",    "ryu",   720),
-    ("combo",    "hieroglyph",   "りょ",    "ryo",   730)
+    ("combo",    "hieroglyph",   "りょ",    "ryo",   730),
+
+    ("voiced",    "hieroglyph",   "が",    "ga",   740),
+    ("voiced",    "hieroglyph",   "ぎ",    "gi",   750),
+    ("voiced",    "hieroglyph",   "ぐ",    "gu",   760),
+    ("voiced",    "hieroglyph",   "げ",    "ge",   770),
+    ("voiced",    "hieroglyph",   "ご",    "go",   780),
+
+    ("voiced",    "hieroglyph",   "ざ",    "za",   790),
+    ("voiced",    "hieroglyph",   "じ",    "ji",   800),
+    ("voiced",    "hieroglyph",   "ず",    "zu",   810),
+    ("voiced",    "hieroglyph",   "ぜ",    "ze",   820),
+    ("voiced",    "hieroglyph",   "ぞ",    "zo",   830),
+
+    ("voiced",    "hieroglyph",   "だ",    "da",   840),
+    ("voiced",    "hieroglyph",   "ぢ",    "ji",   850),
+    ("voiced",    "hieroglyph",   "づ",    "zu",   860),
+    ("voiced",    "hieroglyph",   "で",    "de",   870),
+    ("voiced",    "hieroglyph",   "ど",    "do",   880),
+
+    ("voiced",    "hieroglyph",   "ば",    "ba",   890),
+    ("voiced",    "hieroglyph",   "び",    "bi",   900),
+    ("voiced",    "hieroglyph",   "ぶ",    "bu",   910),
+    ("voiced",    "hieroglyph",   "べ",    "be",   920),
+    ("voiced",    "hieroglyph",   "ぼ",    "bo",   930),
+
+    ("voiced",    "hieroglyph",   "ぱ",    "pa",   940),
+    ("voiced",    "hieroglyph",   "ぴ",    "pi",   950),
+    ("voiced",    "hieroglyph",   "ぷ",    "pu",   960),
+    ("voiced",    "hieroglyph",   "ぺ",    "pe",   970),
+    ("voiced",    "hieroglyph",   "ぽ",    "po",   980)
 ;
