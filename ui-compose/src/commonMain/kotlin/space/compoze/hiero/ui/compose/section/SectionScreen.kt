@@ -30,6 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,7 +93,7 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
 
         LazyVerticalGrid(
             contentPadding = containerPadding,
-            columns = GridCells.Fixed(5),
+            columns = GridCells.Fixed(15),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -108,12 +110,22 @@ private fun LazyGridScope.section(
     section: SectionModel
 ) {
     item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-        Text("TITLE")
+        val sectionHeaderStyle = remember {
+            TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Text(
+            section.title,
+            style = sectionHeaderStyle
+        )
     }
     val items = content.items[section.id].orEmpty()
     items(
         count = items.size,
-        key = { items[it].id }
+        key = { items[it].id },
+        span = { GridItemSpan(if (section.id == "basic") 3 else 5) }
     ) {
         val item = items[it]
         Box(
@@ -138,7 +150,8 @@ private fun LazyGridScope.section(
                         ) {
                             Text(
                                 item.value,
-                                fontSize = 32.sp
+                                fontSize = 32.sp,
+                                softWrap = false
                             )
                             Text(
                                 item.transcription,

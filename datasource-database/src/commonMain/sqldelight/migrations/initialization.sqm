@@ -97,5 +97,33 @@ INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
     ("basic",    "empty",        "",     "",     470),
     ("basic",    "hieroglyph",   "ん",    "n",    480),
     ("basic",    "empty",        "",     "",     490),
-    ("basic",    "hieroglyph",   "を",    "wo",   500)
+    ("basic",    "hieroglyph",   "を",    "wo",   500),
+
+    ("combo",    "hieroglyph",   "きゃ",    "kya",   510),
+    ("combo",    "hieroglyph",   "きゅ",    "kyu",   530),
+    ("combo",    "hieroglyph",   "きょ",    "kyo",   540),
+
+    ("combo",    "hieroglyph",   "しゃ",    "sha",   560),
+    ("combo",    "hieroglyph",   "しゅ",    "shu",   570),
+    ("combo",    "hieroglyph",   "しょ",    "sho",   580),
+
+    ("combo",    "hieroglyph",   "ちゃ",    "cha",   590),
+    ("combo",    "hieroglyph",   "ちゅ",    "chu",   600),
+    ("combo",    "hieroglyph",   "ちょ",    "cho",   610),
+
+    ("combo",    "hieroglyph",   "にゃ",    "nya",   620),
+    ("combo",    "hieroglyph",   "にゅ",    "nyu",   630),
+    ("combo",    "hieroglyph",   "にょ",    "nyo",   640),
+
+    ("combo",    "hieroglyph",   "ひゃ",    "hya",   650),
+    ("combo",    "hieroglyph",   "ひゅ",    "hyu",   660),
+    ("combo",    "hieroglyph",   "ひょ",    "hyo",   670),
+
+    ("combo",    "hieroglyph",   "みゃ",    "mya",   680),
+    ("combo",    "hieroglyph",   "みゅ",    "myu",   690),
+    ("combo",    "hieroglyph",   "みょ",    "myo",   700),
+
+    ("combo",    "hieroglyph",   "りゃ",    "rya",   710),
+    ("combo",    "hieroglyph",   "りゅ",    "ryu",   720),
+    ("combo",    "hieroglyph",   "りょ",    "ryo",   730)
 ;
