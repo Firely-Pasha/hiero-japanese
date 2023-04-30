@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.launch
+import space.compoze.hiero.domain.section.model.SectionModel
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
@@ -33,7 +34,7 @@ class DefaultCollectionComponent(
     }
 
     override fun addItem() {
-        store.accept(CollectionIntent.AddItem)
+        store.accept(CollectionIntent.AddSection)
     }
 
     override fun navigateBack() {
@@ -41,6 +42,10 @@ class DefaultCollectionComponent(
     }
 
     override fun navigateToItemDetails() {
+        navigationComponent.navigation.push(StackNavigationComponent.Config.Katakana)
+    }
+
+    override fun navigateToSection(section: SectionModel) {
         navigationComponent.navigation.push(StackNavigationComponent.Config.Katakana)
     }
 }

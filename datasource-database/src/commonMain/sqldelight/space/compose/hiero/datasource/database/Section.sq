@@ -1,0 +1,4 @@
+getOfCollection:
+SELECT Section.* FROM Section
+    WHERE Section.collectionId = :collectionId
+;

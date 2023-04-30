@@ -17,6 +17,8 @@ import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfCompositionUseCase
 import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
+import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
+import space.compoze.hiero.domain.section.model.SectionModel
 import kotlin.random.Random
 
 @OptIn(ExperimentalMviKotlinApi::class)
@@ -25,6 +27,7 @@ class CollectionStoreProvider(
 ) : KoinComponent {
 
     private val collectionGetByUuidUseCase: CollectionGetByUuidUseCase by inject()
+    private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfCompositionUseCase: CollectionItemGetOfCompositionUseCase by inject()
 
     fun create(collectionId: String): CollectionStore = object : CollectionStore,
@@ -38,11 +41,12 @@ class CollectionStoreProvider(
                             None -> raise(DomainError("Collection not found :("))
                             is Some -> collection.value
                         }
+                    val collectionSections = sectionGetOfCollectionUseCase(collectionId).bind()
                     val collectionItems = collectionItemGetOfCompositionUseCase(collectionId).bind()
                     dispatch(
                         CollectionAction.Loaded(
                             collection = collection,
-                            items = collectionItems
+                            sections = collectionSections
                         )
                     )
                 }.onLeft {
@@ -57,21 +61,24 @@ class CollectionStoreProvider(
                     dispatch(
                         CollectionMessage.InitCollection(
                             collection = it.collection,
-                            items = it.items
+                            sections = it.sections
                         )
                     )
                 }
-                onIntent<CollectionIntent.AddItem> {
+                onIntent<CollectionIntent.AddSection> {
                     state.withContent { state ->
                         dispatch(
-                            CollectionMessage.AddItem(
-                                CollectionItemModel(
-                                    id = state.items.size.toLong() + 1000L,
-                                    sectionId = "KEK",
-                                    type = "word",
-                                    value = "Item ${state.items.size}",
-                                    transcription = "",
-                                    sort = 1L,
+                            CollectionMessage.AddSection(
+                                SectionModel(
+                                    id = "${state.sections.size.toLong() + 1000L}",
+                                    collectionId = "",
+                                    title = "Item ${state.sections.size}"
+//                                    id = state.sections.size.toLong() + 1000L,
+//                                    sectionId = "KEK",
+//                                    type = "word",
+//                                    value = "Item ${state.items.size}",
+//                                    transcription = "",
+//                                    sort = 1L,
                                 )
                             )
                         )
@@ -83,15 +90,15 @@ class CollectionStoreProvider(
                     is CollectionMessage.Error -> CollectionState.Error(msg.error)
                     is CollectionMessage.InitCollection -> CollectionState.Content(
                         collection = msg.collection,
-                        items = msg.items
+                        sections = msg.sections
                     )
 
                     is CollectionMessage.SetCollection -> applyContent {
                         copy(collection = msg.collection)
                     }
 
-                    is CollectionMessage.AddItem -> applyContent {
-                        copy(items = items + msg.item)
+                    is CollectionMessage.AddSection -> applyContent {
+                        copy(sections = sections + msg.section)
                     }
                 }
             }
