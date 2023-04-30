@@ -9,6 +9,8 @@ import space.compoze.hiero.data.collectionitem.CollectionItemRepository
 import space.compoze.hiero.data.section.SectionRepository
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfCompositionUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
+import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
 
 internal expect fun appPlatformModule(): Module
@@ -27,7 +29,13 @@ fun dataModule() = module {
 }
 
 fun domainModule() = module {
+
     single { CollectionGetByUuidUseCase(get()) }
-    single { CollectionItemGetOfCompositionUseCase(get()) }
+
+    single { SectionGetByIdUseCase(get()) }
     single { SectionGetOfCollectionUseCase(get()) }
+
+    single { CollectionItemGetOfCompositionUseCase(get()) }
+    single { CollectionItemGetOfSectionUseCase(get()) }
+
 }

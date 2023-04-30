@@ -1,3 +1,9 @@
+getById:
+SELECT Section.* FROM Section
+    WHERE Section.id = :sectionId
+    LIMIT 1
+;
+
 getOfCollection:
 SELECT Section.* FROM Section
     WHERE Section.collectionId = :collectionId

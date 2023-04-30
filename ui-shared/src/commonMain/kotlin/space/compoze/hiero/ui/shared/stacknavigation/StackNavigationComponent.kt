@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import space.compoze.hiero.ui.shared.collection.CollectionComponent
+import space.compoze.hiero.ui.shared.section.SectionComponent
 import space.compoze.hiero.ui.shared.settings.SettingsComponent
 
 interface StackNavigationComponent {
@@ -16,14 +17,18 @@ interface StackNavigationComponent {
     fun navigateBack()
 
     sealed interface Child {
-        class Hiragana(val component: CollectionComponent) : Child
-        class Katakana(val component: CollectionComponent) : Child
+        class Collection(val component: CollectionComponent) : Child
+        class Section(val component: SectionComponent) : Child
         class Settings(val component: SettingsComponent) : Child
     }
 
     sealed interface Config : Parcelable {
         @Parcelize
         object Hiragana : Config
+        @Parcelize
+        data class Section(
+            val sectionId: String
+        ) : Config
 
         @Parcelize
         object Katakana : Config

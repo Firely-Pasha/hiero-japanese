@@ -8,5 +8,6 @@ import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
 interface CollectionItemRepository {
 
     fun getOfCollection(collectionId: String): Either<DomainError, List<CollectionItemModel>>
+    fun getOfSection(sectionId: String): Either<DomainError, List<CollectionItemModel>>
 
 }

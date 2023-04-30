@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.collection
+package space.compoze.hiero.ui.shared.section
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.push
@@ -12,17 +12,17 @@ import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
 
-class DefaultCollectionComponent(
+class DefaultSectionComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
     private val navigationComponent: StackNavigationComponent,
-    private val collectionId: String,
-) : CollectionComponent, ComponentContext by componentContext {
+    private val sectionId: String,
+) : SectionComponent, ComponentContext by componentContext {
 
     private val componentScope = inheritScope()
 
     private val store = instanceKeeper.getStore {
-        CollectionStoreProvider(storeFactory).create(collectionId)
+        SectionStoreProvider(storeFactory).create(sectionId)
     }
 
     override val state = MutableValue(store.state)
@@ -34,7 +34,7 @@ class DefaultCollectionComponent(
     }
 
     override fun addItem() {
-        store.accept(CollectionIntent.AddSection)
+        store.accept(SectionIntent.AddSection)
     }
 
     override fun navigateBack() {

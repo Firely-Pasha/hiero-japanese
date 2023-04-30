@@ -117,46 +117,6 @@ fun CollectionContent(component: CollectionComponent, state: CollectionState.Con
                 val section = state.sections[it]
                 SectionItem(section) { component.navigateToSection(section) }
             }
-//            items(
-//                count = state.items.size,
-//                key = { state.items[it].id }
-//            ) {
-//                val item = state.items[it]
-//                Box(
-//                    modifier = Modifier
-//                ) {
-//                    if (item.type == CollectionItemType.HIEROGLYPH) {
-//                        Card(
-//                            modifier = Modifier
-//                                .fillMaxSize()
-//                                .padding(vertical = 6.dp),
-//                            elevation = CardDefaults.cardElevation(6.dp),
-//                            onClick = {
-//                                component.navigateToItemDetails()
-//                            }
-//                        ) {
-//                            Box(
-//                                modifier = Modifier.padding(6.dp)
-//                                    .align(Alignment.CenterHorizontally),
-//                            ) {
-//                                Column(
-//                                    horizontalAlignment = Alignment.CenterHorizontally
-//                                ) {
-//                                    Text(
-//                                        item.value,
-//                                        fontSize = 32.sp
-//                                    )
-//                                    Text(
-//                                        item.transcription,
-//                                        fontSize = 16.sp
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
         }
     }
 }

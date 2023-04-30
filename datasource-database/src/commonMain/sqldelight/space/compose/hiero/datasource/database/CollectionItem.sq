@@ -3,3 +3,8 @@ SELECT CollectionItem.* FROM CollectionItem
     JOIN Section ON Section.id = CollectionItem.sectionId
     WHERE Section.collectionId = :collectionId
 ;
+
+getOfSection:
+SELECT CollectionItem.* FROM CollectionItem
+    WHERE CollectionItem.sectionId = :sectionId
+;

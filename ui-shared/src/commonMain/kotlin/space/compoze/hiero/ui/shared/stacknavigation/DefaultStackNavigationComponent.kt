@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import space.compoze.hiero.ui.shared.collection.DefaultCollectionComponent
+import space.compoze.hiero.ui.shared.section.DefaultSectionComponent
 import space.compoze.hiero.ui.shared.settings.DefaultSettingsComponent
 
 class DefaultStackNavigationComponent(
@@ -23,7 +24,7 @@ class DefaultStackNavigationComponent(
         handleBackButton = true, // Pop the back stack on back button press
         childFactory = { config, componentContext ->
             when (config) {
-                is StackNavigationComponent.Config.Hiragana -> StackNavigationComponent.Child.Hiragana(
+                is StackNavigationComponent.Config.Hiragana -> StackNavigationComponent.Child.Collection(
                     DefaultCollectionComponent(
                         componentContext,
                         storeFactory,
@@ -32,7 +33,7 @@ class DefaultStackNavigationComponent(
                     )
                 )
 
-                is StackNavigationComponent.Config.Katakana -> StackNavigationComponent.Child.Katakana(
+                is StackNavigationComponent.Config.Katakana -> StackNavigationComponent.Child.Collection(
                     DefaultCollectionComponent(
                         componentContext,
                         storeFactory,
@@ -40,7 +41,14 @@ class DefaultStackNavigationComponent(
                         "katakana"
                     )
                 )
-
+                is StackNavigationComponent.Config.Section -> StackNavigationComponent.Child.Section(
+                    DefaultSectionComponent(
+                        componentContext,
+                        storeFactory,
+                        this,
+                        config.sectionId
+                    )
+                )
                 is StackNavigationComponent.Config.Settings -> StackNavigationComponent.Child.Settings(
                     DefaultSettingsComponent(
                         componentContext,
