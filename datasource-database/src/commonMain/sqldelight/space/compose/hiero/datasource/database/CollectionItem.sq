@@ -8,3 +8,8 @@ getOfSection:
 SELECT CollectionItem.* FROM CollectionItem
     WHERE CollectionItem.sectionId = :sectionId
 ;
+
+getOfSections:
+SELECT CollectionItem.* FROM CollectionItem
+    WHERE CollectionItem.sectionId IN :sectionIds
+;

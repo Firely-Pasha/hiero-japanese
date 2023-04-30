@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.launch
 import space.compoze.hiero.domain.section.model.SectionModel
+import space.compoze.hiero.ui.shared.collection.CollectionComponent
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
@@ -17,12 +18,13 @@ class DefaultSectionComponent(
     storeFactory: StoreFactory,
     private val navigationComponent: StackNavigationComponent,
     private val sectionId: String,
+    private val collectionId: String? = null,
 ) : SectionComponent, ComponentContext by componentContext {
 
     private val componentScope = inheritScope()
 
     private val store = instanceKeeper.getStore {
-        SectionStoreProvider(storeFactory).create(sectionId)
+        SectionStoreProvider(storeFactory).create(sectionId, collectionId)
     }
 
     override val state = MutableValue(store.state)

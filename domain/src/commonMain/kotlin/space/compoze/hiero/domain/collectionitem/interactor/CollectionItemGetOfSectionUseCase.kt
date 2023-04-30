@@ -7,6 +7,10 @@ class CollectionItemGetOfSectionUseCase(
     private val collectionItemRepository: CollectionItemRepository
 ) {
 
+    operator fun invoke(sectionIds: List<String>) = either {
+        collectionItemRepository.getOfSection(sectionIds).bind()
+    }
+
     operator fun invoke(sectionId: String) = either {
         collectionItemRepository.getOfSection(sectionId).bind()
     }

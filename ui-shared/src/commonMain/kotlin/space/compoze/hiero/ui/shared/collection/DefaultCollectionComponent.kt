@@ -48,7 +48,12 @@ class DefaultCollectionComponent(
     override fun navigateToSection(section: SectionModel) {
         navigationComponent.navigation.push(
             StackNavigationComponent.Config.Section(
-                sectionId = section.id
+                sectionId = section.id,
+                collectionId = if (section == CollectionComponent.AllSection) {
+                    collectionId
+                } else {
+                    null
+                },
             )
         )
     }

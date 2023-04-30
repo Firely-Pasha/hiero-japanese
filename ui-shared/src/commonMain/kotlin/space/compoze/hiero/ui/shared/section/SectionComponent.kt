@@ -9,12 +9,4 @@ interface SectionComponent {
     fun navigateBack()
     fun navigateToItemDetails()
     fun navigateToSection(section: SectionModel)
-
-    companion object {
-        val AllSection = SectionModel(
-            id = "%ALL%",
-            title = "All",
-            collectionId = "%DYNAMIC%",
-        )
-    }
 }

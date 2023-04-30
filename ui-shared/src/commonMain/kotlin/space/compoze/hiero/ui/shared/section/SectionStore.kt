@@ -11,8 +11,8 @@ sealed interface SectionState {
     object Loading : SectionState
     data class Content(
         val collection: CollectionModel,
-        val section: SectionModel,
-        val items: List<CollectionItemModel>,
+        val sections: List<SectionModel>,
+        val items: Map<String, List<CollectionItemModel>>,
     ) : SectionState
 
     data class Error(
@@ -31,15 +31,15 @@ sealed interface SectionMessage {
 
     data class InitSection(
         val collection: CollectionModel,
-        val section: SectionModel,
-        val items: List<CollectionItemModel>,
+        val section: List<SectionModel>,
+        val items: Map<String, List<CollectionItemModel>>,
     ) : SectionMessage
 }
 sealed interface SectionAction {
     data class Loaded(
         val collection: CollectionModel,
-        val section: SectionModel,
-        val items: List<CollectionItemModel>,
+        val sections: List<SectionModel>,
+        val items: Map<String, List<CollectionItemModel>>,
     ) : SectionAction
 
     data class LoadingError(

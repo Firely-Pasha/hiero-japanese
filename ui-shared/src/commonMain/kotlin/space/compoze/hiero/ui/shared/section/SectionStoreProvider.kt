@@ -15,6 +15,7 @@ import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
+import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
 
 @OptIn(ExperimentalMviKotlinApi::class)
 class SectionStoreProvider(
@@ -23,14 +24,31 @@ class SectionStoreProvider(
 
     private val collectionGetByUuidUseCase: CollectionGetByUuidUseCase by inject()
     private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
+    private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
 
-    fun create(sectionId: String): SectionStore = object : SectionStore,
+    fun create(sectionId: String, collectionId: String? = null): SectionStore = object : SectionStore,
         Store<SectionIntent, SectionState, Nothing> by storeFactory.create<SectionIntent, SectionAction, SectionMessage, SectionState, Nothing>(
             name = "KEK",
             initialState = SectionState.Loading,
             bootstrapper = coroutineBootstrapper {
                 either {
+                    if (collectionId != null) {
+                        val collection = collectionGetByUuidUseCase(collectionId).bind()
+                            .getOrElse { raise(DomainError("Collection not found :(")) }
+                        val sections = sectionGetOfCollectionUseCase(collectionId).bind()
+                        val sectionItems = collectionItemGetOfSectionUseCase(
+                            sections.map { it.id }
+                        ).bind()
+                        dispatch(
+                            SectionAction.Loaded(
+                                collection = collection,
+                                sections = sections,
+                                items = sectionItems
+                            )
+                        )
+                        return@coroutineBootstrapper
+                    }
                     val section = sectionGetByIdUseCase(sectionId).bind()
                         .getOrElse { raise(DomainError("Section not found :(")) }
                     val collection = collectionGetByUuidUseCase(section.collectionId).bind()
@@ -39,8 +57,8 @@ class SectionStoreProvider(
                     dispatch(
                         SectionAction.Loaded(
                             collection = collection,
-                            section = section,
-                            items = sectionItems
+                            sections = listOf(section),
+                            items = mapOf(section.id to sectionItems)
                         )
                     )
                 }.onLeft {
@@ -55,7 +73,7 @@ class SectionStoreProvider(
                     dispatch(
                         SectionMessage.InitSection(
                             collection = it.collection,
-                            section = it.section,
+                            section = it.sections,
                             items = it.items,
                         )
                     )
@@ -66,21 +84,21 @@ class SectionStoreProvider(
                     is SectionMessage.Error -> SectionState.Error(msg.error)
                     is SectionMessage.InitSection -> SectionState.Content(
                         collection = msg.collection,
-                        section = msg.section,
+                        sections = msg.section,
                         items = msg.items,
                     )
                 }
             }
         ) {}
 
-    private fun SectionState.withContent(block: (SectionState.Content) -> Unit) {
-        if (this is SectionState.Content) {
+    private inline fun <reified State : SectionState> SectionState.withState(block: State.() -> Unit) {
+        if (this is State) {
             block(this)
         }
     }
 
-    private fun SectionState.applyContent(block: SectionState.Content.() -> SectionState): SectionState {
-        if (this is SectionState.Content) {
+    private inline fun <reified State : SectionState> SectionState.applyState(block: State.() -> SectionState): SectionState {
+        if (this is State) {
             return block(this)
         }
         return this

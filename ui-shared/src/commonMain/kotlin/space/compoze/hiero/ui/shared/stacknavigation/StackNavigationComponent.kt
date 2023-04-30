@@ -27,7 +27,8 @@ interface StackNavigationComponent {
         object Hiragana : Config
         @Parcelize
         data class Section(
-            val sectionId: String
+            val sectionId: String,
+            val collectionId: String? = null,
         ) : Config
 
         @Parcelize

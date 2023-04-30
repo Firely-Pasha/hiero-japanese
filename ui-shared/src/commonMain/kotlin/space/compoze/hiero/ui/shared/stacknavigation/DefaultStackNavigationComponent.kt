@@ -46,7 +46,8 @@ class DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         this,
-                        config.sectionId
+                        sectionId = config.sectionId,
+                        collectionId = config.collectionId
                     )
                 )
                 is StackNavigationComponent.Config.Settings -> StackNavigationComponent.Child.Settings(

@@ -26,14 +26,20 @@ class CollectionItemRepository(
         }
     }
 
-    override fun getOfSection(sectionId: String) = either {
+    override fun getOfSection(sectionIds: List<String>) = either {
         catch({
-            collectionItems.getOfSection(sectionId = sectionId)
+            collectionItems.getOfSections(sectionIds = sectionIds)
                 .executeAsList()
-                .map { it.toDomainModel() }
+                .groupBy({ it.sectionId }, { it.toDomainModel() })
         }) {
             raise(DomainError("Db Error", it))
         }
+    }
+
+    override fun getOfSection(sectionId: String) = either {
+        getOfSection(listOf(sectionId))
+            .bind()[sectionId]
+            .orEmpty()
     }
 
 
