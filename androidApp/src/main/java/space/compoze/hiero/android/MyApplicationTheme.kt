@@ -1,8 +1,17 @@
 package space.compoze.hiero.android
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+
+fun supportsDynamic() : Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
 
 @Composable
 fun MyApplicationTheme(
@@ -35,10 +44,20 @@ fun MyApplicationTheme(
 //        large = RoundedCornerShape(0.dp)
 //    )
 //
+    val inDarkMode: Boolean = isSystemInDarkTheme()
+
+    val colors = if (supportsDynamic()) {
+        val context = LocalContext.current
+        if (inDarkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        if (inDarkMode) darkColorScheme() else lightColorScheme()
+    }
+
     MaterialTheme(
+        colorScheme = colors,
 //        colors = colors,
 //        typography = typography,
 //        shapes = shapes,
-        content = content
+        content = content,
     )
 }

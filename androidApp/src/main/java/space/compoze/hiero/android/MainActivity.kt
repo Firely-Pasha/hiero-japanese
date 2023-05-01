@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     MainScreen(component = mainComponent)
 //                    TabNavigator(HomeTab(UUID.randomUUID().toString())) {
