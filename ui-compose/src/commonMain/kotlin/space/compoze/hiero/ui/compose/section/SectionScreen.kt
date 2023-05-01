@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -73,7 +75,7 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
                     IconButton({
                         component.navigateBack()
                     }) {
-                        Icon(Icons.Default.ArrowBack, "Back")
+                        Icon(Icons.Rounded.ArrowBack, "Back")
                     }
                 },
                 title = {
@@ -89,7 +91,7 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
         },
         floatingActionButton = {
             FloatingActionButton({}) {
-                Icon(Icons.Default.PlayArrow, "as")
+                Icon(Icons.Rounded.PlayArrow, "as")
             }
         }
     ) {

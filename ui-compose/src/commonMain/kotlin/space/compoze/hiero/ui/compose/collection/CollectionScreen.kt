@@ -22,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -142,7 +144,7 @@ private fun SectionItem(section: SectionModel, onClick: () -> Unit) {
                 fontWeight = FontWeight.Bold,
             )
             Box {
-                Icon(Icons.Default.ArrowForward, "Show")
+                Icon(Icons.Rounded.ChevronRight, "Show")
             }
         }
     }

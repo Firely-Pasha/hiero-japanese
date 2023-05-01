@@ -8,14 +8,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import space.compoze.hiero.ui.compose.stacknavigation.StackNavigator
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
@@ -36,7 +43,7 @@ fun MainScreen(component: DefaultMainComponent, modifier: Modifier = Modifier) {
                         component.changeTab(0)
                     },
                     icon = {
-                        Icon(Icons.Default.Home, "Hiragana")
+                        Text("ひ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
                     },
                 )
                 NavigationBarItem(
@@ -45,7 +52,7 @@ fun MainScreen(component: DefaultMainComponent, modifier: Modifier = Modifier) {
                         component.changeTab(1)
                     },
                     icon = {
-                        Icon(Icons.Default.Person, "Katakana")
+                        Text("カ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
                     },
                 )
                 NavigationBarItem(
@@ -54,7 +61,7 @@ fun MainScreen(component: DefaultMainComponent, modifier: Modifier = Modifier) {
                         component.changeTab(2)
                     },
                     icon = {
-                        Icon(Icons.Default.Settings, "Settings")
+                        Icon(Icons.Outlined.Settings, "Settings")
                     },
                 )
             }
