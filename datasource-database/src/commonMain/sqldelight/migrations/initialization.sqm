@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS CollectionItem (
 INSERT INTO Section(id, collectionId, title) VALUES
     ("basic", "hiragana", "Basic"),
     ("voiced", "hiragana", "Voiced"),
-    ("combo", "hiragana", "Combo")
+    ("combo", "hiragana", "Combo"),
+    ("vioced_combo", "hiragana", "Voiced and combo")
 ;
 
 INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
@@ -52,13 +53,13 @@ INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
     ("basic",    "hieroglyph",   "こ",    "ko",   100),
 
     ("basic",    "hieroglyph",   "さ",    "sa",   110),
-    ("basic",    "hieroglyph",   "し",    "si",   120),
+    ("basic",    "hieroglyph",   "し",    "shi",   120),
     ("basic",    "hieroglyph",   "す",    "su",   130),
     ("basic",    "hieroglyph",   "せ",    "se",   140),
     ("basic",    "hieroglyph",   "そ",    "so",   150),
 
     ("basic",    "hieroglyph",   "た",    "ta",   160),
-    ("basic",    "hieroglyph",   "ち",    "ti",   170),
+    ("basic",    "hieroglyph",   "ち",    "chi",   170),
     ("basic",    "hieroglyph",   "つ",    "tsu",  180),
     ("basic",    "hieroglyph",   "て",    "te",   190),
     ("basic",    "hieroglyph",   "と",    "to",   200),
@@ -155,5 +156,25 @@ INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
     ("voiced",    "hieroglyph",   "ぴ",    "pi",   950),
     ("voiced",    "hieroglyph",   "ぷ",    "pu",   960),
     ("voiced",    "hieroglyph",   "ぺ",    "pe",   970),
-    ("voiced",    "hieroglyph",   "ぽ",    "po",   980)
+    ("voiced",    "hieroglyph",   "ぽ",    "po",   980),
+
+    ("vioced_combo",    "hieroglyph",   "ぎゃ",    "gya",   990),
+    ("vioced_combo",    "hieroglyph",   "ぎゅ",    "gyu",   1000),
+    ("vioced_combo",    "hieroglyph",   "ぎょ",    "gyo",   1010),
+
+    ("vioced_combo",    "hieroglyph",   "じゃ",    "ja",   1020),
+    ("vioced_combo",    "hieroglyph",   "じゅ",    "ju",   1030),
+    ("vioced_combo",    "hieroglyph",   "じょ",    "jo",   1040),
+
+    ("vioced_combo",    "hieroglyph",   "ぢゃ",    "ja",   1050),
+    ("vioced_combo",    "hieroglyph",   "ぢゅ",    "ju",   1060),
+    ("vioced_combo",    "hieroglyph",   "ぢょ",    "jo",   1070),
+
+    ("vioced_combo",    "hieroglyph",   "びゃ",    "bya",   1080),
+    ("vioced_combo",    "hieroglyph",   "びゅ",    "byu",   1090),
+    ("vioced_combo",    "hieroglyph",   "びょ",    "byo",   1100),
+
+    ("vioced_combo",    "hieroglyph",   "ぴゃ",    "pya",   1110),
+    ("vioced_combo",    "hieroglyph",   "ぴゅ",    "pyu",   1120),
+    ("vioced_combo",    "hieroglyph",   "ぴょ",    "pyo",   1130)
 ;
