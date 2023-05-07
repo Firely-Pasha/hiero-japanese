@@ -96,6 +96,16 @@ fun SectionScreen(component: SectionComponent) {
             onNavigateBack = {
                 component.navigateBack()
             },
+            onSelectAllClick = remember {
+                {
+                    component.selectAll()
+                }
+            },
+            onClearAllClick = remember {
+                {
+                    component.clearAll()
+                }
+            },
             onItemClick = remember(component) {
                 {
                     component.toggleItemSelect(it.id)
@@ -117,6 +127,8 @@ fun <T : Any, R> Value<T>.selectContent(
 private fun SectionContent(
     state: SectionState.Content,
     onNavigateBack: () -> Unit,
+    onClearAllClick: () -> Unit,
+    onSelectAllClick: () -> Unit,
     onItemClick: (CollectionItemModel) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -124,9 +136,11 @@ private fun SectionContent(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SectionTopBar(
-                state,
-                scrollBehavior,
-                onNavigateBack,
+                state = state,
+                scrollBehavior = scrollBehavior,
+                onSelectAllClick = onSelectAllClick,
+                onClearAllClick = onClearAllClick,
+                onNavigateBack = onNavigateBack,
             )
         },
         floatingActionButton = {
@@ -290,6 +304,8 @@ private fun SectionContent(
 private fun SectionTopBar(
     state: SectionState.Content,
     scrollBehavior: TopAppBarScrollBehavior,
+    onSelectAllClick: () -> Unit,
+    onClearAllClick: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
 
@@ -340,24 +356,26 @@ private fun SectionTopBar(
                         ) {
                             Column {
                                 ListItem(
-                                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                                     modifier = Modifier
-                                        .clickable {
-
-                                        },
+                                        .clickable(onClick = {
+                                            onSelectAllClick()
+                                            isMenuOpen = false
+                                        }),
+                                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                                     headlineText = {
                                         Text("Select all")
                                     }
                                 )
                                 ListItem(
+                                    modifier = Modifier
+                                        .clickable(onClick = {
+                                            onClearAllClick()
+                                            isMenuOpen = false
+                                        }),
                                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                                     headlineText = {
                                         Text("Clear all")
                                     },
-                                    modifier = Modifier
-                                        .clickable {
-
-                                        },
                                 )
                             }
                         }

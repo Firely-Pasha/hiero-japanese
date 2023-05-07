@@ -11,6 +11,7 @@ import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCa
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfCompositionUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
 
@@ -39,5 +40,6 @@ fun domainModule() = module {
     single { CollectionItemGetOfCompositionUseCase(get()) }
     single { CollectionItemGetOfSectionUseCase(get()) }
     single { CollectionItemUpdateById(get()) }
+    single { CollectionItemUpdateBySectionId(get(), get()) }
 
 }

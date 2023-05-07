@@ -3,9 +3,11 @@
 package space.compoze.hiero.ui.shared.section
 
 import arrow.core.Some
+import arrow.core.flatten
 import arrow.core.getOrElse
 import arrow.core.raise.either
 import arrow.core.recover
+import arrow.core.some
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
@@ -17,6 +19,7 @@ import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
@@ -31,6 +34,7 @@ class SectionStoreProvider(
     private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
     private val collectionItemUpdateById: CollectionItemUpdateById by inject()
+    private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
 
     fun create(sectionId: String, collectionId: String? = null): SectionStore =
         object : SectionStore,
@@ -95,7 +99,39 @@ class SectionStoreProvider(
                                         )
                                     )
                                 ).bind()
-                                dispatch(SectionMessage.SetItem(result))
+                                dispatch(SectionMessage.SetItems(listOf(result)))
+                            }.onLeft {
+                                println(it)
+                            }
+                        }
+                    }
+                    onIntent<SectionIntent.SelectAll> {
+                        state.withState<SectionState.Content> {
+                            either {
+                                val sectionItems = sections.map {
+                                    collectionItemUpdateBySectionId(
+                                        it.id, CollectionItemMutationData(
+                                            isSelected = true.some()
+                                        )
+                                    ).bind()
+                                }.flatten()
+                                dispatch(SectionMessage.SetItems(sectionItems))
+                            }.onLeft {
+                                println(it)
+                            }
+                        }
+                    }
+                    onIntent<SectionIntent.ClearAll> {
+                        state.withState<SectionState.Content> {
+                            either {
+                                val sectionItems = sections.map {
+                                    collectionItemUpdateBySectionId(
+                                        it.id, CollectionItemMutationData(
+                                            isSelected = false.some()
+                                        )
+                                    ).bind()
+                                }.flatten()
+                                dispatch(SectionMessage.SetItems(sectionItems))
                             }.onLeft {
                                 println(it)
                             }
@@ -122,11 +158,13 @@ class SectionStoreProvider(
                             )
                         }
 
-                        is SectionMessage.SetItem -> applyState<SectionState.Content> {
+                        is SectionMessage.SetItems -> applyState<SectionState.Content> {
                             copy(
                                 items = items.toMutableList().apply {
-                                    val index = indexOfFirst { it.id == msg.item.id }
-                                    set(index, msg.item)
+                                    msg.items.forEach { msgItem ->
+                                        val index = indexOfFirst { it.id == msgItem.id }
+                                        set(index, msgItem)
+                                    }
                                 }.toList()
                             )
                         }

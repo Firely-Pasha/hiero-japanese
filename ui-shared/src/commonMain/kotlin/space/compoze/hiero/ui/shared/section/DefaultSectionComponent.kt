@@ -38,6 +38,14 @@ class DefaultSectionComponent(
         store.accept(SectionIntent.ToggleItemSelect(itemId = itemId))
     }
 
+    override fun selectAll() {
+        store.accept(SectionIntent.SelectAll)
+    }
+
+    override fun clearAll() {
+        store.accept(SectionIntent.ClearAll)
+    }
+
     override fun navigateBack() {
         navigationComponent.navigateBack()
     }

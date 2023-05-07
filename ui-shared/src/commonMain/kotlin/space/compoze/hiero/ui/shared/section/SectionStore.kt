@@ -22,6 +22,8 @@ sealed interface SectionState {
 
 sealed interface SectionIntent {
     data class ToggleItemSelect(val itemId: Long) : SectionIntent
+    object SelectAll : SectionIntent
+    object ClearAll : SectionIntent
 }
 
 sealed interface SectionMessage {
@@ -40,10 +42,11 @@ sealed interface SectionMessage {
         val value: Boolean,
     ) : SectionMessage
 
-    data class SetItem(
-        val item: CollectionItemModel
-    ) : SectionMessage
+    data class SetItems(
+        val items: List<CollectionItemModel>,
+    ): SectionMessage
 }
+
 sealed interface SectionAction {
     data class Loaded(
         val collection: CollectionModel,
@@ -52,7 +55,7 @@ sealed interface SectionAction {
     ) : SectionAction
 
     data class LoadingError(
-        val error: DomainError
+        val error: DomainError,
     ) : SectionAction
 }
 
