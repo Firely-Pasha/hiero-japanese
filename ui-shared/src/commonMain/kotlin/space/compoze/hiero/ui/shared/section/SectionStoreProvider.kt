@@ -79,13 +79,15 @@ class SectionStoreProvider(
                             )
                         )
                     }
-                    onIntent<SectionIntent.SelectItem> {
-                        dispatch(
-                            SectionMessage.SelectItem(
-                                it.itemId,
-                                true
+                    onIntent<SectionIntent.ToggleItemSelect> {
+                        state.withState<SectionState.Content> {
+                            dispatch(
+                                SectionMessage.SelectItem(
+                                    it.itemId,
+                                    !(items.find { item -> item.id == it.itemId }?.isSelected ?: false)
+                                )
                             )
-                        )
+                        }
                     }
                 },
                 reducer = { msg ->

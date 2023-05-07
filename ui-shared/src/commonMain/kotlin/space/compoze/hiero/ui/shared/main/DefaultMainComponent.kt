@@ -48,7 +48,7 @@ class DefaultMainComponent(
                     DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
-                        StackNavigationComponent.Config.Hiragana,
+                        StackNavigationComponent.Config.Section(collectionId = "hiragana", sectionId = "%ALL%"),
                     )
                 )
 

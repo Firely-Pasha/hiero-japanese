@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @file:Suppress("NAME_SHADOWING")
 
 package space.compoze.hiero.ui.compose.section
@@ -8,7 +8,9 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,8 +29,11 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
@@ -36,6 +44,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -45,11 +55,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +75,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.getValue
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
 import space.compoze.hiero.domain.section.model.SectionModel
@@ -87,7 +103,7 @@ fun SectionScreen(component: SectionComponent) {
             },
             onItemClick = remember(component) {
                 {
-                    component.selectItem(it.id)
+                    component.toggleItemSelect(it.id)
                 }
             }
         )
@@ -119,8 +135,21 @@ private fun SectionContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton({}) {
-                Icon(Icons.Rounded.PlayArrow, "as")
+            val isSelectedAny = remember(state.items) {
+                state.items.any { it.isSelected }
+            }
+            AnimatedVisibility(
+                isSelectedAny,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut()
+            ) {
+                FloatingActionButton(
+                    onClick = {
+
+                    }
+                ) {
+                    Icon(Icons.Rounded.PlayArrow, "as")
+                }
             }
         }
     ) {
@@ -130,7 +159,7 @@ private fun SectionContent(
                 start = it.calculateStartPadding(LayoutDirection.Ltr) + padding,
                 top = it.calculateTopPadding() + padding,
                 end = it.calculateEndPadding(LayoutDirection.Ltr) + padding,
-                bottom = it.calculateBottomPadding() + padding,
+                bottom = it.calculateBottomPadding() + padding + 64.dp,
             )
         }
 
@@ -157,7 +186,7 @@ private fun SectionContent(
             state = lazyGridState,
             contentPadding = containerPadding,
             columns = GridCells.Fixed(15),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             sectionItems.forEach { section ->
@@ -186,14 +215,14 @@ private fun SectionContent(
                         if (item.type == CollectionItemType.HIEROGLYPH) {
                             Card(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(vertical = 6.dp),
+                                    .fillMaxSize(),
+//                                    .padding(vertical = 6.dp),
 //                                elevation = CardDefaults.cardElevation(6.dp),
                                 onClick = {
                                     onItemClick(item)
                                 },
                                 colors = CardDefaults.cardColors(
-                                    containerColor = randomColor()
+//                                    containerColor = randomColor()
                                 )
                             ) {
                                 Box(
@@ -216,6 +245,38 @@ private fun SectionContent(
                                 }
                             }
                         }
+                        AnimatedVisibility(
+                            item.isSelected,
+                            enter = fadeIn() + scaleIn(),
+                            exit = fadeOut() + scaleOut(),
+                            modifier = Modifier
+                                .offset(y = (-8).dp, x = (-8).dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(24.dp)
+                                    .height(24.dp)
+                                    .border(width = 2.dp, color = MaterialTheme.colorScheme.surface, shape = CircleShape)
+                                    .clip(CircleShape)
+                            ) {
+                                Box(
+                                    Modifier
+                                        .padding(2.dp)
+                                        .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
+                                        .fillMaxSize()
+                                ) {
+                                    Icon(
+                                        Icons.Rounded.Check,
+                                        "Selected",
+                                        modifier = Modifier
+                                            .height(16.dp)
+                                            .width(16.dp)
+                                            .align(Alignment.Center),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -232,8 +293,7 @@ private fun SectionTopBar(
     onNavigateBack: () -> Unit,
 ) {
 
-    val isMenuOpenValue = remember { MutableValue(false) }
-    val isMenuOpen by isMenuOpenValue.subscribeAsState()
+    var isMenuOpen by remember { mutableStateOf(false) }
 
     TopAppBar(
         scrollBehavior = scrollBehavior,
@@ -258,8 +318,8 @@ private fun SectionTopBar(
         actions = {
             IconButton(
                 onClick = {
-                    if (!isMenuOpenValue.value) {
-                        isMenuOpenValue.value = true
+                    if (!isMenuOpen) {
+                        isMenuOpen = true
                     }
                 }
             ) {
@@ -267,7 +327,7 @@ private fun SectionTopBar(
                 Popup(
                     Alignment.TopStart,
                     offset = IntOffset(x = 0, y = 120),
-                    onDismissRequest = { isMenuOpenValue.value = false }
+                    onDismissRequest = { isMenuOpen = false }
                 ) {
                     AnimatedVisibility(
                         isMenuOpen,
@@ -280,6 +340,7 @@ private fun SectionTopBar(
                         ) {
                             Column {
                                 ListItem(
+                                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                                     modifier = Modifier
                                         .clickable {
 
@@ -289,6 +350,7 @@ private fun SectionTopBar(
                                     }
                                 )
                                 ListItem(
+                                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                                     headlineText = {
                                         Text("Clear all")
                                     },

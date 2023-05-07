@@ -8,7 +8,6 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.launch
 import space.compoze.hiero.domain.section.model.SectionModel
-import space.compoze.hiero.ui.shared.collection.CollectionComponent
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
@@ -35,8 +34,8 @@ class DefaultSectionComponent(
         }
     }
 
-    override fun selectItem(itemId: Long) {
-        store.accept(SectionIntent.SelectItem(itemId = itemId))
+    override fun toggleItemSelect(itemId: Long) {
+        store.accept(SectionIntent.ToggleItemSelect(itemId = itemId))
     }
 
     override fun navigateBack() {

@@ -5,7 +5,7 @@ import space.compoze.hiero.domain.section.model.SectionModel
 
 interface SectionComponent {
     val state: Value<SectionState>
-    fun selectItem(itemId: Long)
+    fun toggleItemSelect(itemId: Long)
     fun navigateBack()
     fun navigateToItemDetails()
     fun navigateToSection(section: SectionModel)
