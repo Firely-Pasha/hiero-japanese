@@ -2,7 +2,6 @@
 
 package space.compoze.hiero.ui.shared.collection
 
-import arrow.core.Either
 import arrow.core.None
 import arrow.core.Some
 import arrow.core.raise.either
@@ -16,10 +15,8 @@ import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfCompositionUseCase
-import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
 import space.compoze.hiero.domain.section.model.SectionModel
-import kotlin.random.Random
 
 @OptIn(ExperimentalMviKotlinApi::class)
 class CollectionStoreProvider(

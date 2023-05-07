@@ -1,14 +1,12 @@
 package space.compoze.hiero.data.collectionitem
 
-import arrow.core.Either
 import arrow.core.raise.catch
 import arrow.core.raise.either
 import arrow.core.toOption
 import space.compose.hiero.datasource.database.Database
-import space.compoze.hiero.data.collection.toDomainModel
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
-import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
+import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 class CollectionItemRepository(
     database: Database,
@@ -16,13 +14,24 @@ class CollectionItemRepository(
 
     private val collectionItems = database.collectionItemQueries
 
+    override fun getById(collectionItemId: Long) = either {
+        catch({
+            collectionItems.getById(collectionItemId)
+                .executeAsOneOrNull()
+                .toOption()
+                .map { it.toDomainModel() }
+        }) {
+            raise(DomainError("Db getById Error", it))
+        }
+    }
+
     override fun getOfCollection(collectionId: String) = either {
         catch({
             collectionItems.getOfCollection(collectionId)
                 .executeAsList()
                 .map { it.toDomainModel() }
         }) {
-            raise(DomainError("Db Error", it))
+            raise(DomainError("Db getOfCollection Error", it))
         }
     }
 
@@ -32,15 +41,17 @@ class CollectionItemRepository(
                 .executeAsList()
                 .groupBy({ it.sectionId }, { it.toDomainModel() })
         }) {
-            raise(DomainError("Db Error", it))
+            raise(DomainError("Db getOfSection Error", it))
         }
     }
 
-    override fun getOfSection(sectionId: String) = either {
-        getOfSection(listOf(sectionId))
-            .bind()[sectionId]
-            .orEmpty()
+    override fun update(collectionItemId: Long, data: CollectionItemMutationData) = either {
+        catch({
+            data.isSelected.onSome { collectionItems.updateIsSelectedById(it, collectionItemId) }
+        }) {
+            raise(DomainError("Db update Error", it))
+        }
+        val result = getById(collectionItemId).bind().fold({ raise(DomainError()) }) { it }
+        return@either result
     }
-
-
 }

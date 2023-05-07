@@ -2,8 +2,10 @@
 
 package space.compoze.hiero.ui.shared.section
 
+import arrow.core.Some
 import arrow.core.getOrElse
 import arrow.core.raise.either
+import arrow.core.recover
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
@@ -14,6 +16,8 @@ import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
+import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
 
@@ -26,6 +30,7 @@ class SectionStoreProvider(
     private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
     private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
+    private val collectionItemUpdateById: CollectionItemUpdateById by inject()
 
     fun create(sectionId: String, collectionId: String? = null): SectionStore =
         object : SectionStore,
@@ -79,14 +84,21 @@ class SectionStoreProvider(
                             )
                         )
                     }
-                    onIntent<SectionIntent.ToggleItemSelect> {
+                    onIntent<SectionIntent.ToggleItemSelect> { intent ->
                         state.withState<SectionState.Content> {
-                            dispatch(
-                                SectionMessage.SelectItem(
-                                    it.itemId,
-                                    !(items.find { item -> item.id == it.itemId }?.isSelected ?: false)
-                                )
-                            )
+                            either {
+                                val result = collectionItemUpdateById(
+                                    intent.itemId, CollectionItemMutationData(
+                                        isSelected = Some(
+                                            !(items.find { item -> item.id == intent.itemId }?.isSelected
+                                                ?: false)
+                                        )
+                                    )
+                                ).bind()
+                                dispatch(SectionMessage.SetItem(result))
+                            }.onLeft {
+                                println(it)
+                            }
                         }
                     }
                 },
@@ -107,6 +119,15 @@ class SectionStoreProvider(
                             )
                             copy(
                                 items = mutableList
+                            )
+                        }
+
+                        is SectionMessage.SetItem -> applyState<SectionState.Content> {
+                            copy(
+                                items = items.toMutableList().apply {
+                                    val index = indexOfFirst { it.id == msg.item.id }
+                                    set(index, msg.item)
+                                }.toList()
                             )
                         }
                     }

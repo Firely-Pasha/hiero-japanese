@@ -1,4 +1,4 @@
-package space.compoze.hiero.domain.collectionitem.model
+package space.compoze.hiero.domain.collectionitem.model.data
 
 data class CollectionItemModel(
     val id: Long,
@@ -7,5 +7,5 @@ data class CollectionItemModel(
     val value: String,
     val transcription: String,
     val sort: Long,
-    val isSelected: Boolean = false
+    val isSelected: Boolean
 )

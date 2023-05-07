@@ -1,3 +1,5 @@
+import kotlin.Boolean;
+
 CREATE TABLE IF NOT EXISTS Collection (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL
@@ -28,7 +30,8 @@ CREATE TABLE IF NOT EXISTS CollectionItem (
     type TEXT NOT NULL REFERENCES CollectionItemType(code),
     value TEXT NOT NULL,
     transcription TEXT NOT NULL,
-    sort INTEGER NOT NULL
+    sort INTEGER NOT NULL,
+    isSelected INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 INSERT INTO Section(id, collectionId, title) VALUES

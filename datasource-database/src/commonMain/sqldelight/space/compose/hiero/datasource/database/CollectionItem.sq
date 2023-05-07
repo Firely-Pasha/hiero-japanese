@@ -1,3 +1,8 @@
+getById:
+SELECT CollectionItem.* FROM CollectionItem
+    WHERE CollectionItem.id = :collectionItemId
+;
+
 getOfCollection:
 SELECT CollectionItem.* FROM CollectionItem
     JOIN Section ON Section.id = CollectionItem.sectionId
@@ -12,4 +17,10 @@ SELECT CollectionItem.* FROM CollectionItem
 getOfSections:
 SELECT CollectionItem.* FROM CollectionItem
     WHERE CollectionItem.sectionId IN :sectionIds
+;
+
+updateIsSelectedById:
+UPDATE CollectionItem
+    SET isSelected = :isSelected
+    WHERE CollectionItem.id = :collectionItemId
 ;

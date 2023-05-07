@@ -12,7 +12,7 @@ class CollectionItemGetOfSectionUseCase(
     }
 
     operator fun invoke(sectionId: String) = either {
-        collectionItemRepository.getOfSection(sectionId).bind()
+        invoke(listOf(sectionId)).bind()[sectionId].orEmpty()
     }
 
 }

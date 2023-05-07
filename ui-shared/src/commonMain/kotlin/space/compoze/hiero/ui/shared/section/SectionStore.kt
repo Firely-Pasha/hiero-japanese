@@ -3,7 +3,7 @@ package space.compoze.hiero.ui.shared.section
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.model.CollectionModel
-import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.section.model.SectionModel
 
 
@@ -38,6 +38,10 @@ sealed interface SectionMessage {
     data class SelectItem(
         val itemId: Long,
         val value: Boolean,
+    ) : SectionMessage
+
+    data class SetItem(
+        val item: CollectionItemModel
     ) : SectionMessage
 }
 sealed interface SectionAction {
