@@ -35,8 +35,8 @@ class DefaultSectionComponent(
         }
     }
 
-    override fun addItem() {
-        store.accept(SectionIntent.AddSection)
+    override fun selectItem(itemId: Long) {
+        store.accept(SectionIntent.SelectItem(itemId = itemId))
     }
 
     override fun navigateBack() {

@@ -7,4 +7,5 @@ data class CollectionItemModel(
     val value: String,
     val transcription: String,
     val sort: Long,
+    val isSelected: Boolean = false
 )

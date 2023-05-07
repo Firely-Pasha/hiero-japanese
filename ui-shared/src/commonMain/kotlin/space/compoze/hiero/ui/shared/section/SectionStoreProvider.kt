@@ -27,69 +27,89 @@ class SectionStoreProvider(
     private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
 
-    fun create(sectionId: String, collectionId: String? = null): SectionStore = object : SectionStore,
-        Store<SectionIntent, SectionState, Nothing> by storeFactory.create<SectionIntent, SectionAction, SectionMessage, SectionState, Nothing>(
-            name = "KEK",
-            initialState = SectionState.Loading,
-            bootstrapper = coroutineBootstrapper {
-                either {
-                    if (collectionId != null) {
-                        val collection = collectionGetByUuidUseCase(collectionId).bind()
+    fun create(sectionId: String, collectionId: String? = null): SectionStore =
+        object : SectionStore,
+            Store<SectionIntent, SectionState, Nothing> by storeFactory.create<SectionIntent, SectionAction, SectionMessage, SectionState, Nothing>(
+                name = "KEK",
+                initialState = SectionState.Loading,
+                bootstrapper = coroutineBootstrapper {
+                    either {
+                        if (collectionId != null) {
+                            val collection = collectionGetByUuidUseCase(collectionId).bind()
+                                .getOrElse { raise(DomainError("Collection not found :(")) }
+                            val sections = sectionGetOfCollectionUseCase(collectionId).bind()
+                            val sectionItems = collectionItemGetOfSectionUseCase(
+                                sections.map { it.id }
+                            ).bind()
+                            dispatch(
+                                SectionAction.Loaded(
+                                    collection = collection,
+                                    sections = sections,
+                                    items = sectionItems.values.flatten()
+                                )
+                            )
+                            return@coroutineBootstrapper
+                        }
+                        val section = sectionGetByIdUseCase(sectionId).bind()
+                            .getOrElse { raise(DomainError("Section not found :(")) }
+                        val collection = collectionGetByUuidUseCase(section.collectionId).bind()
                             .getOrElse { raise(DomainError("Collection not found :(")) }
-                        val sections = sectionGetOfCollectionUseCase(collectionId).bind()
-                        val sectionItems = collectionItemGetOfSectionUseCase(
-                            sections.map { it.id }
-                        ).bind()
+                        val sectionItems = collectionItemGetOfSectionUseCase(sectionId).bind()
                         dispatch(
                             SectionAction.Loaded(
                                 collection = collection,
-                                sections = sections,
+                                sections = listOf(section),
                                 items = sectionItems
                             )
                         )
-                        return@coroutineBootstrapper
+                    }.onLeft {
+                        dispatch(SectionAction.LoadingError(it))
                     }
-                    val section = sectionGetByIdUseCase(sectionId).bind()
-                        .getOrElse { raise(DomainError("Section not found :(")) }
-                    val collection = collectionGetByUuidUseCase(section.collectionId).bind()
-                        .getOrElse { raise(DomainError("Collection not found :(")) }
-                    val sectionItems = collectionItemGetOfSectionUseCase(sectionId).bind()
-                    dispatch(
-                        SectionAction.Loaded(
-                            collection = collection,
-                            sections = listOf(section),
-                            items = mapOf(section.id to sectionItems)
+                },
+                executorFactory = coroutineExecutorFactory {
+                    onAction<SectionAction.LoadingError> {
+                        dispatch(SectionMessage.Error(it.error))
+                    }
+                    onAction<SectionAction.Loaded> {
+                        dispatch(
+                            SectionMessage.InitSection(
+                                collection = it.collection,
+                                sections = it.sections,
+                                items = it.items,
+                            )
                         )
-                    )
-                }.onLeft {
-                    dispatch(SectionAction.LoadingError(it))
-                }
-            },
-            executorFactory = coroutineExecutorFactory {
-                onAction<SectionAction.LoadingError> {
-                    dispatch(SectionMessage.Error(it.error))
-                }
-                onAction<SectionAction.Loaded> {
-                    dispatch(
-                        SectionMessage.InitSection(
-                            collection = it.collection,
-                            section = it.sections,
-                            items = it.items,
+                    }
+                    onIntent<SectionIntent.SelectItem> {
+                        dispatch(
+                            SectionMessage.SelectItem(
+                                it.itemId,
+                                true
+                            )
                         )
-                    )
+                    }
+                },
+                reducer = { msg ->
+                    when (msg) {
+                        is SectionMessage.Error -> SectionState.Error(msg.error)
+                        is SectionMessage.InitSection -> SectionState.Content(
+                            collection = msg.collection,
+                            sections = msg.sections,
+                            items = msg.items,
+                        )
+
+                        is SectionMessage.SelectItem -> applyState<SectionState.Content> {
+                            val index = items.indexOfFirst { it.id == msg.itemId }
+                            val mutableList = items.toMutableList()
+                            mutableList[index] = items[index].copy(
+                                isSelected = msg.value
+                            )
+                            copy(
+                                items = mutableList
+                            )
+                        }
+                    }
                 }
-            },
-            reducer = { msg ->
-                when (msg) {
-                    is SectionMessage.Error -> SectionState.Error(msg.error)
-                    is SectionMessage.InitSection -> SectionState.Content(
-                        collection = msg.collection,
-                        sections = msg.section,
-                        items = msg.items,
-                    )
-                }
-            }
-        ) {}
+            ) {}
 
     private inline fun <reified State : SectionState> SectionState.withState(block: State.() -> Unit) {
         if (this is State) {

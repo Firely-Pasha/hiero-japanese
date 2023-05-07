@@ -12,7 +12,7 @@ sealed interface SectionState {
     data class Content(
         val collection: CollectionModel,
         val sections: List<SectionModel>,
-        val items: Map<String, List<CollectionItemModel>>,
+        val items: List<CollectionItemModel>,
     ) : SectionState
 
     data class Error(
@@ -21,7 +21,7 @@ sealed interface SectionState {
 }
 
 sealed interface SectionIntent {
-    object AddSection : SectionIntent
+    data class SelectItem(val itemId: Long) : SectionIntent
 }
 
 sealed interface SectionMessage {
@@ -31,15 +31,20 @@ sealed interface SectionMessage {
 
     data class InitSection(
         val collection: CollectionModel,
-        val section: List<SectionModel>,
-        val items: Map<String, List<CollectionItemModel>>,
+        val sections: List<SectionModel>,
+        val items: List<CollectionItemModel>,
+    ) : SectionMessage
+
+    data class SelectItem(
+        val itemId: Long,
+        val value: Boolean,
     ) : SectionMessage
 }
 sealed interface SectionAction {
     data class Loaded(
         val collection: CollectionModel,
         val sections: List<SectionModel>,
-        val items: Map<String, List<CollectionItemModel>>,
+        val items: List<CollectionItemModel>,
     ) : SectionAction
 
     data class LoadingError(

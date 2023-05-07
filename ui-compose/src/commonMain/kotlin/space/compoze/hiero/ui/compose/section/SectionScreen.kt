@@ -5,7 +5,6 @@ package space.compoze.hiero.ui.compose.section
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -18,19 +17,19 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -43,8 +42,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,19 +58,21 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
+import space.compoze.hiero.domain.collectionitem.model.CollectionItemModel
 import space.compoze.hiero.domain.section.model.SectionModel
+import space.compoze.hiero.ui.compose.utils.select
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.section.SectionComponent
 import space.compoze.hiero.ui.shared.section.SectionState
+import kotlin.random.Random
 
 @Composable
 fun SectionScreen(component: SectionComponent) {
 
-    val state by component.state.subscribeAsState()
+    val state by component.state.select { it }
 
     when (val state = state) {
         SectionState.Loading -> CircularProgressIndicator()
@@ -76,21 +80,42 @@ fun SectionScreen(component: SectionComponent) {
             state.error.message ?: state.error.cause?.message ?: "UNKNOWN ERROR WTF?????"
         )
 
-        is SectionState.Content -> SectionContent(component, state)
+        is SectionState.Content -> SectionContent(
+            state = state,
+            onNavigateBack = {
+                component.navigateBack()
+            },
+            onItemClick = remember(component) {
+                {
+                    component.selectItem(it.id)
+                }
+            }
+        )
     }
 
 }
 
 @Composable
-private fun SectionContent(component: SectionComponent, content: SectionState.Content) {
+fun <T : Any, R> Value<T>.selectContent(
+    policy: SnapshotMutationPolicy<R> = structuralEqualityPolicy(),
+    block: (SectionState.Content) -> R,
+) =
+    select(policy) { block(it as SectionState.Content) }
+
+@Composable
+private fun SectionContent(
+    state: SectionState.Content,
+    onNavigateBack: () -> Unit,
+    onItemClick: (CollectionItemModel) -> Unit,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SectionTopBar(
-                component,
-                content,
-                scrollBehavior
+                state,
+                scrollBehavior,
+                onNavigateBack,
             )
         },
         floatingActionButton = {
@@ -99,7 +124,7 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
             }
         }
     ) {
-        val containerPadding = remember {
+        val containerPadding = remember(Unit) {
             val padding = 16.dp
             PaddingValues(
                 start = it.calculateStartPadding(LayoutDirection.Ltr) + padding,
@@ -109,14 +134,91 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
             )
         }
 
+
+//        val sectionItems = remember(content.items) {
+//            println("LELEELLELE")
+//            content.items.groupBy { it.sectionId }
+//        }
+        val lazyGridState = rememberLazyGridState()
+        val sectionItems = remember(state.sections, state.items) {
+            mutableStateMapOf<SectionModel, List<CollectionItemModel>>().also {
+                it.putAll(
+                    state.sections.associateWith { section ->
+                        state.items.filter {
+                            it.sectionId == section.id
+                        }
+                    }
+                )
+            }
+        }
+        val showTitle = remember(sectionItems) { sectionItems.size > 1 }
+        println("RECOMPOSE SECTION IOTEMS")
         LazyVerticalGrid(
+            state = lazyGridState,
             contentPadding = containerPadding,
             columns = GridCells.Fixed(15),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            for (section in content.sections) {
-                section(component, content, section, showTitle = content.sections.size > 1)
+            sectionItems.forEach { section ->
+                if (showTitle) {
+                    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                        val sectionHeaderStyle = remember {
+                            TextStyle(
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        Text(
+                            section.key.title,
+                            style = sectionHeaderStyle
+                        )
+                    }
+                }
+                items(
+                    items = section.value,
+                    key = { it.id },
+                    span = { GridItemSpan(if (section.key.id == "basic" || section.key.id == "voiced") 3 else 5) }
+                ) { item ->
+                    Box(
+                        modifier = Modifier
+                    ) {
+                        if (item.type == CollectionItemType.HIEROGLYPH) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(vertical = 6.dp),
+//                                elevation = CardDefaults.cardElevation(6.dp),
+                                onClick = {
+                                    onItemClick(item)
+                                },
+                                colors = CardDefaults.cardColors(
+                                    containerColor = randomColor()
+                                )
+                            ) {
+                                Box(
+                                    modifier = Modifier.padding(6.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            item.value,
+                                            fontSize = 32.sp,
+                                            softWrap = false
+                                        )
+                                        Text(
+                                            item.transcription,
+                                            fontSize = 16.sp
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -125,9 +227,9 @@ private fun SectionContent(component: SectionComponent, content: SectionState.Co
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SectionTopBar(
-    component: SectionComponent,
-    content: SectionState.Content,
+    state: SectionState.Content,
     scrollBehavior: TopAppBarScrollBehavior,
+    onNavigateBack: () -> Unit,
 ) {
 
     val isMenuOpenValue = remember { MutableValue(false) }
@@ -137,16 +239,16 @@ private fun SectionTopBar(
         scrollBehavior = scrollBehavior,
         navigationIcon = {
             IconButton({
-                component.navigateBack()
+                onNavigateBack()
             }) {
                 Icon(Icons.Rounded.ArrowBack, "Back")
             }
         },
         title = {
             Text(
-                "${content.collection.title}: ${
-                    if (content.sections.size == 1) {
-                        content.sections[0].title
+                "${state.collection.title}: ${
+                    if (state.sections.size == 1) {
+                        state.sections[0].title
                     } else {
                         "All"
                     }
@@ -204,67 +306,8 @@ private fun SectionTopBar(
     )
 }
 
-private fun LazyGridScope.section(
-    component: SectionComponent,
-    content: SectionState.Content,
-    section: SectionModel,
-    showTitle: Boolean,
-) {
-    if (showTitle) {
-        item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-            val sectionHeaderStyle = remember {
-                TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Text(
-                section.title,
-                style = sectionHeaderStyle
-            )
-        }
-    }
-    val items = content.items[section.id].orEmpty()
-    items(
-        count = items.size,
-        key = { items[it].id },
-        span = { GridItemSpan(if (section.id == "basic" || section.id == "voiced") 3 else 5) }
-    ) {
-        val item = items[it]
-        Box(
-            modifier = Modifier
-        ) {
-            if (item.type == CollectionItemType.HIEROGLYPH) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 6.dp),
-//                            elevation = CardDefaults.cardElevation(6.dp),
-                    onClick = {
-//                                component.navigateToItemDetails()
-                    }
-                ) {
-                    Box(
-                        modifier = Modifier.padding(6.dp)
-                            .align(Alignment.CenterHorizontally),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                item.value,
-                                fontSize = 32.sp,
-                                softWrap = false
-                            )
-                            Text(
-                                item.transcription,
-                                fontSize = 16.sp
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-}
+fun randomColor() = Color(
+    Random.nextInt(256),
+    Random.nextInt(256),
+    Random.nextInt(256)
+)
