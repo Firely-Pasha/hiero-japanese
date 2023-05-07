@@ -52,11 +52,13 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.structuralEqualityPolicy
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -163,15 +165,13 @@ private fun SectionContent(
 //        }
         val lazyGridState = rememberLazyGridState()
         val sectionItems = remember(state.sections, state.items) {
-            mutableStateMapOf<SectionModel, List<CollectionItemModel>>().also {
-                it.putAll(
-                    state.sections.associateWith { section ->
-                        state.items.filter {
-                            it.sectionId == section.id
-                        }
-                    }
-                )
-            }
+            buildList {
+                state.sections.forEach { section ->
+                    add(section to state.items.filter {
+                        it.sectionId == section.id
+                    })
+                }
+            }.toMutableStateList()
         }
         val showTitle = remember(sectionItems) { sectionItems.size > 1 }
         println("RECOMPOSE SECTION IOTEMS")
@@ -182,7 +182,7 @@ private fun SectionContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            sectionItems.forEach { section ->
+            sectionItems.forEach { (section, items) ->
                 if (showTitle) {
                     item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                         val sectionHeaderStyle = remember {
@@ -192,15 +192,15 @@ private fun SectionContent(
                             )
                         }
                         Text(
-                            section.key.title,
+                            section.title,
                             style = sectionHeaderStyle
                         )
                     }
                 }
                 items(
-                    items = section.value,
+                    items = items,
                     key = { it.id },
-                    span = { GridItemSpan(if (section.key.id == "basic" || section.key.id == "voiced") 3 else 5) }
+                    span = { GridItemSpan(if (section.id == "basic" || section.id == "voiced") 3 else 5) }
                 ) { item ->
                     Box(
                         modifier = Modifier
@@ -249,13 +249,20 @@ private fun SectionContent(
                                 modifier = Modifier
                                     .width(24.dp)
                                     .height(24.dp)
-                                    .border(width = 2.dp, color = MaterialTheme.colorScheme.surface, shape = CircleShape)
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        shape = CircleShape
+                                    )
                                     .clip(CircleShape)
                             ) {
                                 Box(
                                     Modifier
                                         .padding(2.dp)
-                                        .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
+                                        .background(
+                                            MaterialTheme.colorScheme.primaryContainer,
+                                            shape = CircleShape
+                                        )
                                         .fillMaxSize()
                                 ) {
                                     Icon(

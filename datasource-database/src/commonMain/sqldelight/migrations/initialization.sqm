@@ -13,7 +13,8 @@ INSERT INTO Collection (id, title) VALUES
 CREATE TABLE IF NOT EXISTS Section (
     id TEXT PRIMARY KEY,
     collectionId TEXT NOT NULL REFERENCES Collection(id),
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    sort INTEGER NOT NULL
 );
 
 
@@ -34,11 +35,11 @@ CREATE TABLE IF NOT EXISTS CollectionItem (
     isSelected INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
-INSERT INTO Section(id, collectionId, title) VALUES
-    ("basic", "hiragana", "Basic"),
-    ("voiced", "hiragana", "Voiced"),
-    ("combo", "hiragana", "Combo"),
-    ("vioced_combo", "hiragana", "Voiced and combo")
+INSERT INTO Section(id, collectionId, title, sort) VALUES
+    ("basic", "hiragana", "Basic", 100),
+    ("voiced", "hiragana", "Voiced", 200),
+    ("combo", "hiragana", "Combo", 300),
+    ("vioced_combo", "hiragana", "Voiced and combo", 400)
 ;
 
 INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
