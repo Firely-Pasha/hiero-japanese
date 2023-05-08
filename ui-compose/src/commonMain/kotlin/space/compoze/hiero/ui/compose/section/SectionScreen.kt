@@ -34,6 +34,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -255,43 +256,43 @@ private fun SectionContent(
                                     }
                                 }
                             }
-                        }
-                        AnimatedVisibility(
-                            item.isSelected,
-                            enter = fadeIn() + scaleIn(),
-                            exit = fadeOut() + scaleOut(),
-                            modifier = Modifier
-                                .offset(y = (-8).dp, x = (-8).dp)
-                        ) {
-                            Box(
+                            AnimatedVisibility(
+                                item.isSelected,
+                                enter = fadeIn() + scaleIn(),
+                                exit = fadeOut() + scaleOut(),
                                 modifier = Modifier
-                                    .width(24.dp)
-                                    .height(24.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = MaterialTheme.colorScheme.surface,
-                                        shape = CircleShape
-                                    )
-                                    .clip(CircleShape)
+                                    .offset(y = (-8).dp, x = (-8).dp)
                             ) {
                                 Box(
-                                    Modifier
-                                        .padding(2.dp)
-                                        .background(
-                                            MaterialTheme.colorScheme.primaryContainer,
+                                    modifier = Modifier
+                                        .width(24.dp)
+                                        .height(24.dp)
+                                        .border(
+                                            width = 2.dp,
+                                            color = MaterialTheme.colorScheme.surface,
                                             shape = CircleShape
                                         )
-                                        .fillMaxSize()
+                                        .clip(CircleShape)
                                 ) {
-                                    Icon(
-                                        Icons.Rounded.Check,
-                                        "Selected",
-                                        modifier = Modifier
-                                            .height(16.dp)
-                                            .width(16.dp)
-                                            .align(Alignment.Center),
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                    )
+                                    Box(
+                                        Modifier
+                                            .padding(2.dp)
+                                            .background(
+                                                MaterialTheme.colorScheme.primaryContainer,
+                                                shape = CircleShape
+                                            )
+                                            .fillMaxSize()
+                                    ) {
+                                        Icon(
+                                            Icons.Rounded.School,
+                                            "Selected",
+                                            modifier = Modifier
+                                                .height(16.dp)
+                                                .width(16.dp)
+                                                .align(Alignment.Center),
+                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        )
+                                    }
                                 }
                             }
                         }
