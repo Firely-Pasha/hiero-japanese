@@ -1,5 +1,6 @@
 package space.compoze.hiero.data.collectionitem
 
+import arrow.core.firstOrNone
 import arrow.core.raise.catch
 import arrow.core.raise.either
 import arrow.core.toOption
@@ -15,13 +16,16 @@ class CollectionItemRepository(
     private val collectionItems = database.collectionItemQueries
 
     override fun getById(collectionItemId: Long) = either {
+        getByIds(listOf(collectionItemId)).bind().firstOrNone()
+    }
+
+    override fun getByIds(collectionItemIds: List<Long>) = either {
         catch({
-            collectionItems.getById(collectionItemId)
-                .executeAsOneOrNull()
-                .toOption()
+            collectionItems.getByIds(collectionItemIds)
+                .executeAsList()
                 .map { it.toDomainModel() }
         }) {
-            raise(DomainError("Db getById Error", it))
+            raise(DomainError("Db getByIds(${collectionItemIds}) Error", it))
         }
     }
 

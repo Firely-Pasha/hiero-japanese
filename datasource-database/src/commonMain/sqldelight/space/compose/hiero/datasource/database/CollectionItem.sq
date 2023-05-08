@@ -1,6 +1,12 @@
 getById:
 SELECT CollectionItem.* FROM CollectionItem
     WHERE CollectionItem.id = :collectionItemId
+    LIMIT 1
+;
+
+getByIds:
+SELECT CollectionItem.* FROM CollectionItem
+    WHERE CollectionItem.id IN :collectionItemIds
 ;
 
 getOfCollection:

@@ -8,6 +8,7 @@ import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMu
 
 interface CollectionItemRepository {
     fun getById(collectionItemId: Long): Either<DomainError, Option<CollectionItemModel>>
+    fun getByIds(collectionItemIds: List<Long>): Either<DomainError, List<CollectionItemModel>>
     fun getOfCollection(collectionId: String): Either<DomainError, List<CollectionItemModel>>
     fun getOfSection(sectionIds: List<String>): Either<DomainError, Map<String, List<CollectionItemModel>>>
     fun update(

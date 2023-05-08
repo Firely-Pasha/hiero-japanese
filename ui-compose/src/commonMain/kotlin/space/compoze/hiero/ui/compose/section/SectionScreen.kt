@@ -106,6 +106,11 @@ fun SectionScreen(component: SectionComponent) {
                     component.clearAll()
                 }
             },
+            onStartQuizClick = remember {
+                {
+                    component.startQuiz()
+                }
+            },
             onItemClick = remember(component) {
                 {
                     component.toggleItemSelect(it.id)
@@ -129,6 +134,7 @@ private fun SectionContent(
     onNavigateBack: () -> Unit,
     onClearAllClick: () -> Unit,
     onSelectAllClick: () -> Unit,
+    onStartQuizClick: () -> Unit,
     onItemClick: (CollectionItemModel) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -153,9 +159,7 @@ private fun SectionContent(
                 exit = fadeOut() + scaleOut()
             ) {
                 FloatingActionButton(
-                    onClick = {
-
-                    }
+                    onClick = onStartQuizClick
                 ) {
                     Icon(Icons.Rounded.PlayArrow, "as")
                 }

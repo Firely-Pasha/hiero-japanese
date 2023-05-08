@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import space.compoze.hiero.ui.shared.collection.CollectionComponent
+import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.section.SectionComponent
 import space.compoze.hiero.ui.shared.settings.SettingsComponent
 
@@ -20,6 +21,7 @@ interface StackNavigationComponent {
         class Collection(val component: CollectionComponent) : Child
         class Section(val component: SectionComponent) : Child
         class Settings(val component: SettingsComponent) : Child
+        class Quiz(val component: QuizComponent) : Child
     }
 
     sealed interface Config : Parcelable {
@@ -36,5 +38,10 @@ interface StackNavigationComponent {
 
         @Parcelize
         object Settings : Config
+
+        @Parcelize
+        data class Quiz(
+            val items: List<Long>
+        ) : Config
     }
 }

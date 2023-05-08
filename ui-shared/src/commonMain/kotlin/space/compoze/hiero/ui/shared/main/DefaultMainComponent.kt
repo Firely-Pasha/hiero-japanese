@@ -50,6 +50,7 @@ class DefaultMainComponent(
                         storeFactory,
 //                        StackNavigationComponent.Config.Section(collectionId = "hiragana", sectionId = "%ALL%"),
                         StackNavigationComponent.Config.Hiragana,
+//                        StackNavigationComponent.Config.Quiz(listOf(1L, 2L, 3L))
                     )
                 )
 

@@ -46,6 +46,18 @@ class DefaultSectionComponent(
         store.accept(SectionIntent.ClearAll)
     }
 
+    override fun startQuiz() {
+        when (val state = state.value) {
+            is SectionState.Content -> navigationComponent.navigation.push(
+                StackNavigationComponent.Config.Quiz(
+                    state.items.filter { it.isSelected && it.type != "empty" }.map { it.id }
+                )
+            )
+            else -> {}
+        }
+
+    }
+
     override fun navigateBack() {
         navigationComponent.navigateBack()
     }

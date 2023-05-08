@@ -8,6 +8,7 @@ interface SectionComponent {
     fun toggleItemSelect(itemId: Long)
     fun selectAll()
     fun clearAll()
+    fun startQuiz()
     fun navigateBack()
     fun navigateToItemDetails()
     fun navigateToSection(section: SectionModel)
