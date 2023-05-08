@@ -8,11 +8,13 @@ import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.launch
 import space.compoze.hiero.ui.shared.quiz.store.QuizIntent
 import space.compoze.hiero.ui.shared.quiz.store.QuizStoreProvider
+import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
 class QuizComponentDefault(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
+    private val navigationComponent: StackNavigationComponent,
     private val items: List<Long>,
 ) : QuizComponent, ComponentContext by componentContext {
 
@@ -28,6 +30,10 @@ class QuizComponentDefault(
         componentScope.launch {
             store.states.collect { state.value = it }
         }
+    }
+
+    override fun navigateBack() {
+        navigationComponent.navigateBack()
     }
 
     override fun nextItem() {

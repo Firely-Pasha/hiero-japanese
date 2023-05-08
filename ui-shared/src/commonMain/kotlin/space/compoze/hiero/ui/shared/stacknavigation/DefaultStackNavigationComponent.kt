@@ -63,6 +63,7 @@ class DefaultStackNavigationComponent(
                     QuizComponentDefault(
                         componentContext,
                         storeFactory,
+                        this,
                         config.items
                     )
                 )

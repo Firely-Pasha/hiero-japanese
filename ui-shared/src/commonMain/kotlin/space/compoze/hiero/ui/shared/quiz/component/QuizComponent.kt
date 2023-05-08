@@ -7,5 +7,6 @@ interface QuizComponent {
 
     val state: Value<QuizState>
 
+    fun navigateBack()
     fun nextItem()
 }
