@@ -22,7 +22,7 @@ class DefaultCollectionComponent(
     private val componentScope = inheritScope()
 
     private val store = instanceKeeper.getStore {
-        CollectionStoreProvider(storeFactory).create(collectionId)
+        CollectionStoreProvider(storeFactory).create(componentScope, collectionId)
     }
 
     override val state = MutableValue(store.state)

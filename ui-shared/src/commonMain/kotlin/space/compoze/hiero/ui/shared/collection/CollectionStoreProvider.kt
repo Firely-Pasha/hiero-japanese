@@ -10,6 +10,10 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
@@ -27,41 +31,43 @@ class CollectionStoreProvider(
     private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfCompositionUseCase: CollectionItemGetOfCompositionUseCase by inject()
 
-    fun create(collectionId: String): CollectionStore = object : CollectionStore,
-        Store<CollectionIntent, CollectionState, CollectionLabel> by storeFactory.create<CollectionIntent, CollectionAction, CollectionMessage, CollectionState, CollectionLabel>(
-            name = "KEK",
-            initialState = CollectionState.Loading,
-            bootstrapper = coroutineBootstrapper {
-                either {
-                    val collection =
-                        when (val collection = collectionGetByUuidUseCase(collectionId).bind()) {
-                            None -> raise(DomainError("Collection not found :("))
-                            is Some -> collection.value
+    fun create(scope: CoroutineScope, collectionId: String): CollectionStore =
+        object : CollectionStore,
+            Store<CollectionIntent, CollectionState, CollectionLabel> by storeFactory.create<CollectionIntent, CollectionAction, CollectionMessage, CollectionState, CollectionLabel>(
+                name = "KEK",
+                initialState = CollectionState.Loading,
+                bootstrapper = coroutineBootstrapper {
+                    either {
+                        val collection =
+                            when (val collection =
+                                collectionGetByUuidUseCase(collectionId).bind()) {
+                                None -> raise(DomainError("Collection not found :("))
+                                is Some -> collection.value
+                            }
+                        scope.launch {
+                            sectionGetOfCollectionUseCase.asFlow(collectionId)
+                                .collect {
+                                    withContext(Dispatchers.Main) {
+                                        dispatch(CollectionAction.Loaded(collection, it))
+                                    }
+                                }
                         }
-                    val collectionSections = sectionGetOfCollectionUseCase(collectionId).bind()
-                    val collectionItems = collectionItemGetOfCompositionUseCase(collectionId).bind()
-                    dispatch(
-                        CollectionAction.Loaded(
-                            collection = collection,
-                            sections = collectionSections
+                    }.onLeft {
+                        dispatch(CollectionAction.LoadingError(it))
+                    }
+                },
+                executorFactory = coroutineExecutorFactory {
+                    onAction<CollectionAction.LoadingError> {
+                        dispatch(CollectionMessage.Error(it.error))
+                    }
+                    onAction<CollectionAction.Loaded> {
+                        dispatch(
+                            CollectionMessage.InitCollection(
+                                collection = it.collection,
+                                sections = it.sections
+                            )
                         )
-                    )
-                }.onLeft {
-                    dispatch(CollectionAction.LoadingError(it))
-                }
-            },
-            executorFactory = coroutineExecutorFactory {
-                onAction<CollectionAction.LoadingError> {
-                    dispatch(CollectionMessage.Error(it.error))
-                }
-                onAction<CollectionAction.Loaded> {
-                    dispatch(
-                        CollectionMessage.InitCollection(
-                            collection = it.collection,
-                            sections = it.sections
-                        )
-                    )
-                }
+                    }
 //                onIntent<CollectionIntent.AddSection> {
 //                    state.withContent { state ->
 //                        dispatch(
@@ -81,25 +87,25 @@ class CollectionStoreProvider(
 //                        )
 //                    }
 //                }
-            },
-            reducer = { msg ->
-                when (msg) {
-                    is CollectionMessage.Error -> CollectionState.Error(msg.error)
-                    is CollectionMessage.InitCollection -> CollectionState.Content(
-                        collection = msg.collection,
-                        sections = msg.sections
-                    )
+                },
+                reducer = { msg ->
+                    when (msg) {
+                        is CollectionMessage.Error -> CollectionState.Error(msg.error)
+                        is CollectionMessage.InitCollection -> CollectionState.Content(
+                            collection = msg.collection,
+                            sections = msg.sections
+                        )
 
-                    is CollectionMessage.SetCollection -> applyContent {
-                        copy(collection = msg.collection)
-                    }
+                        is CollectionMessage.SetCollection -> applyContent {
+                            copy(collection = msg.collection)
+                        }
 
-                    is CollectionMessage.AddSection -> applyContent {
-                        copy(sections = sections + msg.section)
+                        is CollectionMessage.AddSection -> applyContent {
+                            copy(sections = sections + msg.section)
+                        }
                     }
                 }
-            }
-        ) {}
+            ) {}
 
     private fun CollectionState.withContent(block: (CollectionState.Content) -> Unit) {
         if (this is CollectionState.Content) {

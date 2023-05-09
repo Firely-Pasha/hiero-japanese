@@ -1,11 +1,14 @@
 package space.compoze.hiero.data.section
 
+import app.cash.sqldelight.coroutines.asFlow
 import arrow.core.Either
 import arrow.core.Option
 import arrow.core.getOrElse
 import arrow.core.raise.catch
 import arrow.core.raise.either
 import arrow.core.toOption
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.section.model.SectionModel
@@ -35,6 +38,12 @@ class SectionRepository(
         }) {
             raise(DomainError("Section::getByCollection(collectionId: $collectionId) error", it))
         }
+    }
+
+    override fun flowByCollection(collectionId: String): Flow<List<SectionModel>> {
+        return database.sectionQueries.getOfCollection(collectionId)
+            .asFlow()
+            .map { it.executeAsList().map { it.toDomainModel() } }
     }
 
     override fun updateComputed(sectionId: String, data: SectionComputedMutation) = either {

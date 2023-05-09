@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -136,15 +139,15 @@ private fun SectionItem(section: SectionModel, onClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(16.dp),
         ) {
-//                            Text("Start")
-//                            Text("End")
             Text(
                 section.title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
             )
-            Box {
-                Icon(Icons.Rounded.ChevronRight, "Show")
+            Row {
+                Text("${section.selectedCount}")
+                Spacer(Modifier.width(8.dp))
+                Icon(Icons.Rounded.School, "Learnt")
             }
         }
     }
