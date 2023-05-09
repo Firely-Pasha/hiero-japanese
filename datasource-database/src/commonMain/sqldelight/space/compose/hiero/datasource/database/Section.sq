@@ -9,3 +9,10 @@ SELECT Section.* FROM Section
     WHERE Section.collectionId = :collectionId
     ORDER BY Section.sort
 ;
+
+updateSelectedCount:
+UPDATE Section
+    SET selectedCount = selectedCount + :value
+    WHERE Section.id = :sectionId
+;
+

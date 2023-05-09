@@ -2,6 +2,7 @@ import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS Collection (
     id TEXT PRIMARY KEY,
+    selectedCount INTEGER NOT NULL DEFAULT 0,
     title TEXT NOT NULL
 );
 
@@ -14,6 +15,7 @@ CREATE TABLE IF NOT EXISTS Section (
     id TEXT PRIMARY KEY,
     collectionId TEXT NOT NULL REFERENCES Collection(id),
     title TEXT NOT NULL,
+    selectedCount INTEGER NOT NULL DEFAULT 0,
     sort INTEGER NOT NULL
 );
 

@@ -6,7 +6,6 @@ import arrow.core.Some
 import arrow.core.flatten
 import arrow.core.getOrElse
 import arrow.core.raise.either
-import arrow.core.recover
 import arrow.core.some
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -18,7 +17,7 @@ import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
@@ -33,7 +32,7 @@ class SectionStoreProvider(
     private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
     private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
-    private val collectionItemUpdateById: CollectionItemUpdateById by inject()
+    private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
     private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
 
     fun create(sectionId: String, collectionId: String? = null): SectionStore =
@@ -91,7 +90,7 @@ class SectionStoreProvider(
                     onIntent<SectionIntent.ToggleItemSelect> { intent ->
                         state.withState<SectionState.Content> {
                             either {
-                                val result = collectionItemUpdateById(
+                                val result = collectionItemUpdateByIdUseCase(
                                     intent.itemId, CollectionItemMutationData(
                                         isSelected = Some(
                                             !(items.find { item -> item.id == intent.itemId }?.isSelected

@@ -62,25 +62,25 @@ class CollectionStoreProvider(
                         )
                     )
                 }
-                onIntent<CollectionIntent.AddSection> {
-                    state.withContent { state ->
-                        dispatch(
-                            CollectionMessage.AddSection(
-                                SectionModel(
-                                    id = "${state.sections.size.toLong() + 1000L}",
-                                    collectionId = "",
-                                    title = "Item ${state.sections.size}"
-//                                    id = state.sections.size.toLong() + 1000L,
-//                                    sectionId = "KEK",
-//                                    type = "word",
-//                                    value = "Item ${state.items.size}",
-//                                    transcription = "",
-//                                    sort = 1L,
-                                )
-                            )
-                        )
-                    }
-                }
+//                onIntent<CollectionIntent.AddSection> {
+//                    state.withContent { state ->
+//                        dispatch(
+//                            CollectionMessage.AddSection(
+//                                SectionModel(
+//                                    id = "${state.sections.size.toLong() + 1000L}",
+//                                    collectionId = "",
+//                                    title = "Item ${state.sections.size}"
+////                                    id = state.sections.size.toLong() + 1000L,
+////                                    sectionId = "KEK",
+////                                    type = "word",
+////                                    value = "Item ${state.items.size}",
+////                                    transcription = "",
+////                                    sort = 1L,
+//                                )
+//                            )
+//                        )
+//                    }
+//                }
             },
             reducer = { msg ->
                 when (msg) {

@@ -7,14 +7,19 @@ import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.data.collection.CollectionRepository
 import space.compoze.hiero.data.collectionitem.CollectionItemRepository
 import space.compoze.hiero.data.section.SectionRepository
+import space.compoze.hiero.domain.application.interactor.ApplicationInitUseCase
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
+import space.compoze.hiero.domain.collectionitem.CollectionItemNotifier
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIdsUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfCompositionUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
+import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationListenUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
+import space.compoze.hiero.domain.section.interactor.SectionUpdateComputedUseCase
 
 internal expect fun appPlatformModule(): Module
 
@@ -33,15 +38,21 @@ fun dataModule() = module {
 
 fun domainModule() = module {
 
+    single { ApplicationInitUseCase(get()) }
+
     single { CollectionGetByUuidUseCase(get()) }
 
     single { SectionGetByIdUseCase(get()) }
     single { SectionGetOfCollectionUseCase(get()) }
+    single { SectionUpdateComputedUseCase(get()) }
 
     single { CollectionItemGetByIdsUseCase(get()) }
     single { CollectionItemGetOfCompositionUseCase(get()) }
     single { CollectionItemGetOfSectionUseCase(get()) }
-    single { CollectionItemUpdateById(get()) }
+    single { CollectionItemUpdateByIdUseCase(get(), get(), get()) }
     single { CollectionItemUpdateBySectionId(get(), get()) }
+    single { CollectionItemNotifier() }
+    single { CollectionItemNotificationGetFlowUseCase(get()) }
+    single { CollectionItemNotificationListenUseCase(get(), get()) }
 
 }
