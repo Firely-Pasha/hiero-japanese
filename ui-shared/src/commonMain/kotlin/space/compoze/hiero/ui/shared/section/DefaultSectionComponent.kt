@@ -23,7 +23,7 @@ class DefaultSectionComponent(
     private val componentScope = inheritScope()
 
     private val store = instanceKeeper.getStore {
-        SectionStoreProvider(storeFactory).create(sectionId, collectionId)
+        SectionStoreProvider(storeFactory).create(componentScope, sectionId, collectionId)
     }
 
     override val state = MutableValue(store.state)
@@ -36,6 +36,10 @@ class DefaultSectionComponent(
 
     override fun toggleItemSelect(itemId: Long) {
         store.accept(SectionIntent.ToggleItemSelect(itemId = itemId))
+    }
+
+    override fun toggleItemBookmark(itemId: Long) {
+        store.accept(SectionIntent.ToggleItemBookmark(itemId = itemId))
     }
 
     override fun selectAll() {

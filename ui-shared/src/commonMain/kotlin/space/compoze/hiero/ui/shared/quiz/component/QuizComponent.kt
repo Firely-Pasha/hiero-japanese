@@ -9,4 +9,5 @@ interface QuizComponent {
 
     fun navigateBack()
     fun nextItem()
+    fun bookmarkCurrentItem()
 }

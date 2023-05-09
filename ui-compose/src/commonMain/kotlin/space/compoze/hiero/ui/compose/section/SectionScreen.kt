@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class
+)
 @file:Suppress("NAME_SHADOWING")
 
 package space.compoze.hiero.ui.compose.section
@@ -9,9 +12,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +36,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.School
@@ -53,8 +58,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -75,7 +78,6 @@ import androidx.compose.ui.window.Popup
 import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
-import space.compoze.hiero.domain.section.model.SectionModel
 import space.compoze.hiero.ui.compose.utils.select
 import space.compoze.hiero.ui.shared.section.SectionComponent
 import space.compoze.hiero.ui.shared.section.SectionState
@@ -112,9 +114,14 @@ fun SectionScreen(component: SectionComponent) {
                     component.startQuiz()
                 }
             },
-            onItemClick = remember(component) {
+            onItemSelect = remember(component) {
                 {
                     component.toggleItemSelect(it.id)
+                }
+            },
+            onItemBookmark = remember(component) {
+                {
+                    component.toggleItemBookmark(it.id)
                 }
             }
         )
@@ -136,7 +143,8 @@ private fun SectionContent(
     onClearAllClick: () -> Unit,
     onSelectAllClick: () -> Unit,
     onStartQuizClick: () -> Unit,
-    onItemClick: (CollectionItemModel) -> Unit,
+    onItemSelect: (CollectionItemModel) -> Unit,
+    onItemBookmark: (CollectionItemModel) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -227,12 +235,20 @@ private fun SectionContent(
                         if (item.type == CollectionItemType.HIEROGLYPH) {
                             Card(
                                 modifier = Modifier
+                                    .combinedClickable(
+                                        onLongClick = {
+                                            onItemBookmark(item)
+                                        },
+                                        onClick = {
+                                            onItemSelect(item)
+                                        }
+                                    )
                                     .fillMaxSize(),
 //                                    .padding(vertical = 6.dp),
 //                                elevation = CardDefaults.cardElevation(6.dp),
-                                onClick = {
-                                    onItemClick(item)
-                                },
+//                                onClick = {
+//                                },
+
                                 colors = CardDefaults.cardColors(
 //                                    containerColor = randomColor()
                                 )
@@ -285,6 +301,46 @@ private fun SectionContent(
                                     ) {
                                         Icon(
                                             Icons.Rounded.School,
+                                            "Selected",
+                                            modifier = Modifier
+                                                .height(16.dp)
+                                                .width(16.dp)
+                                                .align(Alignment.Center),
+                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        )
+                                    }
+                                }
+                            }
+                            AnimatedVisibility(
+                                item.isBookmarked,
+                                enter = fadeIn() + scaleIn(),
+                                exit = fadeOut() + scaleOut(),
+                                modifier = Modifier
+                                    .offset(y = (-8).dp, x = (8).dp)
+                                    .align(Alignment.TopEnd)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .width(24.dp)
+                                        .height(24.dp)
+                                        .border(
+                                            width = 2.dp,
+                                            color = MaterialTheme.colorScheme.surface,
+                                            shape = CircleShape
+                                        )
+                                        .clip(CircleShape)
+                                ) {
+                                    Box(
+                                        Modifier
+                                            .padding(2.dp)
+                                            .background(
+                                                MaterialTheme.colorScheme.primaryContainer,
+                                                shape = CircleShape
+                                            )
+                                            .fillMaxSize()
+                                    ) {
+                                        Icon(
+                                            Icons.Rounded.Bookmark,
                                             "Selected",
                                             modifier = Modifier
                                                 .height(16.dp)

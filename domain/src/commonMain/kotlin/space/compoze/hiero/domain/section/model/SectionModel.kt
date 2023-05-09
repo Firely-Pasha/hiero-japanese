@@ -5,4 +5,5 @@ data class SectionModel(
     val collectionId: String,
     val title: String,
     val selectedCount: Long,
+    val bookmarkedCount: Long,
 )

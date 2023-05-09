@@ -10,4 +10,7 @@ sealed interface QuizMessage {
     data class ChangeCurrentItem(
         val item: CollectionItemModel,
     ) : QuizMessage
+    data class SetItem(
+        val item: CollectionItemModel,
+    ) : QuizMessage
 }

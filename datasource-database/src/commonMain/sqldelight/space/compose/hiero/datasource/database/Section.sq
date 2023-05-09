@@ -10,9 +10,15 @@ SELECT Section.* FROM Section
     ORDER BY Section.sort
 ;
 
-updateSelectedCount:
+addSelectedCount:
 UPDATE Section
     SET selectedCount = selectedCount + :value
+    WHERE Section.id = :sectionId
+;
+
+addBookmarkedCount:
+UPDATE Section
+    SET bookmarkedCount = bookmarkedCount + :value
     WHERE Section.id = :sectionId
 ;
 

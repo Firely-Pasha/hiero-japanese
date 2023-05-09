@@ -6,6 +6,7 @@ data class CollectionItemModel(
     val type: String,
     val value: String,
     val transcription: String,
+    val isSelected: Boolean,
+    val isBookmarked: Boolean,
     val sort: Long,
-    val isSelected: Boolean
 )

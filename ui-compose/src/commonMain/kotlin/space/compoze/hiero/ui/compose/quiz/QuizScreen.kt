@@ -3,15 +3,20 @@
 package space.compoze.hiero.ui.compose.quiz
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.NavigateNext
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,6 +61,11 @@ fun QuizScreen(component: QuizComponent) {
                 {
                     component.nextItem()
                 }
+            },
+            onBookmark = remember {
+                {
+                    component.bookmarkCurrentItem()
+                }
             }
         )
     }
@@ -66,14 +76,15 @@ fun QuizContent(
     state: QuizState.Content,
     onNavigateBack: () -> Unit,
     onNextItemClick: () -> Unit,
+    onBookmark: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                     IconButton(onNavigateBack) {
-                         Icon(Icons.Rounded.ArrowBack, "Back")
-                     }
+                    IconButton(onNavigateBack) {
+                        Icon(Icons.Rounded.ArrowBack, "Back")
+                    }
                 },
                 title = {},
                 colors = TopAppBarDefaults.mediumTopAppBarColors(Color.Transparent)
@@ -112,6 +123,22 @@ fun QuizContent(
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .offset(x = (-8).dp, y = (8).dp)
+                        ) {
+                            IconButton(onBookmark) {
+                                AnimatedContent(
+                                    state.currentItem.isBookmarked,
+                                ) { state ->
+                                    Icon(
+                                        if (state) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                                        "Not bookmarked"
+                                    )
+                                }
+                            }
+                        }
                         Text(
                             text = if (isFlipped) targetState.transcription else targetState.value,
                             fontSize = 112.sp,

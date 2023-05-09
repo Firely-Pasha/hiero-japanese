@@ -6,6 +6,7 @@ import space.compoze.hiero.domain.section.model.SectionModel
 interface SectionComponent {
     val state: Value<SectionState>
     fun toggleItemSelect(itemId: Long)
+    fun toggleItemBookmark(itemId: Long)
     fun selectAll()
     fun clearAll()
     fun startQuiz()

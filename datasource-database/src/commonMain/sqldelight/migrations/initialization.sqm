@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS Section (
     collectionId TEXT NOT NULL REFERENCES Collection(id),
     title TEXT NOT NULL,
     selectedCount INTEGER NOT NULL DEFAULT 0,
+    bookmarkedCount INTEGER NOT NULL DEFAULT 0,
     sort INTEGER NOT NULL
 );
 
@@ -34,7 +35,8 @@ CREATE TABLE IF NOT EXISTS CollectionItem (
     value TEXT NOT NULL,
     transcription TEXT NOT NULL,
     sort INTEGER NOT NULL,
-    isSelected INTEGER AS Boolean NOT NULL DEFAULT 0
+    isSelected INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 INSERT INTO Section(id, collectionId, title, sort) VALUES

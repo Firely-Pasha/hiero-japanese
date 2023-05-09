@@ -3,6 +3,7 @@
 package space.compoze.hiero.ui.shared.quiz.store
 
 import arrow.core.raise.either
+import arrow.core.some
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
@@ -11,12 +12,15 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIdsUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
+import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 class QuizStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
     private val collectionItemGetByIdsUseCase: CollectionItemGetByIdsUseCase by inject()
+    private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
 
     fun create(items: List<Long>): QuizStore =
         object : QuizStore,
@@ -52,10 +56,24 @@ class QuizStoreProvider(
                                 }
                                 var randomItem = this.items.random()
                                 while (randomItem == currentItem) {
-                                   randomItem = this.items.random()
+                                    randomItem = this.items.random()
                                 }
                                 randomItem
                             }))
+                        }
+                    }
+                    onIntent<QuizIntent.BookmarkCurrentItem> {
+                        state.withState<QuizState.Content> {
+                            either {
+                                val result = collectionItemUpdateByIdUseCase(currentItem.id,
+                                    CollectionItemMutationData(
+                                        isBookmarked = currentItem.isBookmarked.some().map { !it }
+                                    )).bind()
+                                dispatch(QuizMessage.ChangeCurrentItem(result))
+                                dispatch(QuizMessage.SetItem(result))
+                            }.onLeft {
+                                println(it)
+                            }
                         }
                     }
                 },
@@ -69,6 +87,15 @@ class QuizStoreProvider(
                         is QuizMessage.ChangeCurrentItem -> applyState<QuizState.Content> {
                             copy(
                                 currentItem = msg.item
+                            )
+                        }
+
+                        is QuizMessage.SetItem -> applyState<QuizState.Content> {
+                            copy(
+                                items = this.items.toMutableList().apply {
+                                    val index = indexOfFirst { it.id == msg.item.id }
+                                    set(index, msg.item)
+                                }.toList()
                             )
                         }
                     }

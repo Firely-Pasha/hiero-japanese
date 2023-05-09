@@ -30,3 +30,9 @@ UPDATE CollectionItem
     SET isSelected = :isSelected
     WHERE CollectionItem.id = :collectionItemId
 ;
+
+updateIsBookmarkedById:
+UPDATE CollectionItem
+    SET isBookmarked = :isBookmarked
+    WHERE CollectionItem.id = :collectionItemId
+;

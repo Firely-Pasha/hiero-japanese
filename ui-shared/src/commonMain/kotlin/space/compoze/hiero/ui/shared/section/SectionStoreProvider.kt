@@ -12,13 +12,21 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
+import space.compoze.hiero.domain.collectionitem.CollectionItemNotification
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
+import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
@@ -34,8 +42,13 @@ class SectionStoreProvider(
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
     private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
     private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
+    private val collectionItemNotificationGetFlowUseCase: CollectionItemNotificationGetFlowUseCase by inject()
 
-    fun create(sectionId: String, collectionId: String? = null): SectionStore =
+    fun create(
+        scope: CoroutineScope,
+        sectionId: String,
+        collectionId: String? = null,
+    ): SectionStore =
         object : SectionStore,
             Store<SectionIntent, SectionState, Nothing> by storeFactory.create<SectionIntent, SectionAction, SectionMessage, SectionState, Nothing>(
                 name = "KEK",
@@ -86,6 +99,19 @@ class SectionStoreProvider(
                                 items = it.items,
                             )
                         )
+                        state.withState<SectionState.Content> {
+                            collectionItemNotificationGetFlowUseCase().onEach {
+                                when (it) {
+                                    is CollectionItemNotification.Changed -> {
+                                        if (it.new.sectionId in sections.map { it.id }) {
+                                            withContext(Dispatchers.Main) {
+                                                dispatch(SectionMessage.SetItems(listOf(it.new)))
+                                            }
+                                        }
+                                    }
+                                }
+                            }.launchIn(scope)
+                        }
                     }
                     onIntent<SectionIntent.ToggleItemSelect> { intent ->
                         state.withState<SectionState.Content> {
@@ -95,10 +121,26 @@ class SectionStoreProvider(
                                         isSelected = Some(
                                             !(items.find { item -> item.id == intent.itemId }?.isSelected
                                                 ?: false)
-                                        )
+                                        ),
                                     )
                                 ).bind()
                                 dispatch(SectionMessage.SetItems(listOf(result)))
+                            }.onLeft {
+                                println(it)
+                            }
+                        }
+                    }
+                    onIntent<SectionIntent.ToggleItemBookmark> { intent ->
+                        state.withState<SectionState.Content> {
+                            either {
+                                val result = collectionItemUpdateByIdUseCase(
+                                    intent.itemId, CollectionItemMutationData(
+                                        isBookmarked = Some(
+                                            !(items.find { item -> item.id == intent.itemId }?.isBookmarked
+                                                ?: false)
+                                        ),
+                                    )
+                                ).bind()
                             }.onLeft {
                                 println(it)
                             }

@@ -1,12 +1,13 @@
 package space.compoze.hiero.data.collectionitem
 
+import arrow.core.Option
 import arrow.core.firstOrNone
 import arrow.core.raise.catch
 import arrow.core.raise.either
-import arrow.core.toOption
 import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 class CollectionItemRepository(
@@ -51,11 +52,24 @@ class CollectionItemRepository(
 
     override fun update(collectionItemId: Long, data: CollectionItemMutationData) = either {
         catch({
-            data.isSelected.onSome { collectionItems.updateIsSelectedById(it, collectionItemId) }
+            collectionItems.transaction {
+                data.isSelected.onSome {
+                    collectionItems.updateIsSelectedById(
+                        it,
+                        collectionItemId
+                    )
+                }
+                data.isBookmarked.onSome {
+                    collectionItems.updateIsBookmarkedById(
+                        it,
+                        collectionItemId
+                    )
+                }
+            }
         }) {
             raise(DomainError("Db update Error", it))
         }
-        val result = getById(collectionItemId).bind().fold({ raise(DomainError()) }) { it }
-        return@either result
+        return@either getById(collectionItemId).bind<Option<CollectionItemModel>>()
+            .fold<CollectionItemModel>({ this.raise(DomainError()) }) { it }
     }
 }

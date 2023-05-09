@@ -7,5 +7,6 @@ fun Section.toDomainModel() = SectionModel(
     id = id,
     collectionId = collectionId,
     title = title,
-    selectedCount = selectedCount
+    selectedCount = selectedCount,
+    bookmarkedCount = bookmarkedCount,
 )

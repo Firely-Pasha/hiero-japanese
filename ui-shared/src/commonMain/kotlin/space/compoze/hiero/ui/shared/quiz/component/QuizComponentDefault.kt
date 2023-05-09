@@ -40,4 +40,8 @@ class QuizComponentDefault(
         store.accept(QuizIntent.NextItem)
     }
 
+    override fun bookmarkCurrentItem() {
+        store.accept(QuizIntent.BookmarkCurrentItem)
+    }
+
 }

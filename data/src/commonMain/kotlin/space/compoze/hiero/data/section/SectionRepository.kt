@@ -50,7 +50,10 @@ class SectionRepository(
         catch({
             database.sectionQueries.transaction {
                 when (data) {
-                    is SectionComputedMutation.AddSelectedCount -> database.sectionQueries.updateSelectedCount(
+                    is SectionComputedMutation.AddSelectedCount -> database.sectionQueries.addSelectedCount(
+                        data.value, sectionId
+                    )
+                    is SectionComputedMutation.AddBookmarkedCount -> database.sectionQueries.addBookmarkedCount(
                         data.value, sectionId
                     )
                 }

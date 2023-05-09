@@ -10,5 +10,6 @@ fun CollectionItem.toDomainModel() = CollectionItemModel(
     value = value_,
     transcription = transcription,
     isSelected = isSelected,
+    isBookmarked = isBookmarked,
     sort = sort,
 )

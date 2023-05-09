@@ -10,4 +10,7 @@ sealed interface SectionComputedMutation {
     data class AddSelectedCount(
         val value: Long
     ): SectionComputedMutation
+    data class AddBookmarkedCount(
+        val value: Long
+    ): SectionComputedMutation
 }

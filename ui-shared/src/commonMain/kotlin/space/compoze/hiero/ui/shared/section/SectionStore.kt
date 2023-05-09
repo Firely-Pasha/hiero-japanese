@@ -22,6 +22,7 @@ sealed interface SectionState {
 
 sealed interface SectionIntent {
     data class ToggleItemSelect(val itemId: Long) : SectionIntent
+    data class ToggleItemBookmark(val itemId: Long) : SectionIntent
     object SelectAll : SectionIntent
     object ClearAll : SectionIntent
 }
