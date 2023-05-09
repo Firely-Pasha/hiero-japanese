@@ -50,6 +50,7 @@ import space.compoze.hiero.domain.section.model.SectionModel
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.collection.CollectionComponent
 import space.compoze.hiero.ui.shared.collection.CollectionState
+import space.compoze.hiero.ui.shared.section.SectionComponent
 
 @Composable
 fun CollectionScreen(component: CollectionComponent) {
@@ -144,10 +145,16 @@ private fun SectionItem(section: SectionModel, onClick: () -> Unit) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
             )
-            Row {
-                Text("${section.selectedCount}")
-                Spacer(Modifier.width(8.dp))
-                Icon(Icons.Rounded.School, "Learnt")
+            if (section != CollectionComponent.AllSection) {
+                Row {
+                    Text("${section.selectedCount}")
+                    Spacer(Modifier.width(8.dp))
+                    Icon(Icons.Rounded.School, "Learnt")
+                }
+            } else {
+                Box {
+                    Icon(Icons.Rounded.ChevronRight, "Learnt")
+                }
             }
         }
     }
