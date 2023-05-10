@@ -235,6 +235,7 @@ private fun SectionContent(
                         if (item.type == CollectionItemType.HIEROGLYPH) {
                             Card(
                                 modifier = Modifier
+                                    .clip(MaterialTheme.shapes.medium)
                                     .combinedClickable(
                                         onLongClick = {
                                             onItemBookmark(item)
