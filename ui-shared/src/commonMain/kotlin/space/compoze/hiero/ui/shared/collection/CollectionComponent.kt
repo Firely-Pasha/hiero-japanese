@@ -16,7 +16,8 @@ interface CollectionComponent {
             title = "All",
             collectionId = "%DYNAMIC%",
             selectedCount = 0,
-            bookmarkedCount = 0
+            bookmarkedCount = 0,
+            span = 15
         )
     }
 }

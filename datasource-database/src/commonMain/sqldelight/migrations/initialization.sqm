@@ -3,12 +3,13 @@ import kotlin.Boolean;
 CREATE TABLE IF NOT EXISTS Collection (
     id TEXT PRIMARY KEY,
     selectedCount INTEGER NOT NULL DEFAULT 0,
+    cols INTEGER NOT NULL DEFAULT 1,
     title TEXT NOT NULL
 );
 
-INSERT INTO Collection (id, title) VALUES
-    ("hiragana", "Hiragana"),
-    ("katakana", "Katakana")
+INSERT INTO Collection (id, title, cols) VALUES
+    ("hiragana", "Hiragana", 15),
+    ("katakana", "Katakana", 15)
 ;
 
 CREATE TABLE IF NOT EXISTS Section (
@@ -17,6 +18,7 @@ CREATE TABLE IF NOT EXISTS Section (
     title TEXT NOT NULL,
     selectedCount INTEGER NOT NULL DEFAULT 0,
     bookmarkedCount INTEGER NOT NULL DEFAULT 0,
+    span INTEGER NOT NULL DEFAULT 0,
     sort INTEGER NOT NULL
 );
 
@@ -39,15 +41,15 @@ CREATE TABLE IF NOT EXISTS CollectionItem (
     isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
-INSERT INTO Section(id, collectionId, title, sort) VALUES
-    ("hiragana_basic", "hiragana", "Basic", 100),
-    ("hiragana_voiced", "hiragana", "Voiced", 200),
-    ("hiragana_combo", "hiragana", "Combo", 300),
-    ("hiragana_vioced_combo", "hiragana", "Voiced and combo", 400),
-    ("katakana_basic", "katakana", "Basic", 100),
-    ("katakana_voiced", "katakana", "Voiced", 200),
-    ("katakana_combo", "katakana", "Combo", 300),
-    ("katakana_vioced_combo", "katakana", "Voiced and combo", 400)
+INSERT INTO Section(id, collectionId, title, span, sort) VALUES
+    ("hiragana_basic",          "hiragana",     "Basic",            3, 100),
+    ("hiragana_vioced",         "hiragana",     "Voiced",           3, 200),
+    ("hiragana_combo",          "hiragana",     "Combo",            5, 300),
+    ("hiragana_vioced_combo",   "hiragana",     "Voiced and combo", 5, 400),
+    ("katakana_basic",          "katakana",     "Basic",            3, 100),
+    ("katakana_voiced",         "katakana",     "Voiced",           3, 200),
+    ("katakana_combo",          "katakana",     "Combo",            5, 300),
+    ("katakana_vioced_combo",   "katakana",     "Voiced and combo", 5, 400)
 ;
 
 INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES

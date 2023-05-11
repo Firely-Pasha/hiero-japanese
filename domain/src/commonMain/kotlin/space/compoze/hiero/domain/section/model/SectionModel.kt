@@ -6,4 +6,5 @@ data class SectionModel(
     val title: String,
     val selectedCount: Long,
     val bookmarkedCount: Long,
+    val span: Int,
 )

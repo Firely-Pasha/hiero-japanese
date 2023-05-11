@@ -9,4 +9,5 @@ fun Section.toDomainModel() = SectionModel(
     title = title,
     selectedCount = selectedCount,
     bookmarkedCount = bookmarkedCount,
+    span = span.toInt(),
 )

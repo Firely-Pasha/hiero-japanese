@@ -205,7 +205,7 @@ private fun SectionContent(
         LazyVerticalGrid(
             state = lazyGridState,
             contentPadding = containerPadding,
-            columns = GridCells.Fixed(15),
+            columns = GridCells.Fixed(state.collection.cols),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -227,7 +227,7 @@ private fun SectionContent(
                 items(
                     items = items,
                     key = { it.id },
-                    span = { GridItemSpan(if (section.id == "basic" || section.id == "voiced") 3 else 5) }
+                    span = { GridItemSpan(section.span) }
                 ) { item ->
                     Box(
                         modifier = Modifier
