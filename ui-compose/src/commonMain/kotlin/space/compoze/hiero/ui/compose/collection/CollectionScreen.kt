@@ -174,62 +174,65 @@ private fun SectionItem(
                         .fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colorScheme.secondaryContainer,
-                                shape = RoundedCornerShape(99.dp)
-                            )
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+//                        modifier = Modifier
+//                            .background(
+//                                color = MaterialTheme.colorScheme.secondaryContainer,
+//                                shape = RoundedCornerShape(99.dp)
+//                            )
+//                            .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             Icons.Filled.CropPortrait,
                             "Learnt",
-                            modifier = Modifier.height(18.dp)
+                            modifier = Modifier.height(18.dp),
+                            tint = MaterialTheme.colorScheme.secondary,
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text("${section.itemsCount}")
+                        Text("${section.itemsCount}", fontWeight = FontWeight.SemiBold)
                     }
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
                     ) {
                         Row(
-                            modifier = Modifier
-                                .background(
-                                    color = MaterialTheme.colorScheme.secondaryContainer,
-                                    shape = RoundedCornerShape(99.dp)
-                                )
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
+//                            modifier = Modifier
+//                                .background(
+//                                    color = MaterialTheme.colorScheme.secondaryContainer,
+//                                    shape = RoundedCornerShape(99.dp)
+//                                )
+//                                .padding(horizontal = 12.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("${section.selectedCount}")
-                            Spacer(Modifier.width(8.dp))
                             Icon(
                                 Icons.Outlined.School,
                                 "Learnt",
-                                modifier = Modifier.height(18.dp)
+                                modifier = Modifier.height(18.dp),
+                                tint = MaterialTheme.colorScheme.secondary,
                             )
+                            Spacer(Modifier.width(8.dp))
+                            Text("${section.selectedCount}", fontWeight = FontWeight.SemiBold)
                         }
 
                         Row(
-                            modifier = Modifier
-                                .background(
-                                    color = MaterialTheme.colorScheme.secondaryContainer,
-                                    shape = RoundedCornerShape(99.dp)
-                                )
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
+//                            modifier = Modifier
+//                                .background(
+//                                    color = MaterialTheme.colorScheme.secondaryContainer,
+//                                    shape = RoundedCornerShape(99.dp)
+//                                )
+//                                .padding(horizontal = 12.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("${section.bookmarkedCount}")
-                            Spacer(Modifier.width(8.dp))
                             Icon(
                                 Icons.Outlined.BookmarkBorder,
                                 "Learnt",
-                                modifier = Modifier.height(18.dp)
+                                modifier = Modifier.height(18.dp),
+                                tint = MaterialTheme.colorScheme.secondary,
                             )
+                            Spacer(Modifier.width(8.dp))
+                            Text("${section.bookmarkedCount}", fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }

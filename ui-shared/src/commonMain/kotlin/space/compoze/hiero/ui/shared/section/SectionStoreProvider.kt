@@ -119,8 +119,9 @@ class SectionStoreProvider(
                                     intent.itemId, CollectionItemMutationData(
                                         isSelected = Some(
                                             !(items.find { item -> item.id == intent.itemId }?.isSelected
-                                                ?: false)
+                                                ?: false),
                                         ),
+                                        isBookmarked = Some(false)
                                     )
                                 ).bind()
                                 dispatch(SectionMessage.SetItems(listOf(result)))
@@ -132,13 +133,14 @@ class SectionStoreProvider(
                     onIntent<SectionIntent.ToggleItemBookmark> { intent ->
                         state.withState<SectionState.Content> {
                             either {
-                                val result = collectionItemUpdateByIdUseCase(
-                                    intent.itemId, CollectionItemMutationData(
-                                        isBookmarked = Some(
-                                            !(items.find { item -> item.id == intent.itemId }?.isBookmarked
-                                                ?: false)
-                                        ),
-                                    )
+                                val item =
+                                    items.find { item -> item.id == intent.itemId } ?: return@either
+                                collectionItemUpdateByIdUseCase(
+                                    intent.itemId,
+                                    CollectionItemMutationData(
+                                        isBookmarked = Some(!item.isBookmarked),
+                                        isSelected = Some(!item.isBookmarked),
+                                    ),
                                 ).bind()
                             }.onLeft {
                                 println(it)

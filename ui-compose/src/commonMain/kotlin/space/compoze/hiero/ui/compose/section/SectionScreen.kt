@@ -35,6 +35,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.MoreVert
@@ -301,7 +304,7 @@ private fun SectionContent(
                                             .fillMaxSize()
                                     ) {
                                         Icon(
-                                            Icons.Rounded.School,
+                                            Icons.Outlined.School,
                                             "Selected",
                                             modifier = Modifier
                                                 .height(16.dp)
@@ -317,8 +320,10 @@ private fun SectionContent(
                                 enter = fadeIn() + scaleIn(),
                                 exit = fadeOut() + scaleOut(),
                                 modifier = Modifier
-                                    .offset(y = (-8).dp, x = (8).dp)
-                                    .align(Alignment.TopEnd)
+                                    .offset(y = (-8).dp, x = (-8).dp)
+//                                modifier = Modifier
+//                                    .offset(y = (-8).dp, x = (8).dp)
+//                                    .align(Alignment.TopEnd)
                             ) {
                                 Box(
                                     modifier = Modifier
@@ -341,7 +346,7 @@ private fun SectionContent(
                                             .fillMaxSize()
                                     ) {
                                         Icon(
-                                            Icons.Rounded.Bookmark,
+                                            Icons.Outlined.BookmarkBorder,
                                             "Selected",
                                             modifier = Modifier
                                                 .height(16.dp)
