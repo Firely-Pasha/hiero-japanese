@@ -36,3 +36,21 @@ UPDATE CollectionItem
     SET isBookmarked = :isBookmarked
     WHERE CollectionItem.id = :collectionItemId
 ;
+
+countOfSection:
+SELECT Section.id, count(CollectionItem.id)
+    FROM CollectionItem
+    LEFT JOIN Section ON Section.id = CollectionItem.sectionId
+    WHERE Section.id IN :sectionId
+        AND CollectionItem.type != "empty"
+    GROUP BY Section.id
+;
+
+countOfCollection:
+SELECT Section.collectionId, count(CollectionItem.id)
+    FROM CollectionItem
+    LEFT JOIN Section ON Section.id = CollectionItem.sectionId
+    WHERE Section.collectionId IN :collectionId
+        AND CollectionItem.type != "empty"
+    GROUP BY Section.collectionId
+;

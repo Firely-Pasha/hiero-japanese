@@ -1,8 +1,6 @@
 package space.compoze.hiero.data.section
 
 import app.cash.sqldelight.coroutines.asFlow
-import arrow.core.Either
-import arrow.core.Option
 import arrow.core.getOrElse
 import arrow.core.raise.catch
 import arrow.core.raise.either
@@ -11,8 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.domain.base.exceptions.DomainError
-import space.compoze.hiero.domain.section.model.SectionModel
+import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
+import space.compoze.hiero.domain.section.model.mutate.SectionMutation
 import space.compoze.hiero.domain.section.repository.SectionRepository
 
 class SectionRepository(
@@ -26,7 +25,17 @@ class SectionRepository(
                 ?.toDomainModel()
                 .toOption()
         }) {
-            raise(DomainError("Section::getById(sectionId: $sectionId) error", it))
+            raise(DomainError("SectionRepository::getById(sectionId: $sectionId) error", it))
+        }
+    }
+
+    override fun getAll() = either {
+        catch({
+            database.sectionQueries.getAll()
+                .executeAsList()
+                .map { it.toDomainModel() }
+        }) {
+            raise(DomainError("SectionRepository::getAll() error", it))
         }
     }
 
@@ -36,7 +45,12 @@ class SectionRepository(
                 .executeAsList()
                 .map { it.toDomainModel() }
         }) {
-            raise(DomainError("Section::getByCollection(collectionId: $collectionId) error", it))
+            raise(
+                DomainError(
+                    "SectionRepository::getByCollection(collectionId: $collectionId) error",
+                    it
+                )
+            )
         }
     }
 
@@ -46,6 +60,25 @@ class SectionRepository(
             .map { it.executeAsList().map { it.toDomainModel() } }
     }
 
+    override fun update(sectionId: String, data: SectionMutation) = either {
+        catch({
+            database.sectionQueries.transaction {
+                data.itemsCount.onSome {
+                    database.sectionQueries.updateItemsCountById(it, sectionId)
+                }
+            }
+        }) {
+            raise(
+                DomainError(
+                    "SectionRepository::update(collectionId: $sectionId, data: $data) error",
+                    it
+                )
+            )
+        }
+        getById(sectionId).bind().fold({ this.raise(DomainError()) }) { it }
+    }
+
+
     override fun updateComputed(sectionId: String, data: SectionComputedMutation) = either {
         catch({
             database.sectionQueries.transaction {
@@ -53,6 +86,7 @@ class SectionRepository(
                     is SectionComputedMutation.AddSelectedCount -> database.sectionQueries.addSelectedCount(
                         data.value, sectionId
                     )
+
                     is SectionComputedMutation.AddBookmarkedCount -> database.sectionQueries.addBookmarkedCount(
                         data.value, sectionId
                     )
@@ -61,7 +95,7 @@ class SectionRepository(
         }) {
             raise(
                 DomainError(
-                    "Section::updateComputed(sectionId: $sectionId, data: $data) error",
+                    "SectionRepository::updateComputed(sectionId: $sectionId, data: $data) error",
                     it
                 )
             )

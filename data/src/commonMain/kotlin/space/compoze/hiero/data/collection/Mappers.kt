@@ -1,10 +1,11 @@
 package space.compoze.hiero.data.collection
 
 import migrations.Collection
-import space.compoze.hiero.domain.collection.model.CollectionModel
+import space.compoze.hiero.domain.collection.model.data.CollectionModel
 
 fun Collection.toDomainModel() = CollectionModel(
     id = id,
     title = title,
-    cols = cols.toInt()
+    cols = cols.toInt(),
+    itemsCount = itemsCount,
 )

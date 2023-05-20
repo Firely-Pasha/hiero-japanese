@@ -49,6 +49,7 @@ kotlin {
                 @OptIn(ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
 
+                implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Decompose.Decompose)
                 implementation(Dependencies.Decompose.Extensions.Compose.JetBrains)
                 implementation(Dependencies.MviKotlin.MviKotlin)

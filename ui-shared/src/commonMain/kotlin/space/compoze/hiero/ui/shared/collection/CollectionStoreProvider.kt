@@ -17,19 +17,18 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
-import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfCompositionUseCase
-import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
-import space.compoze.hiero.domain.section.model.SectionModel
+import space.compoze.hiero.domain.collection.interactor.CollectionGetById
+import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
+import space.compoze.hiero.domain.sectionpreview.interactor.SectionPreviewGet
 
 @OptIn(ExperimentalMviKotlinApi::class)
 class CollectionStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
-    private val collectionGetByUuidUseCase: CollectionGetByUuidUseCase by inject()
-    private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
-    private val collectionItemGetOfCompositionUseCase: CollectionItemGetOfCompositionUseCase by inject()
+    private val collectionGetById: CollectionGetById by inject()
+    private val sectionGetOfCollection: SectionGetOfCollection by inject()
+    private val sectionPreviewGet: SectionPreviewGet by inject()
 
     fun create(scope: CoroutineScope, collectionId: String): CollectionStore =
         object : CollectionStore,
@@ -38,20 +37,23 @@ class CollectionStoreProvider(
                 initialState = CollectionState.Loading,
                 bootstrapper = coroutineBootstrapper {
                     either {
-                        val collection =
-                            when (val collection =
-                                collectionGetByUuidUseCase(collectionId).bind()) {
-                                None -> raise(DomainError("Collection not found :("))
-                                is Some -> collection.value
-                            }
-                        scope.launch {
-                            sectionGetOfCollectionUseCase.asFlow(collectionId)
-                                .collect {
-                                    withContext(Dispatchers.Main) {
-                                        dispatch(CollectionAction.Loaded(collection, it))
-                                    }
-                                }
+                        val collection = when (
+                            val collection = collectionGetById(collectionId).bind()
+                        ) {
+                            None -> raise(DomainError("Collection not found :("))
+                            is Some -> collection.value
                         }
+                        val sections = sectionGetOfCollection.single(collectionId).bind()
+//                        val previews = sections.map {
+//                            sectionPreviewGet.single(it.id).getOrNone()
+//                        }
+                        dispatch(
+                            CollectionAction.Loaded(
+                                collection = collection,
+                                sections = sections,
+                                previews = listOf()
+                            )
+                        )
                     }.onLeft {
                         dispatch(CollectionAction.LoadingError(it))
                     }
@@ -64,9 +66,31 @@ class CollectionStoreProvider(
                         dispatch(
                             CollectionMessage.InitCollection(
                                 collection = it.collection,
-                                sections = it.sections
+                                sections = it.sections,
+                                previews = it.previews
                             )
                         )
+                        state.withContent {
+                            scope.launch {
+                                sectionGetOfCollection.flow(it.collection.id)
+                                    .collect { sections ->
+//                                        val previews =
+//                                            sections.map { section ->
+//                                                sectionPreviewGet.single(
+//                                                    section.id
+//                                                ).getOrNone()
+//                                            }
+                                        withContext(Dispatchers.Main) {
+                                            dispatch(
+                                                CollectionMessage.SetSections(
+                                                    sections = sections,
+                                                    previews = listOf()
+                                                )
+                                            )
+                                        }
+                                    }
+                            }
+                        }
                     }
 //                onIntent<CollectionIntent.AddSection> {
 //                    state.withContent { state ->
@@ -93,11 +117,19 @@ class CollectionStoreProvider(
                         is CollectionMessage.Error -> CollectionState.Error(msg.error)
                         is CollectionMessage.InitCollection -> CollectionState.Content(
                             collection = msg.collection,
-                            sections = msg.sections
+                            sections = msg.sections,
+                            previews = msg.previews
                         )
 
                         is CollectionMessage.SetCollection -> applyContent {
                             copy(collection = msg.collection)
+                        }
+
+                        is CollectionMessage.SetSections -> applyContent {
+                            copy(
+                                sections = msg.sections,
+                                previews = msg.previews
+                            )
                         }
 
                         is CollectionMessage.AddSection -> applyContent {

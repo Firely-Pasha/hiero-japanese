@@ -26,6 +26,13 @@ class CollectionItemNotificationListenUseCase(
                             )
                         )
                     }
+                    if (it.prev.isBookmarked != it.new.isBookmarked) {
+                        sectionUpdateComputedUseCase(
+                            it.new.sectionId, SectionComputedMutation.AddBookmarkedCount(
+                                it.new.isBookmarked diffWith it.prev.isBookmarked
+                            )
+                        )
+                    }
                 }
             }
         }.launchIn(GlobalScope)

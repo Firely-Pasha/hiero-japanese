@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS Collection (
     id TEXT PRIMARY KEY,
     selectedCount INTEGER NOT NULL DEFAULT 0,
     cols INTEGER NOT NULL DEFAULT 1,
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    itemsCount INTEGER NOT NULL DEFAULT 0
 );
 
 INSERT INTO Collection (id, title, cols) VALUES
@@ -18,7 +19,9 @@ CREATE TABLE IF NOT EXISTS Section (
     title TEXT NOT NULL,
     selectedCount INTEGER NOT NULL DEFAULT 0,
     bookmarkedCount INTEGER NOT NULL DEFAULT 0,
+    total INTEGER NOT NULL DEFAULT 0,
     span INTEGER NOT NULL DEFAULT 0,
+    itemsCount INTEGER NOT NULL DEFAULT 0,
     sort INTEGER NOT NULL
 );
 

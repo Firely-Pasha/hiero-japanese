@@ -1,3 +1,7 @@
+getAll:
+SELECT Section.* FROM Section
+;
+
 getById:
 SELECT Section.* FROM Section
     WHERE Section.id = :sectionId
@@ -8,6 +12,12 @@ getOfCollection:
 SELECT Section.* FROM Section
     WHERE Section.collectionId = :collectionId
     ORDER BY Section.sort
+;
+
+updateItemsCountById:
+UPDATE Section
+    SET itemsCount = :itemsCount
+    WHERE Section.id = :sectionId
 ;
 
 addSelectedCount:

@@ -2,3 +2,13 @@ getByUuid:
 SELECT * FROM Collection
 WHERE Collection.id = :id
 LIMIT 1;
+
+getAll:
+SELECT * FROM Collection
+;
+
+updateItemsCountById:
+UPDATE Collection
+    SET itemsCount = :itemsCount
+    WHERE Collection.id = :collectionId
+;

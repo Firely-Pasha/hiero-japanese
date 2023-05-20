@@ -16,12 +16,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
-import space.compoze.hiero.domain.collection.interactor.CollectionGetByUuidUseCase
+import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.collectionitem.CollectionItemNotification
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
@@ -29,16 +28,16 @@ import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdate
 import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
-import space.compoze.hiero.domain.section.interactor.SectionGetOfCollectionUseCase
+import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
 
 @OptIn(ExperimentalMviKotlinApi::class)
 class SectionStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
-    private val collectionGetByUuidUseCase: CollectionGetByUuidUseCase by inject()
+    private val collectionGetById: CollectionGetById by inject()
     private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
-    private val sectionGetOfCollectionUseCase: SectionGetOfCollectionUseCase by inject()
+    private val sectionGetOfCollection: SectionGetOfCollection by inject()
     private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
     private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
     private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
@@ -56,9 +55,9 @@ class SectionStoreProvider(
                 bootstrapper = coroutineBootstrapper {
                     either {
                         if (collectionId != null) {
-                            val collection = collectionGetByUuidUseCase(collectionId).bind()
+                            val collection = collectionGetById(collectionId).bind()
                                 .getOrElse { raise(DomainError("Collection not found :(")) }
-                            val sections = sectionGetOfCollectionUseCase(collectionId).bind()
+                            val sections = sectionGetOfCollection.single(collectionId).bind()
                             val sectionItems = collectionItemGetOfSectionUseCase(
                                 sections.map { it.id }
                             ).bind()
@@ -73,7 +72,7 @@ class SectionStoreProvider(
                         }
                         val section = sectionGetByIdUseCase(sectionId).bind()
                             .getOrElse { raise(DomainError("Section not found :(")) }
-                        val collection = collectionGetByUuidUseCase(section.collectionId).bind()
+                        val collection = collectionGetById(section.collectionId).bind()
                             .getOrElse { raise(DomainError("Collection not found :(")) }
                         val sectionItems = collectionItemGetOfSectionUseCase(sectionId).bind()
                         dispatch(

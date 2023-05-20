@@ -2,9 +2,9 @@ package space.compoze.hiero.ui.shared.section
 
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
-import space.compoze.hiero.domain.collection.model.CollectionModel
+import space.compoze.hiero.domain.collection.model.data.CollectionModel
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
-import space.compoze.hiero.domain.section.model.SectionModel
+import space.compoze.hiero.domain.section.model.data.SectionModel
 
 
 sealed interface SectionState {

@@ -72,4 +72,22 @@ class CollectionItemRepository(
         return@either getById(collectionItemId).bind<Option<CollectionItemModel>>()
             .fold<CollectionItemModel>({ this.raise(DomainError()) }) { it }
     }
+
+    override fun countOfCollection(collectionIds: List<String>) = either {
+        catch({
+            collectionItems.countOfCollection(collectionIds).executeAsList()
+                .associateBy({ it.collectionId!! }) { it.count }
+        }) {
+            raise(DomainError("Db update Error", it))
+        }
+    }
+
+    override fun countOfSection(sectionIds: List<String>) = either {
+        catch({
+            collectionItems.countOfSection(sectionIds).executeAsList()
+                .associateBy({ it.id!! }) { it.count }
+        }) {
+            raise(DomainError("Db update Error", it))
+        }
+    }
 }

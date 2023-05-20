@@ -16,10 +16,9 @@ fun Koin.initDatabase() {
     val sqlDriver: SqlDriver by inject()
     val database: Database by inject()
     Database.Schema.migrate(sqlDriver, 0, Database.Schema.version)
-    println(database.collectionQueries.getByUuid("hiragana").executeAsOne())
 }
 
 fun Koin.initDomain() {
     val applicationInitUseCase: ApplicationInitUseCase by inject()
-    applicationInitUseCase()
+    applicationInitUseCase().getOrNone()
 }

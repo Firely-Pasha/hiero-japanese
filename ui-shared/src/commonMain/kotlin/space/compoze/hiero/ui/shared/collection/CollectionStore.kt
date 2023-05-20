@@ -1,10 +1,11 @@
 package space.compoze.hiero.ui.shared.collection
 
+import arrow.core.Option
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
-import space.compoze.hiero.domain.collection.model.CollectionModel
-import space.compoze.hiero.domain.section.model.SectionModel
-import kotlin.random.Random
+import space.compoze.hiero.domain.collection.model.data.CollectionModel
+import space.compoze.hiero.domain.section.model.data.SectionModel
+import space.compoze.hiero.domain.sectionpreview.model.data.SectionPreview
 
 
 sealed interface CollectionState {
@@ -12,11 +13,24 @@ sealed interface CollectionState {
     data class Content(
         val collection: CollectionModel,
         val sections: List<SectionModel>,
+        val previews: List<Option<SectionPreview>>,
     ) : CollectionState
 
     data class Error(
         val error: DomainError,
     ) : CollectionState
+}
+
+sealed interface CollectionAction {
+    data class Loaded(
+        val collection: CollectionModel,
+        val sections: List<SectionModel>,
+        val previews: List<Option<SectionPreview>>,
+    ) : CollectionAction
+
+    data class LoadingError(
+        val error: DomainError,
+    ) : CollectionAction
 }
 
 sealed interface CollectionIntent {
@@ -28,6 +42,12 @@ sealed interface CollectionMessage {
         val section: SectionModel,
     ) : CollectionMessage
 
+    data class InitCollection(
+        val collection: CollectionModel,
+        val sections: List<SectionModel>,
+        val previews: List<Option<SectionPreview>>,
+    ) : CollectionMessage
+
     data class Error(
         val error: DomainError,
     ) : CollectionMessage
@@ -36,9 +56,9 @@ sealed interface CollectionMessage {
         val collection: CollectionModel,
     ) : CollectionMessage
 
-    data class InitCollection(
-        val collection: CollectionModel,
+    data class SetSections(
         val sections: List<SectionModel>,
+        val previews: List<Option<SectionPreview>>
     ) : CollectionMessage
 }
 
@@ -46,17 +66,6 @@ sealed interface CollectionLabel {
     data class ShowMessage(
         val message: String,
     ) : CollectionLabel
-}
-
-sealed interface CollectionAction {
-    data class Loaded(
-        val collection: CollectionModel,
-        val sections: List<SectionModel>,
-    ) : CollectionAction
-
-    data class LoadingError(
-        val error: DomainError
-    ) : CollectionAction
 }
 
 interface CollectionStore : Store<CollectionIntent, CollectionState, CollectionLabel>

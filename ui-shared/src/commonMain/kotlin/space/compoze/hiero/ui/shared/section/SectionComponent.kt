@@ -1,7 +1,7 @@
 package space.compoze.hiero.ui.shared.section
 
 import com.arkivanov.decompose.value.Value
-import space.compoze.hiero.domain.section.model.SectionModel
+import space.compoze.hiero.domain.section.model.data.SectionModel
 
 interface SectionComponent {
     val state: Value<SectionState>

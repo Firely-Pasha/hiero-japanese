@@ -36,6 +36,7 @@ kotlin {
                 implementation(project(Modules.Data))
                 implementation(project(Modules.Domain))
 
+                implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Koin.Core)
             }
         }

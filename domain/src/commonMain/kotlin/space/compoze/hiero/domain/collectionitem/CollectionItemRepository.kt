@@ -15,4 +15,6 @@ interface CollectionItemRepository {
         collectionItemId: Long,
         data: CollectionItemMutationData,
     ): Either<DomainError, CollectionItemModel>
+    fun countOfCollection(collectionIds: List<String>): Either<DomainError, Map<String, Long>>
+    fun countOfSection(sectionIds: List<String>): Either<DomainError, Map<String, Long>>
 }

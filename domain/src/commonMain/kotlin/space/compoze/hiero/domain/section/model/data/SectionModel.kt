@@ -1,4 +1,4 @@
-package space.compoze.hiero.domain.section.model
+package space.compoze.hiero.domain.section.model.data
 
 data class SectionModel(
     val id: String,
@@ -7,4 +7,5 @@ data class SectionModel(
     val selectedCount: Long,
     val bookmarkedCount: Long,
     val span: Int,
+    val itemsCount: Long,
 )
