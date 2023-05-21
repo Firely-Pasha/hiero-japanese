@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import space.compoze.hiero.ui.shared.collection.DefaultCollectionComponent
+import space.compoze.hiero.ui.shared.main.DefaultMainComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
 import space.compoze.hiero.ui.shared.section.DefaultSectionComponent
 import space.compoze.hiero.ui.shared.settings.DefaultSettingsComponent
@@ -13,8 +14,11 @@ import space.compoze.hiero.ui.shared.settings.DefaultSettingsComponent
 class DefaultStackNavigationComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
-    startConfig: StackNavigationComponent.Config
+    startConfig: StackNavigationComponent.Config,
+    appNavigator: StackNavigationComponent? = null
 ) : StackNavigationComponent, ComponentContext by componentContext {
+
+    private val appNavigator = appNavigator ?: this
 
     override val navigation = StackNavigation<StackNavigationComponent.Config>()
 
@@ -29,7 +33,7 @@ class DefaultStackNavigationComponent(
                     DefaultCollectionComponent(
                         componentContext,
                         storeFactory,
-                        this,
+                        this.appNavigator,
                         "hiragana",
                     )
                 )
@@ -38,7 +42,7 @@ class DefaultStackNavigationComponent(
                     DefaultCollectionComponent(
                         componentContext,
                         storeFactory,
-                        this,
+                        this.appNavigator,
                         "katakana"
                     )
                 )
@@ -46,7 +50,7 @@ class DefaultStackNavigationComponent(
                     DefaultSectionComponent(
                         componentContext,
                         storeFactory,
-                        this,
+                        this.appNavigator,
                         sectionId = config.sectionId,
                         collectionId = config.collectionId
                     )
@@ -55,7 +59,7 @@ class DefaultStackNavigationComponent(
                     DefaultSettingsComponent(
                         componentContext,
                         storeFactory,
-                        this,
+                        this.appNavigator,
                     )
                 )
 
@@ -63,8 +67,16 @@ class DefaultStackNavigationComponent(
                     QuizComponentDefault(
                         componentContext,
                         storeFactory,
-                        this,
+                        this.appNavigator,
                         config.items
+                    )
+                )
+
+                StackNavigationComponent.Config.Main -> StackNavigationComponent.Child.Main(
+                    DefaultMainComponent(
+                        componentContext,
+                        storeFactory,
+                        this.appNavigator,
                     )
                 )
             }

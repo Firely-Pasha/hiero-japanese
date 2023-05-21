@@ -30,7 +30,7 @@ import space.compoze.hiero.ui.shared.main.DefaultMainComponent
 import space.compoze.hiero.ui.shared.main.MainComponent
 
 @Composable
-fun MainScreen(component: DefaultMainComponent, modifier: Modifier = Modifier) {
+fun MainScreen(component: MainComponent, modifier: Modifier = Modifier) {
 
     val state by component.state.subscribeAsState()
 

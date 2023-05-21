@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
+import space.compoze.hiero.ui.compose.main.MainScreen
 import space.compoze.hiero.ui.compose.quiz.QuizScreen
 import space.compoze.hiero.ui.compose.section.SectionScreen
 import space.compoze.hiero.ui.compose.settings.SettingsScreen
@@ -24,6 +25,7 @@ fun StackNavigator(component: StackNavigationComponent, modifier: Modifier = Mod
             is StackNavigationComponent.Child.Section -> SectionScreen(child.component)
             is StackNavigationComponent.Child.Settings -> SettingsScreen(child.component)
             is StackNavigationComponent.Child.Quiz -> QuizScreen(child.component)
+            is StackNavigationComponent.Child.Main -> MainScreen(child.component)
         }
     }
 

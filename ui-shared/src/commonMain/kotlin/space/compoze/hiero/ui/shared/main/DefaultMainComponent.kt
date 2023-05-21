@@ -18,6 +18,7 @@ import space.compoze.hiero.ui.shared.utils.inheritScope
 class DefaultMainComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
+    appNavigator: StackNavigationComponent,
 ) : MainComponent, ComponentContext by componentContext {
 
     private val scope = inheritScope()
@@ -48,9 +49,8 @@ class DefaultMainComponent(
                     DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
-//                        StackNavigationComponent.Config.Section(collectionId = "hiragana", sectionId = "%ALL%"),
                         StackNavigationComponent.Config.Hiragana,
-//                        StackNavigationComponent.Config.Quiz(listOf(1L, 2L, 3L))
+                        appNavigator = appNavigator,
                     )
                 )
 
@@ -59,6 +59,7 @@ class DefaultMainComponent(
                         componentContext,
                         storeFactory,
                         StackNavigationComponent.Config.Katakana,
+                        appNavigator = appNavigator,
                     )
                 )
 
@@ -67,6 +68,7 @@ class DefaultMainComponent(
                         componentContext,
                         storeFactory,
                         StackNavigationComponent.Config.Settings,
+                        appNavigator = appNavigator,
                     )
                 )
             }
