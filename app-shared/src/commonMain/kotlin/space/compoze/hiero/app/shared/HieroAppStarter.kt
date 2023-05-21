@@ -4,8 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import org.koin.core.Koin
 import org.koin.mp.KoinPlatformTools
 import space.compose.hiero.datasource.database.Database
-import space.compoze.hiero.domain.application.interactor.ApplicationInitUseCase
-import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
+import space.compoze.hiero.domain.application.interactor.ApplicationInit
 
 fun startHieroApp() = KoinPlatformTools.defaultContext().get().run {
     initDatabase()
@@ -19,6 +18,6 @@ fun Koin.initDatabase() {
 }
 
 fun Koin.initDomain() {
-    val applicationInitUseCase: ApplicationInitUseCase by inject()
-    applicationInitUseCase().getOrNone()
+    val applicationInit: ApplicationInit by inject()
+    applicationInit().getOrNone()
 }

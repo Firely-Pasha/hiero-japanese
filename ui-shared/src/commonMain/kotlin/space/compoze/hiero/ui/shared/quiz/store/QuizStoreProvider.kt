@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIdsUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIds
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
@@ -19,7 +19,7 @@ class QuizStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
-    private val collectionItemGetByIdsUseCase: CollectionItemGetByIdsUseCase by inject()
+    private val collectionItemGetByIds: CollectionItemGetByIds by inject()
     private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
 
     fun create(items: List<Long>): QuizStore =
@@ -29,7 +29,7 @@ class QuizStoreProvider(
                 initialState = QuizState.Loading,
                 bootstrapper = coroutineBootstrapper {
                     either {
-                        val result = collectionItemGetByIdsUseCase(items).bind()
+                        val result = collectionItemGetByIds(items).bind()
                         dispatch(
                             QuizAction.Loaded(
                                 items = result,

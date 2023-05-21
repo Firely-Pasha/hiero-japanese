@@ -3,7 +3,7 @@ package space.compoze.hiero.domain.collectionitem.interactor
 import arrow.core.raise.either
 import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
 
-class CollectionItemGetOfCompositionUseCase(
+class CollectionItemGetOfComposition(
     private val collectionItemRepository: CollectionItemRepository
 ) {
 

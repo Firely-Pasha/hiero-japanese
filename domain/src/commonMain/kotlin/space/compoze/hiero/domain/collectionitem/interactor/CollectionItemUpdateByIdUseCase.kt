@@ -8,7 +8,7 @@ import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 class CollectionItemUpdateByIdUseCase(
-    private val collectionItemGetByIdsUseCase: CollectionItemGetByIdsUseCase,
+    private val collectionItemGetByIds: CollectionItemGetByIds,
     private val collectionItemRepository: CollectionItemRepository,
     private val collectionItemNotifier: CollectionItemNotifier,
 ) {
@@ -17,7 +17,7 @@ class CollectionItemUpdateByIdUseCase(
         collectionItemId: Long,
         data: CollectionItemMutationData,
     ) = either {
-        val item = collectionItemGetByIdsUseCase(listOf(collectionItemId)).bind().first()
+        val item = collectionItemGetByIds(listOf(collectionItemId)).bind().first()
         invoke(item, data).bind()
     }
 

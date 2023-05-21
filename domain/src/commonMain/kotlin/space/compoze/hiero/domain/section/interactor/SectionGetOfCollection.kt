@@ -7,7 +7,7 @@ class SectionGetOfCollection(
     private val sectionRepository: SectionRepository,
 ) {
 
-    fun single(collectionId: String) = either {
+    operator fun invoke(collectionId: String) = either {
         sectionRepository.getByCollection(collectionId).bind()
     }
 

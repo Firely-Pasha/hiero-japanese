@@ -2,7 +2,7 @@ package space.compoze.hiero.domain.collectionitem.interactor
 
 import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
 
-class CollectionItemGetByIdsUseCase(
+class CollectionItemGetByIds(
     private val collectionItemRepository: CollectionItemRepository,
 ) {
 

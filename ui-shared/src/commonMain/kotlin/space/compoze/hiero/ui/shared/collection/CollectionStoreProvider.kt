@@ -43,7 +43,7 @@ class CollectionStoreProvider(
                             None -> raise(DomainError("Collection not found :("))
                             is Some -> collection.value
                         }
-                        val sections = sectionGetOfCollection.single(collectionId).bind()
+                        val sections = sectionGetOfCollection(collectionId).bind()
 //                        val previews = sections.map {
 //                            sectionPreviewGet.single(it.id).getOrNone()
 //                        }

@@ -4,7 +4,7 @@ import arrow.core.raise.either
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 class CollectionItemUpdateBySectionId(
-    private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase,
+    private val collectionItemGetOfSection: CollectionItemGetOfSection,
     private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase,
 ) {
 
@@ -12,7 +12,7 @@ class CollectionItemUpdateBySectionId(
         sectionId: String,
         data: CollectionItemMutationData,
     ) = either {
-        val items = collectionItemGetOfSectionUseCase(sectionId).bind()
+        val items = collectionItemGetOfSection(sectionId).bind()
         items.mapNotNull {
             collectionItemUpdateByIdUseCase(it, data).getOrNull()
         }

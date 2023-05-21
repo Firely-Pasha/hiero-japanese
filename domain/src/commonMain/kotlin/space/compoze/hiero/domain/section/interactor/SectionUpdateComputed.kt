@@ -4,7 +4,7 @@ import arrow.core.raise.either
 import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
 import space.compoze.hiero.domain.section.repository.SectionRepository
 
-class SectionUpdateComputedUseCase(
+class SectionUpdateComputed(
     private val sectionRepository: SectionRepository
 ) {
 

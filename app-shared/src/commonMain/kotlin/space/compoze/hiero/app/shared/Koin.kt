@@ -7,15 +7,15 @@ import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.data.collection.CollectionRepository
 import space.compoze.hiero.data.collectionitem.CollectionItemRepository
 import space.compoze.hiero.data.section.SectionRepository
-import space.compoze.hiero.domain.application.interactor.ApplicationInitUseCase
+import space.compoze.hiero.domain.application.interactor.ApplicationInit
 import space.compoze.hiero.domain.collection.interactor.CollectionGetAll
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.collection.interactor.CollectionUpdate
 import space.compoze.hiero.domain.collectionitem.CollectionItemNotifier
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIdsUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIds
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetCountOfCollection
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetCountOfSection
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSection
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
 import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
@@ -24,7 +24,7 @@ import space.compoze.hiero.domain.section.interactor.SectionGetAll
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
 import space.compoze.hiero.domain.section.interactor.SectionUpdate
-import space.compoze.hiero.domain.section.interactor.SectionUpdateComputedUseCase
+import space.compoze.hiero.domain.section.interactor.SectionUpdateComputed
 import space.compoze.hiero.domain.sectionpreview.interactor.SectionPreviewGet
 
 internal expect fun appPlatformModule(): Module
@@ -44,16 +44,16 @@ fun dataModule() = module {
 
 fun domainModule() = module {
 
-    single { ApplicationInitUseCase(get(), get(), get(), get(), get(), get(), get()) }
+    single { ApplicationInit(get(), get(), get(), get(), get(), get(), get()) }
 
     single { CollectionGetAll(get()) }
     single { CollectionGetById(get()) }
     single { CollectionUpdate(get()) }
 
-    single { CollectionItemGetByIdsUseCase(get()) }
+    single { CollectionItemGetByIds(get()) }
     single { CollectionItemGetCountOfCollection(get()) }
     single { CollectionItemGetCountOfSection(get()) }
-    single { CollectionItemGetOfSectionUseCase(get()) }
+    single { CollectionItemGetOfSection(get()) }
     single { CollectionItemUpdateByIdUseCase(get(), get(), get()) }
     single { CollectionItemUpdateBySectionId(get(), get()) }
     single { CollectionItemNotifier() }
@@ -64,7 +64,7 @@ fun domainModule() = module {
     single { SectionGetByIdUseCase(get()) }
     single { SectionGetOfCollection(get()) }
     single { SectionUpdate(get()) }
-    single { SectionUpdateComputedUseCase(get()) }
+    single { SectionUpdateComputed(get()) }
 
     single { SectionPreviewGet(get()) }
 

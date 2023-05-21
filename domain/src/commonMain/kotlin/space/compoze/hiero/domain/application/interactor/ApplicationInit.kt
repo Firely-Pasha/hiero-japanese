@@ -6,13 +6,12 @@ import space.compoze.hiero.domain.collection.interactor.CollectionGetAll
 import space.compoze.hiero.domain.collection.interactor.CollectionUpdate
 import space.compoze.hiero.domain.collection.model.mutation.CollectionMutation
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetCountOfCollection
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetCountOfSection
 import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationListenUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetAll
 import space.compoze.hiero.domain.section.interactor.SectionUpdate
 import space.compoze.hiero.domain.section.model.mutate.SectionMutation
 
-class ApplicationInitUseCase(
+class ApplicationInit(
     private val collectionItemNotificationListenUseCase: CollectionItemNotificationListenUseCase,
     private val collectionGetAll: CollectionGetAll,
     private val collectionItemGetCountOfCollection: CollectionItemGetCountOfCollection,

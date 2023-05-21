@@ -22,7 +22,7 @@ import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.collectionitem.CollectionItemNotification
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSectionUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSection
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
 import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
@@ -38,7 +38,7 @@ class SectionStoreProvider(
     private val collectionGetById: CollectionGetById by inject()
     private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
     private val sectionGetOfCollection: SectionGetOfCollection by inject()
-    private val collectionItemGetOfSectionUseCase: CollectionItemGetOfSectionUseCase by inject()
+    private val collectionItemGetOfSection: CollectionItemGetOfSection by inject()
     private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
     private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
     private val collectionItemNotificationGetFlowUseCase: CollectionItemNotificationGetFlowUseCase by inject()
@@ -57,8 +57,8 @@ class SectionStoreProvider(
                         if (collectionId != null) {
                             val collection = collectionGetById(collectionId).bind()
                                 .getOrElse { raise(DomainError("Collection not found :(")) }
-                            val sections = sectionGetOfCollection.single(collectionId).bind()
-                            val sectionItems = collectionItemGetOfSectionUseCase(
+                            val sections = sectionGetOfCollection(collectionId).bind()
+                            val sectionItems = collectionItemGetOfSection(
                                 sections.map { it.id }
                             ).bind()
                             dispatch(
@@ -74,7 +74,7 @@ class SectionStoreProvider(
                             .getOrElse { raise(DomainError("Section not found :(")) }
                         val collection = collectionGetById(section.collectionId).bind()
                             .getOrElse { raise(DomainError("Collection not found :(")) }
-                        val sectionItems = collectionItemGetOfSectionUseCase(sectionId).bind()
+                        val sectionItems = collectionItemGetOfSection(sectionId).bind()
                         dispatch(
                             SectionAction.Loaded(
                                 collection = collection,
