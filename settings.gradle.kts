@@ -31,10 +31,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Hiero"
+include(":app-android")
+include(":app-shared")
 include(":datasource-database")
 include(":data")
 include(":domain")
 include(":ui-compose")
 include(":ui-shared")
-include(":app-shared")
-include(":androidApp")
