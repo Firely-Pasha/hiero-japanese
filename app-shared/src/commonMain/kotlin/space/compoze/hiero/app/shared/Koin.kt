@@ -7,6 +7,7 @@ import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.data.collection.CollectionRepository
 import space.compoze.hiero.data.collectionitem.CollectionItemRepository
 import space.compoze.hiero.data.section.SectionRepository
+import space.compoze.hiero.data.settings.SettingsRepository
 import space.compoze.hiero.domain.application.interactor.ApplicationInit
 import space.compoze.hiero.domain.collection.interactor.CollectionGetAll
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
@@ -40,6 +41,8 @@ fun dataModule() = module {
             space.compoze.hiero.domain.section.repository.SectionRepository::class
     single { CollectionItemRepository(get()) } bind
             space.compoze.hiero.domain.collectionitem.CollectionItemRepository::class
+    single { SettingsRepository(get()) } bind
+            space.compoze.hiero.domain.settings.repository.SettingsRepository::class
 }
 
 fun domainModule() = module {

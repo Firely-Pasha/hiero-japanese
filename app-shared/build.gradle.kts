@@ -33,11 +33,13 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(Modules.Datasource.Database))
+                api(project(Modules.Datasource.Preferences))
                 implementation(project(Modules.Data))
                 implementation(project(Modules.Domain))
 
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Koin.Core)
+                implementation(Dependencies.MultiplatformSettings)
             }
         }
         val commonTest by getting {
