@@ -67,4 +67,6 @@ object Dependencies {
             const val Coroutines = "io.arrow-kt:arrow-fx-coroutines:${Versions.Arrow}"
         }
     }
+
+    val MultiplatformSettings = "com.russhwolf:multiplatform-settings:${Versions.MultiplatformSettings}"
 }

@@ -3,6 +3,7 @@ package space.compose.hiero
 object Modules {
     object Datasource {
         const val Database = ":datasource-database"
+        const val Preferences = ":datasource-preferences"
     }
     const val Data = ":data"
     const val Domain = ":domain"

@@ -34,6 +34,7 @@ rootProject.name = "Hiero"
 include(":app-android")
 include(":app-shared")
 include(":datasource-database")
+include(":datasource-preferences")
 include(":data")
 include(":domain")
 include(":ui-compose")
