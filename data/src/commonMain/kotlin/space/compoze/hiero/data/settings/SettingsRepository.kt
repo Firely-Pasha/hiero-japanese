@@ -1,26 +1,41 @@
 package space.compoze.hiero.data.settings
 
+import arrow.core.raise.catch
+import arrow.core.raise.either
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.settings.enums.AppSettings
 import space.compoze.hiero.domain.settings.repository.SettingsRepository
 
 class SettingsRepository(
-    private val settings: Settings
+    private val settings: Settings,
 ) : SettingsRepository {
 
-    override fun getThemes(): List<String> {
-        return listOf(
-            AppSettings.Theme.SYSTEM,
-        )
+    override fun getThemes() = either {
+        catch({
+            listOf(
+                AppSettings.Theme.SYSTEM,
+            )
+        }) {
+            raise(DomainError("SettingsRepository::getTheme error", it))
+        }
     }
 
-    override fun getTheme(): String {
-        return settings.getStringOrNull(AppSettings.Theme._KEY)
-            ?: AppSettings.Theme.SYSTEM
+    override fun getTheme() = either {
+        catch({
+            settings.getStringOrNull(AppSettings.Theme._KEY)
+                ?: AppSettings.Theme.SYSTEM
+        }) {
+            raise(DomainError("SettingsRepository::getTheme error", it))
+        }
     }
 
-    override fun setTheme(theme: String) {
-        settings[AppSettings.Theme._KEY] = theme
+    override fun setTheme(theme: String) = either {
+        catch({
+            settings[AppSettings.Theme._KEY] = theme
+        }) {
+            raise(DomainError("SettingsRepository::setTheme(theme: $theme) error", it))
+        }
     }
 }
