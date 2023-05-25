@@ -68,5 +68,8 @@ object Dependencies {
         }
     }
 
-    val MultiplatformSettings = "com.russhwolf:multiplatform-settings:${Versions.MultiplatformSettings}"
+    object MultiplatformSettings {
+        const val Core = "com.russhwolf:multiplatform-settings:${Versions.MultiplatformSettings}"
+        const val Coroutines = "com.russhwolf:multiplatform-settings-coroutines:${Versions.MultiplatformSettings}"
+    }
 }

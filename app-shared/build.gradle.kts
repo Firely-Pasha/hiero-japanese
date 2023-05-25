@@ -39,7 +39,8 @@ kotlin {
 
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Koin.Core)
-                implementation(Dependencies.MultiplatformSettings)
+                implementation(Dependencies.MultiplatformSettings.Core)
+                implementation(Dependencies.MultiplatformSettings.Coroutines)
             }
         }
         val commonTest by getting {

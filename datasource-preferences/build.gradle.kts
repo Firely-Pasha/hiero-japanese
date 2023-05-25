@@ -25,7 +25,9 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Dependencies.MultiplatformSettings)
+                implementation(Dependencies.KotlinX.Coroutines.Core)
+                implementation(Dependencies.MultiplatformSettings.Core)
+                implementation(Dependencies.MultiplatformSettings.Coroutines)
             }
         }
         val commonTest by getting {

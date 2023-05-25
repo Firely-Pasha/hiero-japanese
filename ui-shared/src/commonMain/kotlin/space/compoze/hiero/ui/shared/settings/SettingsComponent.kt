@@ -6,9 +6,7 @@ import space.compoze.hiero.ui.shared.main.MainComponent
 
 interface SettingsComponent {
 
-    val state: Value<SettingsComponent.Model>
+    val state: Value<SettingsStore.State>
 
-    data class Model(
-        val id: String
-    )
+    fun toggleTheme()
 }

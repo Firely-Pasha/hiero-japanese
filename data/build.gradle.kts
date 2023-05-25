@@ -34,7 +34,8 @@ kotlin {
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Arrow.FX.Coroutines)
                 implementation("app.cash.sqldelight:coroutines-extensions:2.0.0-alpha05")
-                implementation(Dependencies.MultiplatformSettings)
+                implementation(Dependencies.MultiplatformSettings.Core)
+                implementation(Dependencies.MultiplatformSettings.Coroutines)
             }
         }
         val commonTest by getting {

@@ -6,8 +6,9 @@ inline fun <State, reified ScopedState : State> State.with(block: (ScopedState) 
     }
 }
 
-inline fun <State, reified SomeState : State> State.apply(block: SomeState.() -> Unit) {
-    if (this is SomeState) {
-        block(this)
+inline fun <State, reified ScopedState : State> State.apply(block: (ScopedState) -> ScopedState): State {
+    if (this is ScopedState) {
+        return block(this)
     }
+    return this
 }

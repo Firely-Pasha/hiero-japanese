@@ -15,7 +15,7 @@ fun supportsDynamic() : Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 @Composable
 fun MyApplicationTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    theme: String = "system",
     content: @Composable () -> Unit
 ) {
 //    val colors = if (darkTheme) {
@@ -44,7 +44,11 @@ fun MyApplicationTheme(
 //        large = RoundedCornerShape(0.dp)
 //    )
 //
-    val inDarkMode: Boolean = isSystemInDarkTheme()
+    val inDarkMode: Boolean = when (theme) {
+        "light" -> false
+        "dark" -> true
+        else -> isSystemInDarkTheme()
+    }
 
     val colors = if (supportsDynamic()) {
         val context = LocalContext.current

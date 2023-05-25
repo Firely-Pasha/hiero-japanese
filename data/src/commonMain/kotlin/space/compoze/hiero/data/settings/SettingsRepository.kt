@@ -3,13 +3,15 @@ package space.compoze.hiero.data.settings
 import arrow.core.raise.catch
 import arrow.core.raise.either
 import com.russhwolf.settings.Settings
+import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.set
+import kotlinx.coroutines.flow.flow
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.settings.enums.AppSettings
 import space.compoze.hiero.domain.settings.repository.SettingsRepository
 
 class SettingsRepository(
-    private val settings: Settings,
+    private val settings: FlowSettings,
 ) : SettingsRepository {
 
     override fun getThemes() = either {
@@ -22,7 +24,7 @@ class SettingsRepository(
         }
     }
 
-    override fun getTheme() = either {
+    override suspend fun getTheme() = either {
         catch({
             settings.getStringOrNull(AppSettings.Theme._KEY)
                 ?: AppSettings.Theme.SYSTEM
@@ -31,9 +33,17 @@ class SettingsRepository(
         }
     }
 
-    override fun setTheme(theme: String) = either {
+    override fun flowTheme() = either {
         catch({
-            settings[AppSettings.Theme._KEY] = theme
+            settings.getStringFlow(AppSettings.Theme._KEY, AppSettings.Theme.SYSTEM)
+        }) {
+            raise(DomainError("SettingsRepository::flowTheme error", it))
+        }
+    }
+
+    override suspend fun setTheme(theme: String) = either {
+        catch({
+            settings.putString(AppSettings.Theme._KEY, theme)
         }) {
             raise(DomainError("SettingsRepository::setTheme(theme: $theme) error", it))
         }

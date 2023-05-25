@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.application
+package space.compoze.hiero.ui.shared.settings
 
 import arrow.core.raise.either
 import com.arkivanov.mvikotlin.core.store.Store
@@ -12,26 +12,29 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.settings.interactor.SettingsGetTheme
+import space.compoze.hiero.domain.settings.interactor.SettingsSetTheme
+import space.compoze.hiero.ui.shared.utils.apply
 
-class ApplicationStoreProvider(
+class SettingsStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
     private val settingsGetTheme: SettingsGetTheme by inject()
+    private val settingsSetTheme: SettingsSetTheme by inject()
 
-    fun create(scope: CoroutineScope): ApplicationStore =
-        object : ApplicationStore,
-            Store<ApplicationStore.Intent, ApplicationStore.State, Nothing>
-            by storeFactory.create<ApplicationStore.Intent, ApplicationStore.Action, ApplicationStore.Message, ApplicationStore.State, Nothing>(
-                name = "ApplicationStore",
-                initialState = ApplicationStore.State.Loading,
+    fun create(scope: CoroutineScope): SettingsStore =
+        object : SettingsStore,
+            Store<SettingsStore.Intent, SettingsStore.State, Nothing>
+            by storeFactory.create<SettingsStore.Intent, SettingsStore.Action, SettingsStore.Message, SettingsStore.State, Nothing>(
+                name = "SettingsStore",
+                initialState = SettingsStore.State.Loading,
                 bootstrapper = coroutineBootstrapper {
                     scope.launch {
                         either {
                             val theme = settingsGetTheme().bind()
                             withContext(Dispatchers.Main) {
                                 dispatch(
-                                    ApplicationStore.Action.Loaded(
+                                    SettingsStore.Action.Loaded(
                                         theme = theme
                                     )
                                 )
@@ -42,32 +45,42 @@ class ApplicationStoreProvider(
                     }
                 },
                 executorFactory = coroutineExecutorFactory {
-                    onAction<ApplicationStore.Action.Loaded> {
+                    onAction<SettingsStore.Action.Loaded> {
                         dispatch(
-                            ApplicationStore.Message.Init(
+                            SettingsStore.Message.Init(
                                 theme = it.theme
                             )
                         )
+                    }
+                    onIntent<SettingsStore.Intent.ChangeTheme> {
                         scope.launch {
-                            settingsGetTheme.asFlow().onRight {
-                                it.collect {
-                                    withContext(Dispatchers.Main) {
-                                        dispatch(
-                                            ApplicationStore.Message.Init(
-                                                theme = it
-                                            )
+                            either {
+                                val theme = it.theme
+                                settingsSetTheme(theme).bind()
+                                withContext(Dispatchers.Main) {
+                                    dispatch(
+                                        SettingsStore.Message.UpdateTheme(
+                                            theme = theme
                                         )
-                                    }
+                                    )
                                 }
+                            }.onLeft {
+                                it.printStackTrace()
                             }
                         }
                     }
                 },
                 reducer = { msg ->
                     when (msg) {
-                        is ApplicationStore.Message.Init -> ApplicationStore.State.Content(
+                        is SettingsStore.Message.Init -> SettingsStore.State.Content(
                             theme = msg.theme
                         )
+
+                        is SettingsStore.Message.UpdateTheme -> apply { content: SettingsStore.State.Content ->
+                            content.copy(
+                                theme = msg.theme
+                            )
+                        }
                     }
                 }
             ) {}
