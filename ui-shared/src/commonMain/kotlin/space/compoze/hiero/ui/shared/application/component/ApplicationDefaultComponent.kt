@@ -1,12 +1,12 @@
-package space.compoze.hiero.ui.shared.application
+package space.compoze.hiero.ui.shared.application.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.launch
+import space.compoze.hiero.ui.shared.application.store.ApplicationStoreProvider
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
 class ApplicationDefaultComponent(

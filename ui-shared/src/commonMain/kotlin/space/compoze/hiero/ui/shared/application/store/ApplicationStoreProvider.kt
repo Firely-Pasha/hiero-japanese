@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.application
+package space.compoze.hiero.ui.shared.application.store
 
 import arrow.core.raise.either
 import com.arkivanov.mvikotlin.core.store.Store
