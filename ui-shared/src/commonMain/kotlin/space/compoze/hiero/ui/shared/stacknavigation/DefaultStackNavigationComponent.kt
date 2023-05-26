@@ -8,7 +8,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import space.compoze.hiero.ui.shared.collection.collection.CollectionDefaultComponent
 import space.compoze.hiero.ui.shared.main.component.MainDefaultComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
-import space.compoze.hiero.ui.shared.section.DefaultSectionComponent
+import space.compoze.hiero.ui.shared.section.component.DefaultSectionComponent
 import space.compoze.hiero.ui.shared.settings.DefaultSettingsComponent
 
 class DefaultStackNavigationComponent(

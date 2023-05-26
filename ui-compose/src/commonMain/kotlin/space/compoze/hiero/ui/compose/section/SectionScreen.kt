@@ -35,14 +35,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -82,8 +79,8 @@ import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.ui.compose.utils.select
-import space.compoze.hiero.ui.shared.section.SectionComponent
-import space.compoze.hiero.ui.shared.section.SectionState
+import space.compoze.hiero.ui.shared.section.component.SectionComponent
+import space.compoze.hiero.ui.shared.section.state.SectionStore
 import kotlin.random.Random
 
 @Composable
@@ -92,12 +89,12 @@ fun SectionScreen(component: SectionComponent) {
     val state by component.state.select { it }
 
     when (val state = state) {
-        SectionState.Loading -> CircularProgressIndicator()
-        is SectionState.Error -> Text(
+        SectionStore.State.Loading -> CircularProgressIndicator()
+        is SectionStore.State.Error -> Text(
             state.error.message ?: state.error.cause?.message ?: "UNKNOWN ERROR WTF?????"
         )
 
-        is SectionState.Content -> SectionContent(
+        is SectionStore.State.Content -> SectionContent(
             state = state,
             onNavigateBack = {
                 component.navigateBack()
@@ -135,13 +132,13 @@ fun SectionScreen(component: SectionComponent) {
 @Composable
 fun <T : Any, R> Value<T>.selectContent(
     policy: SnapshotMutationPolicy<R> = structuralEqualityPolicy(),
-    block: (SectionState.Content) -> R,
+    block: (SectionStore.State.Content) -> R,
 ) =
-    select(policy) { block(it as SectionState.Content) }
+    select(policy) { block(it as SectionStore.State.Content) }
 
 @Composable
 private fun SectionContent(
-    state: SectionState.Content,
+    state: SectionStore.State.Content,
     onNavigateBack: () -> Unit,
     onClearAllClick: () -> Unit,
     onSelectAllClick: () -> Unit,
@@ -369,7 +366,7 @@ private fun SectionContent(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SectionTopBar(
-    state: SectionState.Content,
+    state: SectionStore.State.Content,
     scrollBehavior: TopAppBarScrollBehavior,
     onSelectAllClick: () -> Unit,
     onClearAllClick: () -> Unit,

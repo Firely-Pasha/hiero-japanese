@@ -1,6 +1,6 @@
 @file:Suppress("ThrowableNotThrown")
 
-package space.compoze.hiero.ui.shared.section
+package space.compoze.hiero.ui.shared.section.state
 
 import arrow.core.Some
 import arrow.core.flatten
@@ -29,6 +29,8 @@ import space.compoze.hiero.domain.collectionitem.interactor.notification.Collect
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
+import space.compoze.hiero.ui.shared.utils.applyState
+import space.compoze.hiero.ui.shared.utils.with
 
 @OptIn(ExperimentalMviKotlinApi::class)
 class SectionStoreProvider(
@@ -49,9 +51,9 @@ class SectionStoreProvider(
         collectionId: String? = null,
     ): SectionStore =
         object : SectionStore,
-            Store<SectionIntent, SectionState, Nothing> by storeFactory.create<SectionIntent, SectionAction, SectionMessage, SectionState, Nothing>(
+            Store<SectionStore.Intent, SectionStore.State, Nothing> by storeFactory.create<SectionStore.Intent, SectionStore.Action, SectionStore.Message, SectionStore.State, Nothing>(
                 name = "KEK",
-                initialState = SectionState.Loading,
+                initialState = SectionStore.State.Loading,
                 bootstrapper = coroutineBootstrapper {
                     either {
                         if (collectionId != null) {
@@ -62,7 +64,7 @@ class SectionStoreProvider(
                                 sections.map { it.id }
                             ).bind()
                             dispatch(
-                                SectionAction.Loaded(
+                                SectionStore.Action.Loaded(
                                     collection = collection,
                                     sections = sections,
                                     items = sectionItems.values.flatten()
@@ -76,35 +78,35 @@ class SectionStoreProvider(
                             .getOrElse { raise(DomainError("Collection not found :(")) }
                         val sectionItems = collectionItemGetOfSection(sectionId).bind()
                         dispatch(
-                            SectionAction.Loaded(
+                            SectionStore.Action.Loaded(
                                 collection = collection,
                                 sections = listOf(section),
                                 items = sectionItems
                             )
                         )
                     }.onLeft {
-                        dispatch(SectionAction.LoadingError(it))
+                        dispatch(SectionStore.Action.LoadingError(it))
                     }
                 },
                 executorFactory = coroutineExecutorFactory {
-                    onAction<SectionAction.LoadingError> {
-                        dispatch(SectionMessage.Error(it.error))
+                    onAction<SectionStore.Action.LoadingError> {
+                        dispatch(SectionStore.Message.Error(it.error))
                     }
-                    onAction<SectionAction.Loaded> {
+                    onAction<SectionStore.Action.Loaded> {
                         dispatch(
-                            SectionMessage.InitSection(
+                            SectionStore.Message.Init(
                                 collection = it.collection,
                                 sections = it.sections,
                                 items = it.items,
                             )
                         )
-                        state.withState<SectionState.Content> {
+                        state.with { content: SectionStore.State.Content ->
                             collectionItemNotificationGetFlowUseCase().onEach {
                                 when (it) {
                                     is CollectionItemNotification.Changed -> {
-                                        if (it.new.sectionId in sections.map { it.id }) {
+                                        if (it.new.sectionId in content.sections.map { it.id }) {
                                             withContext(Dispatchers.Main) {
-                                                dispatch(SectionMessage.SetItems(listOf(it.new)))
+                                                dispatch(SectionStore.Message.SetItems(listOf(it.new)))
                                             }
                                         }
                                     }
@@ -112,29 +114,29 @@ class SectionStoreProvider(
                             }.launchIn(scope)
                         }
                     }
-                    onIntent<SectionIntent.ToggleItemSelect> { intent ->
-                        state.withState<SectionState.Content> {
+                    onIntent<SectionStore.Intent.ToggleItemSelect> { intent ->
+                        state.with { content: SectionStore.State.Content ->
                             either {
                                 val result = collectionItemUpdateByIdUseCase(
                                     intent.itemId, CollectionItemMutationData(
                                         isSelected = Some(
-                                            !(items.find { item -> item.id == intent.itemId }?.isSelected
+                                            !(content.items.find { item -> item.id == intent.itemId }?.isSelected
                                                 ?: false),
                                         ),
                                         isBookmarked = Some(false)
                                     )
                                 ).bind()
-                                dispatch(SectionMessage.SetItems(listOf(result)))
+                                dispatch(SectionStore.Message.SetItems(listOf(result)))
                             }.onLeft {
                                 println(it)
                             }
                         }
                     }
-                    onIntent<SectionIntent.ToggleItemBookmark> { intent ->
-                        state.withState<SectionState.Content> {
+                    onIntent<SectionStore.Intent.ToggleItemBookmark> { intent ->
+                        state.with { content: SectionStore.State.Content ->
                             either {
-                                val item =
-                                    items.find { item -> item.id == intent.itemId } ?: return@either
+                                val item = content.items.find { item -> item.id == intent.itemId }
+                                        ?: return@either
                                 collectionItemUpdateByIdUseCase(
                                     intent.itemId,
                                     CollectionItemMutationData(
@@ -147,33 +149,33 @@ class SectionStoreProvider(
                             }
                         }
                     }
-                    onIntent<SectionIntent.SelectAll> {
-                        state.withState<SectionState.Content> {
+                    onIntent<SectionStore.Intent.SelectAll> {
+                        state.with { content: SectionStore.State.Content ->
                             either {
-                                val sectionItems = sections.map {
+                                val sectionItems = content.sections.map {
                                     collectionItemUpdateBySectionId(
                                         it.id, CollectionItemMutationData(
                                             isSelected = true.some()
                                         )
                                     ).bind()
                                 }.flatten()
-                                dispatch(SectionMessage.SetItems(sectionItems))
+                                dispatch(SectionStore.Message.SetItems(sectionItems))
                             }.onLeft {
                                 println(it)
                             }
                         }
                     }
-                    onIntent<SectionIntent.ClearAll> {
-                        state.withState<SectionState.Content> {
+                    onIntent<SectionStore.Intent.ClearAll> {
+                        state.with { content: SectionStore.State.Content ->
                             either {
-                                val sectionItems = sections.map {
+                                val sectionItems = content.sections.map {
                                     collectionItemUpdateBySectionId(
                                         it.id, CollectionItemMutationData(
                                             isSelected = false.some()
                                         )
                                     ).bind()
                                 }.flatten()
-                                dispatch(SectionMessage.SetItems(sectionItems))
+                                dispatch(SectionStore.Message.SetItems(sectionItems))
                             }.onLeft {
                                 println(it)
                             }
@@ -182,27 +184,27 @@ class SectionStoreProvider(
                 },
                 reducer = { msg ->
                     when (msg) {
-                        is SectionMessage.Error -> SectionState.Error(msg.error)
-                        is SectionMessage.InitSection -> SectionState.Content(
+                        is SectionStore.Message.Error -> SectionStore.State.Error(msg.error)
+                        is SectionStore.Message.Init -> SectionStore.State.Content(
                             collection = msg.collection,
                             sections = msg.sections,
                             items = msg.items,
                         )
 
-                        is SectionMessage.SelectItem -> applyState<SectionState.Content> {
-                            val index = items.indexOfFirst { it.id == msg.itemId }
-                            val mutableList = items.toMutableList()
-                            mutableList[index] = items[index].copy(
+                        is SectionStore.Message.SelectItem -> applyState { content: SectionStore.State.Content ->
+                            val index = content.items.indexOfFirst { it.id == msg.itemId }
+                            val mutableList = content.items.toMutableList()
+                            mutableList[index] = content.items[index].copy(
                                 isSelected = msg.value
                             )
-                            copy(
+                            content.copy(
                                 items = mutableList
                             )
                         }
 
-                        is SectionMessage.SetItems -> applyState<SectionState.Content> {
-                            copy(
-                                items = items.toMutableList().apply {
+                        is SectionStore.Message.SetItems -> applyState { content: SectionStore.State.Content ->
+                            content.copy(
+                                items = content.items.toMutableList().apply {
                                     msg.items.forEach { msgItem ->
                                         val index = indexOfFirst { it.id == msgItem.id }
                                         set(index, msgItem)
@@ -213,17 +215,4 @@ class SectionStoreProvider(
                     }
                 }
             ) {}
-
-    private inline fun <reified State : SectionState> SectionState.withState(block: State.() -> Unit) {
-        if (this is State) {
-            block(this)
-        }
-    }
-
-    private inline fun <reified State : SectionState> SectionState.applyState(block: State.() -> SectionState): SectionState {
-        if (this is State) {
-            return block(this)
-        }
-        return this
-    }
 }
