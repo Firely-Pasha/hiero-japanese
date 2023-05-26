@@ -13,7 +13,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.settings.interactor.SettingsGetTheme
 import space.compoze.hiero.domain.settings.interactor.SettingsSetTheme
-import space.compoze.hiero.ui.shared.utils.apply
+import space.compoze.hiero.ui.shared.utils.applyState
 
 class SettingsStoreProvider(
     private val storeFactory: StoreFactory,
@@ -76,7 +76,7 @@ class SettingsStoreProvider(
                             theme = msg.theme
                         )
 
-                        is SettingsStore.Message.UpdateTheme -> apply { content: SettingsStore.State.Content ->
+                        is SettingsStore.Message.UpdateTheme -> applyState { content: SettingsStore.State.Content ->
                             content.copy(
                                 theme = msg.theme
                             )

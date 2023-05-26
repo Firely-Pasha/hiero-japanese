@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.launch
-import space.compoze.hiero.ui.shared.quiz.store.QuizIntent
+import space.compoze.hiero.ui.shared.quiz.store.QuizStore
 import space.compoze.hiero.ui.shared.quiz.store.QuizStoreProvider
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
@@ -37,11 +37,11 @@ class QuizComponentDefault(
     }
 
     override fun nextItem() {
-        store.accept(QuizIntent.NextItem)
+        store.accept(QuizStore.Intent.NextItem)
     }
 
     override fun bookmarkCurrentItem() {
-        store.accept(QuizIntent.BookmarkCurrentItem)
+        store.accept(QuizStore.Intent.BookmarkCurrentItem)
     }
 
 }

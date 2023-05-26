@@ -1,11 +1,11 @@
 package space.compoze.hiero.ui.shared.quiz.component
 
 import com.arkivanov.decompose.value.Value
-import space.compoze.hiero.ui.shared.quiz.store.QuizState
+import space.compoze.hiero.ui.shared.quiz.store.QuizStore
 
 interface QuizComponent {
 
-    val state: Value<QuizState>
+    val state: Value<QuizStore.State>
 
     fun navigateBack()
     fun nextItem()

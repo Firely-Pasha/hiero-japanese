@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
-import space.compoze.hiero.ui.shared.quiz.store.QuizState
+import space.compoze.hiero.ui.shared.quiz.store.QuizStore
 
 @Composable
 fun QuizScreen(component: QuizComponent) {
@@ -48,9 +48,9 @@ fun QuizScreen(component: QuizComponent) {
     val state by component.state.subscribeAsState()
 
     when (val state = state) {
-        QuizState.Loading -> Text("LOADUN")
-        QuizState.Error -> Text("EERRRIR")
-        is QuizState.Content -> QuizContent(
+        QuizStore.State.Loading -> Text("LOADUN")
+        QuizStore.State.Error -> Text("EERRRIR")
+        is QuizStore.State.Content -> QuizContent(
             state = state,
             onNavigateBack = remember {
                 {
@@ -73,7 +73,7 @@ fun QuizScreen(component: QuizComponent) {
 
 @Composable
 fun QuizContent(
-    state: QuizState.Content,
+    state: QuizStore.State.Content,
     onNavigateBack: () -> Unit,
     onNextItemClick: () -> Unit,
     onBookmark: () -> Unit
