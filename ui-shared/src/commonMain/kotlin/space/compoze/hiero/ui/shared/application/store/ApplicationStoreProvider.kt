@@ -19,14 +19,14 @@ class ApplicationStoreProvider(
 
     private val settingsGetTheme: SettingsGetTheme by inject()
 
-    fun create(scope: CoroutineScope): ApplicationStore =
+    fun create(): ApplicationStore =
         object : ApplicationStore,
             Store<ApplicationStore.Intent, ApplicationStore.State, Nothing>
             by storeFactory.create<ApplicationStore.Intent, ApplicationStore.Action, ApplicationStore.Message, ApplicationStore.State, Nothing>(
                 name = "ApplicationStore",
                 initialState = ApplicationStore.State.Loading,
                 bootstrapper = coroutineBootstrapper {
-                    scope.launch {
+                    launch {
                         either {
                             val theme = settingsGetTheme().bind()
                             withContext(Dispatchers.Main) {
@@ -48,7 +48,7 @@ class ApplicationStoreProvider(
                                 theme = it.theme
                             )
                         )
-                        scope.launch {
+                        launch {
                             settingsGetTheme.asFlow().onRight {
                                 it.collect {
                                     withContext(Dispatchers.Main) {

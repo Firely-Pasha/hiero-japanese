@@ -18,10 +18,8 @@ class ApplicationDefaultComponent(
     storeFactory: StoreFactory,
 ) : ApplicationComponent, ComponentContext by componentContext {
 
-    private val componentScope = inheritScope()
-
     private val store = instanceKeeper.getStore {
-        ApplicationStoreProvider(storeFactory).create(componentScope)
+        ApplicationStoreProvider(storeFactory).create()
     }
 
     override val state = MutableValue(store.state)
