@@ -9,7 +9,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import space.compoze.hiero.domain.settings.enums.AppSettings
-import space.compoze.hiero.ui.shared.main.MainComponent
+import space.compoze.hiero.ui.shared.main.component.MainComponent
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 import space.compoze.hiero.ui.shared.utils.with

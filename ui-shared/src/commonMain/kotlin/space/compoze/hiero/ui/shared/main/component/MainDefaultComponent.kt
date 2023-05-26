@@ -1,21 +1,26 @@
-package space.compoze.hiero.ui.shared.main
+package space.compoze.hiero.ui.shared.main.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
+import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent
+import kotlinx.coroutines.withContext
+import space.compoze.hiero.ui.shared.main.store.MainStore
+import space.compoze.hiero.ui.shared.main.store.MainStoreProvider
+import space.compoze.hiero.ui.shared.main.toModel
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
 
-class DefaultMainComponent(
+class MainDefaultComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
     appNavigator: StackNavigationComponent,
@@ -46,7 +51,7 @@ class DefaultMainComponent(
         childFactory = { config, componentContext ->
             when (config) {
                 is MainComponent.Config.Hiragana -> MainComponent.Child.Hiragana(
-                    DefaultStackNavigationComponent(
+                    space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         StackNavigationComponent.Config.Hiragana,
@@ -55,7 +60,7 @@ class DefaultMainComponent(
                 )
 
                 is MainComponent.Config.Katakana -> MainComponent.Child.Katakana(
-                    DefaultStackNavigationComponent(
+                    space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         StackNavigationComponent.Config.Katakana,
@@ -64,7 +69,7 @@ class DefaultMainComponent(
                 )
 
                 is MainComponent.Config.Settings -> MainComponent.Child.Settings(
-                    DefaultStackNavigationComponent(
+                    space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         StackNavigationComponent.Config.Settings,
@@ -76,26 +81,31 @@ class DefaultMainComponent(
     )
 
     init {
-        scope.launch {
-            store.states.collect {
-                state.value = it.toModel()
-            }
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+            store.states bindTo ::onStateChange
         }
-        scope.launch {
-            store.labels.collect {
-                when (it) {
-                    is MainLabel.ChangeTab -> {
-                        navigation.bringToFront(it.value.toConfig())
-                    }
-                }
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+            store.labels bindTo ::onLabel
+        }
+    }
+
+    private fun onStateChange(newState: MainStore.State) {
+        state.value = newState.toModel()
+    }
+
+    private fun onLabel(label: MainStore.Label) {
+        when (label) {
+            is MainStore.Label.ChangeTab -> {
+                navigation.bringToFront(label.value.toConfig())
             }
         }
     }
 
     override fun changeTab(index: Int) {
-        isAssertOnMainThreadEnabled = false
         scope.launch {
-            store.accept(MainIntent.ChangeTab(index))
+            withContext(Dispatchers.Main) {
+                store.accept(MainStore.Intent.ChangeTab(index))
+            }
         }
     }
 }

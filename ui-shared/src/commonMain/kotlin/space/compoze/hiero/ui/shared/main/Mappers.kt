@@ -1,5 +1,8 @@
 package space.compoze.hiero.ui.shared.main
 
-fun MainState.toModel() = MainComponent.Model(
+import space.compoze.hiero.ui.shared.main.component.MainComponent
+import space.compoze.hiero.ui.shared.main.store.MainStore
+
+fun MainStore.State.toModel() = MainComponent.Model(
     tab = tab
 )

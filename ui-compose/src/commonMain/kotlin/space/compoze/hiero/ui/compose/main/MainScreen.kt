@@ -5,13 +5,7 @@ package space.compoze.hiero.ui.compose.main
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -26,8 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import space.compoze.hiero.ui.compose.stacknavigation.StackNavigator
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
-import space.compoze.hiero.ui.shared.main.DefaultMainComponent
-import space.compoze.hiero.ui.shared.main.MainComponent
+import space.compoze.hiero.ui.shared.main.component.MainComponent
 
 @Composable
 fun MainScreen(component: MainComponent, modifier: Modifier = Modifier) {

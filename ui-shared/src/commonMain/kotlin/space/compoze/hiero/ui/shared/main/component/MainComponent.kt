@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.main
+package space.compoze.hiero.ui.shared.main.component
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
