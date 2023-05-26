@@ -5,12 +5,9 @@ package space.compoze.hiero.ui.compose.settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,12 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
-import space.compoze.hiero.ui.shared.settings.SettingsComponent
-import space.compoze.hiero.ui.shared.settings.SettingsStore
+import space.compoze.hiero.ui.shared.settings.component.SettingsComponent
+import space.compoze.hiero.ui.shared.settings.store.SettingsStore
 import space.compoze.hiero.ui.shared.utils.with
 
 @Composable

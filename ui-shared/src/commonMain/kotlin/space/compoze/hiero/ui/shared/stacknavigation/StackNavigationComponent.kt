@@ -9,7 +9,7 @@ import space.compoze.hiero.ui.shared.collection.collection.CollectionComponent
 import space.compoze.hiero.ui.shared.main.component.MainComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.section.component.SectionComponent
-import space.compoze.hiero.ui.shared.settings.SettingsComponent
+import space.compoze.hiero.ui.shared.settings.component.SettingsComponent
 
 interface StackNavigationComponent {
 

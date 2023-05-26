@@ -9,7 +9,7 @@ import space.compoze.hiero.ui.shared.collection.collection.CollectionDefaultComp
 import space.compoze.hiero.ui.shared.main.component.MainDefaultComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
 import space.compoze.hiero.ui.shared.section.component.DefaultSectionComponent
-import space.compoze.hiero.ui.shared.settings.DefaultSettingsComponent
+import space.compoze.hiero.ui.shared.settings.component.DefaultSettingsComponent
 
 class DefaultStackNavigationComponent(
     componentContext: ComponentContext,

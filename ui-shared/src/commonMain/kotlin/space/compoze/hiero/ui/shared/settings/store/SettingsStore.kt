@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.settings
+package space.compoze.hiero.ui.shared.settings.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError

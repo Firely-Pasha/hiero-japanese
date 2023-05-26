@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.settings
+package space.compoze.hiero.ui.shared.settings.store
 
 import arrow.core.raise.either
 import com.arkivanov.mvikotlin.core.store.Store
@@ -22,14 +22,14 @@ class SettingsStoreProvider(
     private val settingsGetTheme: SettingsGetTheme by inject()
     private val settingsSetTheme: SettingsSetTheme by inject()
 
-    fun create(scope: CoroutineScope): SettingsStore =
+    fun create(): SettingsStore =
         object : SettingsStore,
             Store<SettingsStore.Intent, SettingsStore.State, Nothing>
             by storeFactory.create<SettingsStore.Intent, SettingsStore.Action, SettingsStore.Message, SettingsStore.State, Nothing>(
                 name = "SettingsStore",
                 initialState = SettingsStore.State.Loading,
                 bootstrapper = coroutineBootstrapper {
-                    scope.launch {
+                    launch {
                         either {
                             val theme = settingsGetTheme().bind()
                             withContext(Dispatchers.Main) {
@@ -53,7 +53,7 @@ class SettingsStoreProvider(
                         )
                     }
                     onIntent<SettingsStore.Intent.ChangeTheme> {
-                        scope.launch {
+                        launch {
                             either {
                                 val theme = it.theme
                                 settingsSetTheme(theme).bind()
