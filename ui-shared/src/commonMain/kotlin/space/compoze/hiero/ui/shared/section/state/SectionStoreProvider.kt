@@ -46,7 +46,6 @@ class SectionStoreProvider(
     private val collectionItemNotificationGetFlowUseCase: CollectionItemNotificationGetFlowUseCase by inject()
 
     fun create(
-        scope: CoroutineScope,
         sectionId: String,
         collectionId: String? = null,
     ): SectionStore =
@@ -111,7 +110,7 @@ class SectionStoreProvider(
                                         }
                                     }
                                 }
-                            }.launchIn(scope)
+                            }.launchIn(this)
                         }
                     }
                     onIntent<SectionStore.Intent.ToggleItemSelect> { intent ->

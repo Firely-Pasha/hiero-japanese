@@ -26,10 +26,8 @@ class DefaultSectionComponent(
     private val collectionId: String? = null,
 ) : SectionComponent, ComponentContext by componentContext {
 
-    private val componentScope = inheritScope()
-
     private val store = instanceKeeper.getStore {
-        SectionStoreProvider(storeFactory).create(componentScope, sectionId, collectionId)
+        SectionStoreProvider(storeFactory).create(sectionId, collectionId)
     }
 
     override val state = MutableValue(store.state)
