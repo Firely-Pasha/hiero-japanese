@@ -103,10 +103,15 @@ fun SettingsScreen(component: SettingsComponent) {
                         Icon(Icons.Outlined.Info, "Info")
                     },
                     headlineText = {
-                        Text("Hiero Japanese")
+                        Text(
+                            "Hiero Japanese"
+                        )
                     },
-                    supportingText = {
-                        Text("v0.0.1")
+                    trailingContent = {
+                        Text(
+                            "v0.0.1",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
                     },
                     colors = ListItemDefaults.colors(
                         leadingIconColor = MaterialTheme.colorScheme.primary,
