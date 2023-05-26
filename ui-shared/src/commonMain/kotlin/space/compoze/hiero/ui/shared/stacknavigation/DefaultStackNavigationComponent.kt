@@ -5,7 +5,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import space.compoze.hiero.ui.shared.collection.DefaultCollectionComponent
+import space.compoze.hiero.ui.shared.collection.collection.CollectionDefaultComponent
 import space.compoze.hiero.ui.shared.main.DefaultMainComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
 import space.compoze.hiero.ui.shared.section.DefaultSectionComponent
@@ -30,7 +30,7 @@ class DefaultStackNavigationComponent(
         childFactory = { config, componentContext ->
             when (config) {
                 is StackNavigationComponent.Config.Hiragana -> StackNavigationComponent.Child.Collection(
-                    DefaultCollectionComponent(
+                    CollectionDefaultComponent(
                         componentContext,
                         storeFactory,
                         this.appNavigator,
@@ -39,7 +39,7 @@ class DefaultStackNavigationComponent(
                 )
 
                 is StackNavigationComponent.Config.Katakana -> StackNavigationComponent.Child.Collection(
-                    DefaultCollectionComponent(
+                    CollectionDefaultComponent(
                         componentContext,
                         storeFactory,
                         this.appNavigator,

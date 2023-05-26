@@ -5,7 +5,6 @@
 @file:Suppress("NAME_SHADOWING")
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,24 +14,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CropPortrait
-import androidx.compose.material.icons.outlined.BookOnline
-import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.School
-import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.CropPortrait
-import androidx.compose.material.icons.rounded.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,8 +49,8 @@ import arrow.core.Some
 import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.domain.sectionpreview.model.data.SectionPreview
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
-import space.compoze.hiero.ui.shared.collection.CollectionComponent
-import space.compoze.hiero.ui.shared.collection.CollectionState
+import space.compoze.hiero.ui.shared.collection.collection.CollectionComponent
+import space.compoze.hiero.ui.shared.collection.store.CollectionStore
 
 @Composable
 fun CollectionScreen(component: CollectionComponent) {
@@ -66,14 +58,14 @@ fun CollectionScreen(component: CollectionComponent) {
     val state by component.state.subscribeAsState()
     println("RERENDER")
     when (val state = state) {
-        is CollectionState.Error -> CollectionError(component, state)
-        CollectionState.Loading -> CircularProgressIndicator()
-        is CollectionState.Content -> CollectionContent(component, state)
+        is CollectionStore.State.Error -> CollectionError(component, state)
+        CollectionStore.State.Loading -> CircularProgressIndicator()
+        is CollectionStore.State.Content -> CollectionContent(component, state)
     }
 }
 
 @Composable
-fun CollectionError(component: CollectionComponent, state: CollectionState.Error) {
+fun CollectionError(component: CollectionComponent, state: CollectionStore.State.Error) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -96,7 +88,7 @@ fun CollectionError(component: CollectionComponent, state: CollectionState.Error
 }
 
 @Composable
-fun CollectionContent(component: CollectionComponent, state: CollectionState.Content) {
+fun CollectionContent(component: CollectionComponent, state: CollectionStore.State.Content) {
     Scaffold(
         topBar = {
             TopAppBar(

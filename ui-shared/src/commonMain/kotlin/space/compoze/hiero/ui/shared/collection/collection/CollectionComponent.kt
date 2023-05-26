@@ -1,10 +1,11 @@
-package space.compoze.hiero.ui.shared.collection
+package space.compoze.hiero.ui.shared.collection.collection
 
 import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.section.model.data.SectionModel
+import space.compoze.hiero.ui.shared.collection.store.CollectionStore
 
 interface CollectionComponent {
-    val state: Value<CollectionState>
+    val state: Value<CollectionStore.State>
     fun addItem()
     fun navigateBack()
     fun navigateToItemDetails()
