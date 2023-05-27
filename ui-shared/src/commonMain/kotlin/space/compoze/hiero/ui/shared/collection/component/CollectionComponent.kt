@@ -1,4 +1,4 @@
-package space.compoze.hiero.ui.shared.collection.collection
+package space.compoze.hiero.ui.shared.collection.component
 
 import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.section.model.data.SectionModel

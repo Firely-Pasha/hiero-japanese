@@ -5,7 +5,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import space.compoze.hiero.ui.shared.collection.collection.CollectionComponent
+import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
 import space.compoze.hiero.ui.shared.main.component.MainComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.section.component.SectionComponent

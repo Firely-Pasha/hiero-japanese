@@ -49,7 +49,7 @@ import arrow.core.Some
 import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.domain.sectionpreview.model.data.SectionPreview
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
-import space.compoze.hiero.ui.shared.collection.collection.CollectionComponent
+import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
 import space.compoze.hiero.ui.shared.collection.store.CollectionStore
 
 @Composable

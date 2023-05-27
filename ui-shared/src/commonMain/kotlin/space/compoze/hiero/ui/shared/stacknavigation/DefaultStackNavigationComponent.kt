@@ -5,7 +5,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import space.compoze.hiero.ui.shared.collection.collection.CollectionDefaultComponent
+import space.compoze.hiero.ui.shared.collection.component.CollectionDefaultComponent
 import space.compoze.hiero.ui.shared.main.component.MainDefaultComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
 import space.compoze.hiero.ui.shared.section.component.DefaultSectionComponent
