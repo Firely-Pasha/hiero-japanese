@@ -7,10 +7,12 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.settings.interactor.SettingsGetTheme
 import space.compoze.hiero.domain.settings.interactor.SettingsSetTheme
 import space.compoze.hiero.ui.shared.utils.applyState
@@ -18,6 +20,8 @@ import space.compoze.hiero.ui.shared.utils.applyState
 class SettingsStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
+
+    private val dispatchers: AppDispatchers by inject()
 
     private val settingsGetTheme: SettingsGetTheme by inject()
     private val settingsSetTheme: SettingsSetTheme by inject()
@@ -28,23 +32,21 @@ class SettingsStoreProvider(
             by storeFactory.create<SettingsStore.Intent, SettingsStore.Action, SettingsStore.Message, SettingsStore.State, Nothing>(
                 name = "SettingsStore",
                 initialState = SettingsStore.State.Loading,
-                bootstrapper = coroutineBootstrapper {
+                bootstrapper = coroutineBootstrapper(dispatchers.main) {
                     launch {
                         either {
                             val theme = settingsGetTheme().bind()
-                            withContext(Dispatchers.Main) {
-                                dispatch(
-                                    SettingsStore.Action.Loaded(
-                                        theme = theme
-                                    )
+                            dispatch(
+                                SettingsStore.Action.Loaded(
+                                    theme = theme
                                 )
-                            }
+                            )
                         }.onLeft {
                             it.printStackTrace()
                         }
                     }
                 },
-                executorFactory = coroutineExecutorFactory {
+                executorFactory = coroutineExecutorFactory(dispatchers.main) {
                     onAction<SettingsStore.Action.Loaded> {
                         dispatch(
                             SettingsStore.Message.Init(
@@ -57,13 +59,11 @@ class SettingsStoreProvider(
                             either {
                                 val theme = it.theme
                                 settingsSetTheme(theme).bind()
-                                withContext(Dispatchers.Main) {
-                                    dispatch(
-                                        SettingsStore.Message.UpdateTheme(
-                                            theme = theme
-                                        )
+                                dispatch(
+                                    SettingsStore.Message.UpdateTheme(
+                                        theme = theme
                                     )
-                                }
+                                )
                             }.onLeft {
                                 it.printStackTrace()
                             }

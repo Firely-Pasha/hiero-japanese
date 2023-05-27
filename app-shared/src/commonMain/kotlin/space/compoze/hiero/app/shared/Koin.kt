@@ -9,6 +9,7 @@ import space.compoze.hiero.data.collectionitem.CollectionItemRepository
 import space.compoze.hiero.data.section.SectionRepository
 import space.compoze.hiero.data.settings.SettingsRepository
 import space.compoze.hiero.domain.application.interactor.ApplicationInit
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.collection.interactor.CollectionGetAll
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.collection.interactor.CollectionUpdate
@@ -33,6 +34,7 @@ import space.compoze.hiero.domain.settings.interactor.SettingsSetTheme
 internal expect fun appPlatformModule(): Module
 
 fun appModule() = appPlatformModule() + module {
+    single { PlatformDispatchers } bind AppDispatchers::class
     single { Database(get()) }
 } + dataModule() + domainModule()
 
@@ -43,7 +45,7 @@ fun dataModule() = module {
             space.compoze.hiero.domain.section.repository.SectionRepository::class
     single { CollectionItemRepository(get()) } bind
             space.compoze.hiero.domain.collectionitem.CollectionItemRepository::class
-    single { SettingsRepository(get()) } bind
+    single { SettingsRepository(get(), get()) } bind
             space.compoze.hiero.domain.settings.repository.SettingsRepository::class
 }
 

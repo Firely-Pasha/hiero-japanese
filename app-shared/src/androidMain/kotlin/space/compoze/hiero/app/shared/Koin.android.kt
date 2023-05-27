@@ -7,6 +7,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import space.compoze.hiero.datasource.database.DriverFactory
 import space.compoze.hiero.datasource.settings.SettingsFactory
+import space.compoze.hiero.domain.base.AppDispatchers
 
 internal actual fun appPlatformModule() = module {
     single { DriverFactory(get()).createDriver() } bind SqlDriver::class

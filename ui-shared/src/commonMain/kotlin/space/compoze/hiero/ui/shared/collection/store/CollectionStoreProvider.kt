@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
@@ -26,6 +27,8 @@ class CollectionStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
+    private val dispatchers: AppDispatchers by inject()
+
     private val collectionGetById: CollectionGetById by inject()
     private val sectionGetOfCollection: SectionGetOfCollection by inject()
 
@@ -35,7 +38,7 @@ class CollectionStoreProvider(
                 name = "KEK",
                 initialState = CollectionStore.State.Loading,
                 bootstrapper = coroutineBootstrapper {
-                    launch {
+                    launch(dispatchers.main) {
                         either {
                             val collection = when (
                                 val collection = collectionGetById(collectionId).bind()
@@ -44,19 +47,15 @@ class CollectionStoreProvider(
                                 is Some -> collection.value
                             }
                             val sections = sectionGetOfCollection(collectionId).bind()
-                            withContext(Dispatchers.Main) {
-                                dispatch(
-                                    CollectionStore.Action.Loaded(
-                                        collection = collection,
-                                        sections = sections,
-                                        previews = listOf()
-                                    )
+                            dispatch(
+                                CollectionStore.Action.Loaded(
+                                    collection = collection,
+                                    sections = sections,
+                                    previews = listOf()
                                 )
-                            }
+                            )
                         }.onLeft {
-                            withContext(Dispatchers.Main) {
-                                dispatch(CollectionStore.Action.LoadingError(it))
-                            }
+                            dispatch(CollectionStore.Action.LoadingError(it))
                         }
                     }
                 },
@@ -76,7 +75,7 @@ class CollectionStoreProvider(
                             state.with { content: CollectionStore.State.Content ->
                                 sectionGetOfCollection.flow(content.collection.id)
                                     .collect { sections ->
-                                        withContext(Dispatchers.Main) {
+                                        withContext(dispatchers.main) {
                                             dispatch(
                                                 CollectionStore.Message.SetSections(
                                                     sections = sections,

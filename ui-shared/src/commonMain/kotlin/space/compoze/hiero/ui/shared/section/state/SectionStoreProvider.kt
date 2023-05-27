@@ -16,9 +16,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.collectionitem.CollectionItemNotification
@@ -37,6 +39,8 @@ class SectionStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
 
+    private val dispatchers: AppDispatchers by inject()
+
     private val collectionGetById: CollectionGetById by inject()
     private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
     private val sectionGetOfCollection: SectionGetOfCollection by inject()
@@ -53,7 +57,7 @@ class SectionStoreProvider(
             Store<SectionStore.Intent, SectionStore.State, Nothing> by storeFactory.create<SectionStore.Intent, SectionStore.Action, SectionStore.Message, SectionStore.State, Nothing>(
                 name = "KEK",
                 initialState = SectionStore.State.Loading,
-                bootstrapper = coroutineBootstrapper {
+                bootstrapper = coroutineBootstrapper(dispatchers.main) {
                     either {
                         if (collectionId != null) {
                             val collection = collectionGetById(collectionId).bind()
@@ -87,7 +91,7 @@ class SectionStoreProvider(
                         dispatch(SectionStore.Action.LoadingError(it))
                     }
                 },
-                executorFactory = coroutineExecutorFactory {
+                executorFactory = coroutineExecutorFactory(dispatchers.main) {
                     onAction<SectionStore.Action.LoadingError> {
                         dispatch(SectionStore.Message.Error(it.error))
                     }
@@ -100,17 +104,19 @@ class SectionStoreProvider(
                             )
                         )
                         state.with { content: SectionStore.State.Content ->
-                            collectionItemNotificationGetFlowUseCase().onEach {
-                                when (it) {
-                                    is CollectionItemNotification.Changed -> {
-                                        if (it.new.sectionId in content.sections.map { it.id }) {
-                                            withContext(Dispatchers.Main) {
-                                                dispatch(SectionStore.Message.SetItems(listOf(it.new)))
+                            launch {
+                                collectionItemNotificationGetFlowUseCase().collect {
+                                    when (it) {
+                                        is CollectionItemNotification.Changed -> {
+                                            if (it.new.sectionId in content.sections.map { it.id }) {
+                                                withContext(dispatchers.main) {
+                                                    dispatch(SectionStore.Message.SetItems(listOf(it.new)))
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }.launchIn(this)
+                            }
                         }
                     }
                     onIntent<SectionStore.Intent.ToggleItemSelect> { intent ->

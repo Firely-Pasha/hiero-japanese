@@ -11,11 +11,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.settings.interactor.SettingsGetTheme
 
 class ApplicationStoreProvider(
     private val storeFactory: StoreFactory,
 ) : KoinComponent {
+
+    private val dispatchers: AppDispatchers by inject()
 
     private val settingsGetTheme: SettingsGetTheme by inject()
 
@@ -25,17 +28,15 @@ class ApplicationStoreProvider(
             by storeFactory.create<ApplicationStore.Intent, ApplicationStore.Action, ApplicationStore.Message, ApplicationStore.State, Nothing>(
                 name = "ApplicationStore",
                 initialState = ApplicationStore.State.Loading,
-                bootstrapper = coroutineBootstrapper {
+                bootstrapper = coroutineBootstrapper(dispatchers.main) {
                     launch {
                         either {
                             val theme = settingsGetTheme().bind()
-                            withContext(Dispatchers.Main) {
-                                dispatch(
-                                    ApplicationStore.Action.Loaded(
-                                        theme = theme
-                                    )
+                            dispatch(
+                                ApplicationStore.Action.Loaded(
+                                    theme = theme
                                 )
-                            }
+                            )
                         }.onLeft {
                             it.printStackTrace()
                         }
@@ -48,10 +49,10 @@ class ApplicationStoreProvider(
                                 theme = it.theme
                             )
                         )
-                        launch {
-                            settingsGetTheme.asFlow().onRight {
+                        settingsGetTheme.asFlow().onRight {
+                            launch {
                                 it.collect {
-                                    withContext(Dispatchers.Main) {
+                                    withContext(dispatchers.main) {
                                         dispatch(
                                             ApplicationStore.Message.Init(
                                                 theme = it

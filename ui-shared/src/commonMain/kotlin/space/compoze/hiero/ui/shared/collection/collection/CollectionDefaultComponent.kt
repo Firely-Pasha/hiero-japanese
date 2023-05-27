@@ -9,6 +9,9 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.ui.shared.collection.store.CollectionStore
 import space.compoze.hiero.ui.shared.collection.store.CollectionStoreProvider
@@ -20,8 +23,10 @@ class CollectionDefaultComponent(
     storeFactory: StoreFactory,
     private val navigationComponent: StackNavigationComponent,
     private val collectionId: String,
-) : CollectionComponent, ComponentContext by componentContext {
+) : CollectionComponent, KoinComponent, ComponentContext by componentContext {
 
+    private val dispatchers: AppDispatchers by inject()
+    
     private val store = instanceKeeper.getStore {
         CollectionStoreProvider(storeFactory).create(collectionId)
     }
@@ -29,7 +34,7 @@ class CollectionDefaultComponent(
     override val state = MutableValue(store.state)
 
     init {
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.states bindTo { state.value = it }
         }
     }

@@ -9,6 +9,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.ui.shared.quiz.store.QuizStore
 import space.compoze.hiero.ui.shared.quiz.store.QuizStoreProvider
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
@@ -19,7 +22,9 @@ class QuizComponentDefault(
     storeFactory: StoreFactory,
     private val navigationComponent: StackNavigationComponent,
     private val items: List<Long>,
-) : QuizComponent, ComponentContext by componentContext {
+) : QuizComponent, KoinComponent, ComponentContext by componentContext {
+
+    private val dispatchers: AppDispatchers by inject()
 
     private val store = instanceKeeper.getStore {
         QuizStoreProvider(storeFactory).create(items)
@@ -28,7 +33,7 @@ class QuizComponentDefault(
     override val state = MutableValue(store.state)
 
     init {
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.states bindTo ::onStateChange
         }
     }

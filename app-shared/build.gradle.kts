@@ -1,4 +1,4 @@
-import space.compose.hiero.Dependencies
+    import space.compose.hiero.Dependencies
 import space.compose.hiero.Modules
 
 plugins {
@@ -37,6 +37,7 @@ kotlin {
                 implementation(project(Modules.Data))
                 implementation(project(Modules.Domain))
 
+                implementation(Dependencies.KotlinX.Coroutines.Core)
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Koin.Core)
                 implementation(Dependencies.MultiplatformSettings.Core)

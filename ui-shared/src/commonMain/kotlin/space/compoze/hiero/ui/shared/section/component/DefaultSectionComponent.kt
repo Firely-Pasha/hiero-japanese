@@ -10,6 +10,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.ui.shared.section.state.SectionStore
 import space.compoze.hiero.ui.shared.section.state.SectionStoreProvider
@@ -24,7 +27,9 @@ class DefaultSectionComponent(
     private val navigationComponent: StackNavigationComponent,
     private val sectionId: String,
     private val collectionId: String? = null,
-) : SectionComponent, ComponentContext by componentContext {
+) : SectionComponent, KoinComponent, ComponentContext by componentContext {
+
+    private val dispatchers: AppDispatchers by inject()
 
     private val store = instanceKeeper.getStore {
         SectionStoreProvider(storeFactory).create(sectionId, collectionId)
@@ -33,7 +38,7 @@ class DefaultSectionComponent(
     override val state = MutableValue(store.state)
 
     init {
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.states bindTo ::onStateChange
         }
     }

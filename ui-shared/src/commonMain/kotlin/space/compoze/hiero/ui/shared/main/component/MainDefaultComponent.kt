@@ -14,6 +14,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.ui.shared.main.store.MainStore
 import space.compoze.hiero.ui.shared.main.store.MainStoreProvider
 import space.compoze.hiero.ui.shared.main.toModel
@@ -24,9 +27,11 @@ class MainDefaultComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
     appNavigator: StackNavigationComponent,
-) : MainComponent, ComponentContext by componentContext {
+) : MainComponent, KoinComponent, ComponentContext by componentContext {
 
     private val scope = inheritScope()
+
+    private val dispatchers: AppDispatchers by inject()
 
     private val store = instanceKeeper.getStore {
         MainStoreProvider(storeFactory).create()
@@ -81,10 +86,10 @@ class MainDefaultComponent(
     )
 
     init {
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.states bindTo ::onStateChange
         }
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.labels bindTo ::onLabel
         }
     }
@@ -102,10 +107,8 @@ class MainDefaultComponent(
     }
 
     override fun changeTab(index: Int) {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                store.accept(MainStore.Intent.ChangeTab(index))
-            }
+        scope.launch(dispatchers.main) {
+            store.accept(MainStore.Intent.ChangeTab(index))
         }
     }
 }

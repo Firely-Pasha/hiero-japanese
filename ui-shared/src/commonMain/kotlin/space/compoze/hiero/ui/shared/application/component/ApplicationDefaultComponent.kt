@@ -9,6 +9,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.ui.shared.application.store.ApplicationStore
 import space.compoze.hiero.ui.shared.application.store.ApplicationStoreProvider
 import space.compoze.hiero.ui.shared.utils.inheritScope
@@ -16,7 +19,9 @@ import space.compoze.hiero.ui.shared.utils.inheritScope
 class ApplicationDefaultComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
-) : ApplicationComponent, ComponentContext by componentContext {
+) : ApplicationComponent, KoinComponent, ComponentContext by componentContext {
+
+    private val dispatchers: AppDispatchers by inject()
 
     private val store = instanceKeeper.getStore {
         ApplicationStoreProvider(storeFactory).create()
@@ -25,7 +30,7 @@ class ApplicationDefaultComponent(
     override val state = MutableValue(store.state)
 
     init {
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, Dispatchers.Unconfined) {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.states bindTo ::onStateChange
         }
     }
