@@ -42,26 +42,31 @@ class QuizStoreProvider(
                 },
                 executorFactory = coroutineExecutorFactory {
                     onAction<QuizStore.Action.Loaded> {
+                        val itemPull = it.items.toTypedArray().also { it.shuffle() }.toList()
                         dispatch(
                             QuizStore.Message.Init(
                                 items = it.items,
-                                currentItem = it.items.random()
+                                currentItem = itemPull.first(),
+                                itemPull = itemPull.takeLast(itemPull.size - 1)
                             )
                         )
                     }
                     onIntent<QuizStore.Intent.NextItem> {
                         state.with { content: QuizStore.State.Content ->
-                            val isSingleSame = content.items.all { it == content.currentItem }
-                            val nextItem = if (isSingleSame) {
-                                content.currentItem
-                            } else {
-                                var randomItem = content.items.random()
-                                while (randomItem == content.currentItem) {
-                                    randomItem = content.items.random()
-                                }
-                                randomItem
+                            if (content.itemPool.isEmpty()) {
+                                val itemPull =
+                                    content.items.toTypedArray().also { it.shuffle() }.toList()
+                                dispatch(QuizStore.Message.SetItemPull(itemPull))
                             }
-                            dispatch(QuizStore.Message.ChangeCurrentItem(item = nextItem))
+                        }
+                        state.with { content: QuizStore.State.Content ->
+                            val nextItem = content.itemPool
+                                .find { it.id != content.currentItem.id }
+                                ?: content.itemPool.first()
+                            val nextItemPull = content.itemPool
+                                .filter { it.id != nextItem.id }
+                            dispatch(QuizStore.Message.SetCurrentItem(nextItem))
+                            dispatch(QuizStore.Message.SetItemPull(nextItemPull))
                         }
                     }
                     onIntent<QuizStore.Intent.BookmarkCurrentItem> {
@@ -74,7 +79,7 @@ class QuizStoreProvider(
                                             .map { !it }
                                     )
                                 ).bind()
-                                dispatch(QuizStore.Message.ChangeCurrentItem(result))
+                                dispatch(QuizStore.Message.SetCurrentItem(result))
                                 dispatch(QuizStore.Message.SetItem(result))
                             }.onLeft {
                                 println(it)
@@ -86,14 +91,21 @@ class QuizStoreProvider(
                     when {
                         it is QuizStore.Message.Init -> QuizStore.State.Content(
                             items = it.items,
-                            currentItem = it.currentItem
+                            currentItem = it.currentItem,
+                            itemPool = it.itemPull,
                         )
 
                         this is QuizStore.State.Content -> when (val msg = it) {
                             is QuizStore.Message.Init -> this
-                            is QuizStore.Message.ChangeCurrentItem -> copy(
+                            is QuizStore.Message.SetCurrentItem -> copy(
                                 currentItem = msg.item
                             )
+
+                            is QuizStore.Message.SetItemPull -> {
+                                copy(
+                                    itemPool = msg.itemPull
+                                )
+                            }
 
                             is QuizStore.Message.SetItem -> copy(
                                 items = this.items.toMutableList().apply {

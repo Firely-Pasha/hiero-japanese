@@ -20,6 +20,7 @@ interface QuizStore : Store<QuizStore.Intent, QuizStore.State, Nothing> {
         object Loading: State
         data class Content(
             val items: List<CollectionItemModel>,
+            val itemPool: List<CollectionItemModel>,
             val currentItem: CollectionItemModel,
         ): State
         object Error: State
@@ -33,9 +34,13 @@ interface QuizStore : Store<QuizStore.Intent, QuizStore.State, Nothing> {
     sealed interface Message {
         data class Init(
             val items: List<CollectionItemModel>,
+            val itemPull: List<CollectionItemModel>,
             val currentItem: CollectionItemModel,
         ) : Message
-        data class ChangeCurrentItem(
+        data class SetItemPull(
+            val itemPull: List<CollectionItemModel>,
+        ) : Message
+        data class SetCurrentItem(
             val item: CollectionItemModel,
         ) : Message
         data class SetItem(
