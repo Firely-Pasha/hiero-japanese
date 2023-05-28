@@ -185,11 +185,6 @@ private fun SectionContent(
             )
         }
 
-
-//        val sectionItems = remember(content.items) {
-//            println("LELEELLELE")
-//            content.items.groupBy { it.sectionId }
-//        }
         val lazyGridState = rememberLazyGridState()
         val sectionItems = remember(state.sections, state.items) {
             buildList {
@@ -201,7 +196,6 @@ private fun SectionContent(
             }.toMutableStateList()
         }
         val showTitle = remember(sectionItems) { sectionItems.size > 1 }
-        println("RECOMPOSE SECTION IOTEMS")
         LazyVerticalGrid(
             state = lazyGridState,
             contentPadding = containerPadding,

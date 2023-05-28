@@ -33,10 +33,6 @@ class MainDefaultComponent(
     appNavigator: StackNavigationComponent,
 ) : MainComponent, KoinComponent, ComponentContext by componentContext {
 
-    init {
-        println(KoinPlatformTools.defaultContext().getOrNull())
-    }
-
     private val scope = inheritScope()
 
     private val dispatchers: AppDispatchers by inject()

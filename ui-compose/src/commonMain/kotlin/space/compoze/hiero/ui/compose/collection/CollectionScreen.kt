@@ -56,7 +56,6 @@ import space.compoze.hiero.ui.shared.collection.store.CollectionStore
 fun CollectionScreen(component: CollectionComponent) {
 
     val state by component.state.subscribeAsState()
-    println("RERENDER")
     when (val state = state) {
         is CollectionStore.State.Error -> CollectionError(component, state)
         CollectionStore.State.Loading -> CircularProgressIndicator()

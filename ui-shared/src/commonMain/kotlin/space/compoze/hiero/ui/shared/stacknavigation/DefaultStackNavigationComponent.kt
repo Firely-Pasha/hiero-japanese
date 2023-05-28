@@ -25,10 +25,6 @@ class DefaultStackNavigationComponent(
 
     private val dispatchers: AppDispatchers by inject()
 
-    init {
-        println("KLEKE ${dispatchers}")
-    }
-
     private val appNavigator = appNavigator ?: this
 
     override val navigation = StackNavigation<StackNavigationComponent.Config>()

@@ -10,8 +10,6 @@ class SectionUpdateComputed(
 
     operator fun invoke(sectionId: String, mutation: SectionComputedMutation) = either {
         sectionRepository.updateComputed(sectionId, mutation).bind()
-    }.onRight {
-        println(it)
     }
 
 }
