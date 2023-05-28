@@ -93,14 +93,14 @@ class MainDefaultComponent(
         },
     )
 
-//    init {
-//        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
-//            store.states bindTo ::onStateChange
-//        }
-//        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
-//            store.labels bindTo ::onLabel
-//        }
-//    }
+    init {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
+            store.states bindTo ::onStateChange
+        }
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
+            store.labels bindTo ::onLabel
+        }
+    }
 
     private fun onStateChange(newState: MainStore.State) {
         state.value = newState.toModel()
