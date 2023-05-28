@@ -21,11 +21,8 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
-        it.binaries.framework {
-            baseName = "HieroUi"
-            export(Dependencies.Decompose.Decompose)
-            export(Dependencies.Essenty.Lifecycle)
-            export(Dependencies.MviKotlin.Main)
+//        it.binaries.framework {
+//            baseName = "HieroUi"
 
             // Optional, only if you need state preservation on Darwin (Apple) targets
 //                export("com.arkivanov.essenty:state-keeper:<essenty_version>")
@@ -33,7 +30,7 @@ kotlin {
             // Optional, only if you need state preservation on Darwin (Apple) targets
 //                export("com.arkivanov.parcelize.darwin:runtime:<parcelize_darwin_version>")
 
-        }
+//        }
     }
 
     sourceSets {

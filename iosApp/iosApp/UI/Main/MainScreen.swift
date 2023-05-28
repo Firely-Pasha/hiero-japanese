@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import HieroUi
+import HieroApp
 
 struct MainScreen : View {
     

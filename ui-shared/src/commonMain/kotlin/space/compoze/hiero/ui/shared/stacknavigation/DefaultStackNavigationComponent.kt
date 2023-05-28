@@ -5,6 +5,11 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import org.koin.core.Koin
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.mp.KoinPlatformTools
+import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.ui.shared.collection.component.CollectionDefaultComponent
 import space.compoze.hiero.ui.shared.main.component.MainDefaultComponent
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
@@ -16,7 +21,13 @@ class DefaultStackNavigationComponent(
     storeFactory: StoreFactory,
     startConfig: StackNavigationComponent.Config,
     appNavigator: StackNavigationComponent? = null
-) : StackNavigationComponent, ComponentContext by componentContext {
+) : StackNavigationComponent, KoinComponent, ComponentContext by componentContext {
+
+    private val dispatchers: AppDispatchers by inject()
+
+    init {
+        println("KLEKE ${dispatchers}")
+    }
 
     private val appNavigator = appNavigator ?: this
 

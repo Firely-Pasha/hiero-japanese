@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import org.koin.mp.KoinPlatformTools
 import space.compoze.hiero.ui.compose.stacknavigation.StackNavigator
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.application.component.ApplicationDefaultComponent
@@ -26,11 +27,6 @@ class MainActivity : ComponentActivity() {
             componentContext = defaultComponentContext(),
             storeFactory = DefaultStoreFactory()
         )
-        val appNavigator = DefaultStackNavigationComponent(
-            componentContext = applicationComponent,
-            startConfig = StackNavigationComponent.Config.Main,
-            storeFactory = DefaultStoreFactory()
-        )
         setContent {
             val applicationState by applicationComponent.state.subscribeAsState()
             MyApplicationTheme(
@@ -40,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    StackNavigator(component = appNavigator)
+                    StackNavigator(component = applicationComponent.navigator)
                 }
             }
         }

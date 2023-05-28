@@ -12,22 +12,30 @@ import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.mp.KoinPlatformTools
 import space.compoze.hiero.domain.base.AppDispatchers
 import space.compoze.hiero.ui.shared.main.store.MainStore
 import space.compoze.hiero.ui.shared.main.store.MainStoreProvider
 import space.compoze.hiero.ui.shared.main.toModel
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 import space.compoze.hiero.ui.shared.utils.inheritScope
+import kotlin.native.concurrent.ThreadLocal
 
 class MainDefaultComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
     appNavigator: StackNavigationComponent,
 ) : MainComponent, KoinComponent, ComponentContext by componentContext {
+
+    init {
+        println(KoinPlatformTools.defaultContext().getOrNull())
+    }
 
     private val scope = inheritScope()
 
@@ -58,7 +66,7 @@ class MainDefaultComponent(
                 is MainComponent.Config.Hiragana -> MainComponent.Child.Hiragana(
                     space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
                         componentContext,
-                        storeFactory,
+                        storeFactory = storeFactory,
                         StackNavigationComponent.Config.Hiragana,
                         appNavigator = appNavigator,
                     )
@@ -67,7 +75,7 @@ class MainDefaultComponent(
                 is MainComponent.Config.Katakana -> MainComponent.Child.Katakana(
                     space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
                         componentContext,
-                        storeFactory,
+                        storeFactory = storeFactory,
                         StackNavigationComponent.Config.Katakana,
                         appNavigator = appNavigator,
                     )
@@ -76,7 +84,7 @@ class MainDefaultComponent(
                 is MainComponent.Config.Settings -> MainComponent.Child.Settings(
                     space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
                         componentContext,
-                        storeFactory,
+                        storeFactory = storeFactory,
                         StackNavigationComponent.Config.Settings,
                         appNavigator = appNavigator,
                     )
@@ -85,14 +93,14 @@ class MainDefaultComponent(
         },
     )
 
-    init {
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
-            store.states bindTo ::onStateChange
-        }
-        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
-            store.labels bindTo ::onLabel
-        }
-    }
+//    init {
+//        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
+//            store.states bindTo ::onStateChange
+//        }
+//        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
+//            store.labels bindTo ::onLabel
+//        }
+//    }
 
     private fun onStateChange(newState: MainStore.State) {
         state.value = newState.toModel()

@@ -1,5 +1,4 @@
 import SwiftUI
-import HieroUi
 import HieroApp
 
 @main
@@ -14,7 +13,7 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainScreen(rootHolder.root)
+            StackNavigator(rootHolder.root.navigator)
                 .onChange(of: scenePhase) { newPhase in
                     switch newPhase {
                     case .background: LifecycleRegistryExtKt.stop(rootHolder.lifecycle)
@@ -41,18 +40,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 private class RootHolder : ObservableObject {
     let lifecycle: LifecycleRegistry
-    let root: MainComponent
+    let root: ApplicationComponent
 
     init() {
-        DiHelperKt.doInitDi()
-        
         lifecycle = LifecycleRegistryKt.LifecycleRegistry()
-
-        root = DefaultMainComponent(
+        AppInitializerKt.doInitApplication()
+        root = ApplicationDefaultComponent(
             componentContext: DefaultComponentContext(lifecycle: lifecycle),
             storeFactory: DefaultStoreFactory()
         )
-
         LifecycleRegistryExtKt.create(lifecycle)
     }
 

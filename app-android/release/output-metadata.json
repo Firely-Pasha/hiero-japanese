@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 1,
       "versionName": "1.0",
-      "outputFile": "androidApp-release.apk"
+      "outputFile": "app-android-release.apk"
     }
   ],
   "elementType": "File"

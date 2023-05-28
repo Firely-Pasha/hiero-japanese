@@ -1,5 +1,5 @@
 import SwiftUI
-import HieroUi
+import HieroApp
 
 struct ContentView: View {
 

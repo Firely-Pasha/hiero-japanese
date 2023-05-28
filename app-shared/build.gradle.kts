@@ -25,6 +25,11 @@ kotlin {
             baseName = "HieroApp"
 
             export(project(Modules.Datasource.Database))
+            export(project(Modules.Ui.Shared))
+            export(Dependencies.Koin.Core)
+            export(Dependencies.Decompose.Decompose)
+            export(Dependencies.Essenty.Lifecycle)
+            export(Dependencies.MviKotlin.Main)
             linkerOpts.add("-lsqlite3")
         }
     }
@@ -34,12 +39,14 @@ kotlin {
             dependencies {
                 api(project(Modules.Datasource.Database))
                 api(project(Modules.Datasource.Preferences))
+                api(project(Modules.Ui.Shared))
                 implementation(project(Modules.Data))
                 implementation(project(Modules.Domain))
 
                 implementation(Dependencies.KotlinX.Coroutines.Core)
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Koin.Core)
+                implementation(Dependencies.Decompose.Decompose)
                 implementation(Dependencies.MultiplatformSettings.Core)
                 implementation(Dependencies.MultiplatformSettings.Coroutines)
             }

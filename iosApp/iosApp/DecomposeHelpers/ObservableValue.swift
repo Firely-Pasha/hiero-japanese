@@ -8,7 +8,7 @@
 
 
 import SwiftUI
-import HieroUi
+import HieroApp
 
 public class ObservableValue<T : AnyObject> : ObservableObject {
     private let observableValue: Value<T>

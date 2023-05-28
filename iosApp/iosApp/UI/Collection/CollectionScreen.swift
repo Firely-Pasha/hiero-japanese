@@ -7,14 +7,14 @@
 //
 
 import SwiftUI
-import HieroUi
+import HieroApp
 
 struct CollectionScreen : View {
     
     private let component: CollectionComponent
     
     @ObservedObject
-    private var state: ObservableValue<CollectionState>
+    private var state: ObservableValue<CollectionStoreState>
     
     init(component: CollectionComponent) {
         self.component = component
@@ -22,14 +22,22 @@ struct CollectionScreen : View {
     }
 
     var body: some View {
-        List {
-            ForEach(state.value.items.indices) {
-                let item = state.value.items[$0]
-                Text("Item \(item)")
-                    .onTapGesture {
-                        component.navigateToItemDetails()
-                    }
-            }
-        }.navigationTitle("Collection \(state.value.collectionId)")
+        Group {
+//            if let loading = state.value as? CollectionStoreStateLoading {
+//                VStack{}
+//            } else if let content = state.value as? CollectionStoreStateContent {
+//                List {
+//                    ForEach(content.items.indices) {
+//                        let item = content.items[$0]
+//                        Text("Item \(item)")
+//                            .onTapGesture {
+//                                component.navigateToItemDetails()
+//                            }
+//                    }
+//                }
+//            } else {
+//                Text("ERROR")
+//            }
+        }.navigationTitle("Collection")
     }
 }

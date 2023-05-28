@@ -234,7 +234,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :ui-shared:embedAndSignAppleFrameworkForXcode\n./gradlew :app-shared:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :app-shared:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -383,7 +383,6 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../ui-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 					"$(SRCROOT)/../app-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
@@ -395,8 +394,6 @@
 					"$(inherited)",
 					"-framework",
 					HieroApp,
-					"-framework",
-					HieroUI,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = orgIdentifier.iosApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -414,7 +411,6 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../ui-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 					"$(SRCROOT)/../app-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
@@ -426,8 +422,6 @@
 					"$(inherited)",
 					"-framework",
 					HieroApp,
-					"-framework",
-					HieroUI,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = orgIdentifier.iosApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";

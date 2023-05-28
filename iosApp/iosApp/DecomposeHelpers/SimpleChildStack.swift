@@ -7,7 +7,7 @@
 //
 
 
-import HieroUi
+import HieroApp
 
 func simpleChildStack<T : AnyObject>(_ child: T) -> Value<ChildStack<AnyObject, T>> {
     return mutableValue(

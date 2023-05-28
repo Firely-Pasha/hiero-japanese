@@ -1,8 +1,12 @@
 package space.compoze.hiero.app.shared
 
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import org.koin.core.Koin
+import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.mp.KoinPlatformTools
 import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.data.collection.CollectionRepository
 import space.compoze.hiero.data.collectionitem.CollectionItemRepository

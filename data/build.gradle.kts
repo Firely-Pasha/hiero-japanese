@@ -74,6 +74,3 @@ android {
         minSdk = 24
     }
 }
-dependencies {
-    implementation(project(mapOf("path" to ":ui-shared")))
-}

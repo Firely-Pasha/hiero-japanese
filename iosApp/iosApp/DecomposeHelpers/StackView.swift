@@ -1,12 +1,12 @@
 import SwiftUI
 import UIKit
-import HieroUi
+import HieroApp
 
 struct StackView<T: AnyObject, Content: View>: View {
     @ObservedObject
     var stackValue: ObservableValue<ChildStack<AnyObject, T>>
 
-    var getTitle: (T) -> String
+    var getTitle: (T) -> String?
     var onBack: () -> Void
     
     @ViewBuilder
@@ -41,7 +41,7 @@ struct StackView<T: AnyObject, Content: View>: View {
 
 private struct StackInteropView<T: AnyObject, Content: View>: UIViewControllerRepresentable {
     var components: [T]
-    var getTitle: (T) -> String
+    var getTitle: (T) -> String?
     var onBack: () -> Void
     var childContent: (T) -> Content
     
