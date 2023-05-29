@@ -47,18 +47,11 @@ class QuizStoreProvider(
                             QuizStore.Message.Init(
                                 items = it.items,
                                 currentItem = itemPull.first(),
-                                itemPull = itemPull.takeLast(itemPull.size - 1)
+                                itemPull = itemPull.takeLast(itemPull.size - 1).ifEmpty { it.items }
                             )
                         )
                     }
                     onIntent<QuizStore.Intent.NextItem> {
-                        state.with { content: QuizStore.State.Content ->
-                            if (content.itemPool.isEmpty()) {
-                                val itemPull =
-                                    content.items.toTypedArray().also { it.shuffle() }.toList()
-                                dispatch(QuizStore.Message.SetItemPull(itemPull))
-                            }
-                        }
                         state.with { content: QuizStore.State.Content ->
                             val nextItem = content.itemPool
                                 .find { it.id != content.currentItem.id }
@@ -67,6 +60,13 @@ class QuizStoreProvider(
                                 .filter { it.id != nextItem.id }
                             dispatch(QuizStore.Message.SetCurrentItem(nextItem))
                             dispatch(QuizStore.Message.SetItemPull(nextItemPull))
+                        }
+                        state.with { content: QuizStore.State.Content ->
+                            if (content.itemPool.isEmpty()) {
+                                val itemPull =
+                                    content.items.toTypedArray().also { it.shuffle() }.toList()
+                                dispatch(QuizStore.Message.SetItemPull(itemPull))
+                            }
                         }
                     }
                     onIntent<QuizStore.Intent.BookmarkCurrentItem> {
