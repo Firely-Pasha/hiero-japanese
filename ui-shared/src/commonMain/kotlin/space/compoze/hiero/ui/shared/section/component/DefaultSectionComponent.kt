@@ -8,8 +8,6 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.states
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.base.AppDispatchers
@@ -17,7 +15,6 @@ import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.ui.shared.section.state.SectionStore
 import space.compoze.hiero.ui.shared.section.state.SectionStoreProvider
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
-import space.compoze.hiero.ui.shared.utils.inheritScope
 import space.compoze.hiero.ui.shared.utils.with
 
 
@@ -47,8 +44,16 @@ class DefaultSectionComponent(
         state.value = newState
     }
 
-    override fun toggleItemSelect(itemId: Long) {
-        store.accept(SectionStore.Intent.ToggleItemSelect(itemId = itemId))
+    override fun selectItem(itemId: Long, isSelected: Boolean) {
+        store.accept(SectionStore.Intent.SelectItem(itemId = itemId, isSelected = isSelected))
+    }
+
+    override fun ToggleItemWithSelection(itemId: Long) {
+        store.accept(SectionStore.Intent.ToggleItemWithSelection(itemId = itemId))
+    }
+
+    override fun ToggleItemBySelection(itemId: Long) {
+        store.accept(SectionStore.Intent.ToggleItemBySelection(itemId = itemId))
     }
 
     override fun toggleItemBookmark(itemId: Long) {

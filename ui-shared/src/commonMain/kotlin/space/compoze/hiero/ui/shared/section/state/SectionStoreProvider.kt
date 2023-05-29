@@ -119,15 +119,12 @@ class SectionStoreProvider(
                             }
                         }
                     }
-                    onIntent<SectionStore.Intent.ToggleItemSelect> { intent ->
+                    onIntent<SectionStore.Intent.SelectItem> { intent ->
                         state.with { content: SectionStore.State.Content ->
                             either {
                                 val result = collectionItemUpdateByIdUseCase(
                                     intent.itemId, CollectionItemMutationData(
-                                        isSelected = Some(
-                                            !(content.items.find { item -> item.id == intent.itemId }?.isSelected
-                                                ?: false),
-                                        ),
+                                        isSelected = Some(intent.isSelected),
                                         isBookmarked = Some(false)
                                     )
                                 ).bind()
@@ -186,6 +183,43 @@ class SectionStoreProvider(
                             }
                         }
                     }
+                    onIntent<SectionStore.Intent.ToggleItemWithSelection> { intent ->
+                        state.with { content: SectionStore.State.Content ->
+                            either {
+                                val item = content.items
+                                    .find { item -> item.id == intent.itemId }
+                                    ?: return@either
+                                val selectionMode = !item.isSelected
+                                collectionItemUpdateByIdUseCase(
+                                    intent.itemId,
+                                    CollectionItemMutationData(
+                                        isSelected = Some(selectionMode),
+                                    ),
+                                ).bind()
+                                dispatch(
+                                    SectionStore.Message.SetSelectionMode(
+                                        selectionMode = selectionMode,
+                                    )
+                                )
+                            }.onLeft {
+                                println(it)
+                            }
+                        }
+                    }
+                    onIntent<SectionStore.Intent.ToggleItemBySelection> { intent ->
+                        state.with { content: SectionStore.State.Content ->
+                            either {
+                                collectionItemUpdateByIdUseCase(
+                                    intent.itemId,
+                                    CollectionItemMutationData(
+                                        isSelected = Some(content.selectionMode),
+                                    ),
+                                ).bind()
+                            }.onLeft {
+                                println(it)
+                            }
+                        }
+                    }
                 },
                 reducer = { msg ->
                     when (msg) {
@@ -194,6 +228,7 @@ class SectionStoreProvider(
                             collection = msg.collection,
                             sections = msg.sections,
                             items = msg.items,
+                            selectionMode = true
                         )
 
                         is SectionStore.Message.SelectItem -> applyState { content: SectionStore.State.Content ->
@@ -215,6 +250,11 @@ class SectionStoreProvider(
                                         set(index, msgItem)
                                     }
                                 }.toList()
+                            )
+                        }
+                        is SectionStore.Message.SetSelectionMode -> applyState { content: SectionStore.State.Content ->
+                            content.copy(
+                                selectionMode = msg.selectionMode
                             )
                         }
                     }

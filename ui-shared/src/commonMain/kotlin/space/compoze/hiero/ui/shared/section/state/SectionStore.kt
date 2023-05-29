@@ -15,6 +15,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
             val collection: CollectionModel,
             val sections: List<SectionModel>,
             val items: List<CollectionItemModel>,
+            val selectionMode: Boolean,
         ) : State
 
         data class Error(
@@ -35,8 +36,24 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
     }
 
     sealed interface Intent {
-        data class ToggleItemSelect(val itemId: Long) : Intent
-        data class ToggleItemBookmark(val itemId: Long) : Intent
+        data class SelectItem(
+            val itemId: Long,
+            val isSelected: Boolean,
+        ) : Intent
+
+        data class ToggleItemWithSelection(
+            val itemId: Long
+        ) : Intent
+
+        data class ToggleItemBySelection(
+            val itemId: Long
+        ) : Intent
+
+        data class ToggleItemBookmark(
+            val itemId: Long,
+        ) : Intent
+
+
         object SelectAll : Intent
         object ClearAll : Intent
     }
@@ -59,6 +76,10 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
 
         data class SetItems(
             val items: List<CollectionItemModel>,
-        ): Message
+        ) : Message
+
+        data class SetSelectionMode(
+            val selectionMode: Boolean,
+        ) : Message
     }
 }

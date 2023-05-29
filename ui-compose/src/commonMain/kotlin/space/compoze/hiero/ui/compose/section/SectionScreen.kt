@@ -17,6 +17,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -62,19 +64,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.structuralEqualityPolicy
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Some
 import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
@@ -114,14 +119,24 @@ fun SectionScreen(component: SectionComponent) {
                     component.startQuiz()
                 }
             },
-            onItemSelect = remember(component) {
-                {
-                    component.toggleItemSelect(it.id)
+            onItemSelect = remember {
+                { itemId: Long, isSelected: Boolean ->
+                    component.selectItem(itemId, isSelected)
                 }
             },
             onItemBookmark = remember(component) {
                 {
                     component.toggleItemBookmark(it.id)
+                }
+            },
+            onToggleItemWithSelection = remember(component) {
+                {
+                    component.ToggleItemWithSelection(it)
+                }
+            },
+            ToggleItemBySelection = remember(component) {
+                {
+                    component.ToggleItemBySelection(it)
                 }
             }
         )
@@ -143,8 +158,10 @@ private fun SectionContent(
     onClearAllClick: () -> Unit,
     onSelectAllClick: () -> Unit,
     onStartQuizClick: () -> Unit,
-    onItemSelect: (CollectionItemModel) -> Unit,
+    onItemSelect: (Long, Boolean) -> Unit,
     onItemBookmark: (CollectionItemModel) -> Unit,
+    onToggleItemWithSelection: (itemId: Long) -> Unit,
+    ToggleItemBySelection: (itemId: Long) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -186,172 +203,180 @@ private fun SectionContent(
         }
 
         val lazyGridState = rememberLazyGridState()
-        val sectionItems = remember(state.sections, state.items) {
-            buildList {
-                state.sections.forEach { section ->
-                    add(section to state.items.filter {
-                        it.sectionId == section.id
-                    })
-                }
-            }.toMutableStateList()
-        }
-        val showTitle = remember(sectionItems) { sectionItems.size > 1 }
+        var offset by remember { mutableStateOf(Offset.Zero) }
+        var currentItem by remember { mutableStateOf<Option<LazyGridItemInfo>>(None) }
         LazyVerticalGrid(
             state = lazyGridState,
             contentPadding = containerPadding,
             columns = GridCells.Fixed(state.collection.cols),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            sectionItems.forEach { (section, items) ->
-                if (showTitle) {
-                    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                        val sectionHeaderStyle = remember {
-                            TextStyle(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Text(
-                            section.title,
-                            style = sectionHeaderStyle
+            modifier = Modifier
+                .composed {
+                    pointerInput(Unit) {
+                        detectDragGestures(
+                            onDragStart = { initialOffset ->
+                                offset = initialOffset - Offset(
+                                    containerPadding.calculateStartPadding(LayoutDirection.Ltr)
+                                        .toPx(),
+                                    lazyGridState.layoutInfo.beforeContentPadding.toFloat()
+                                )
+                                for (item in lazyGridState.layoutInfo.visibleItemsInfo) {
+                                    val isInX =
+                                        offset.x.toInt() in item.offset.x..(item.offset.x + item.size.width)
+                                    val isInY =
+                                        offset.y.toInt() in item.offset.y..(item.offset.y + item.size.height)
+                                    if (isInX && isInY && !currentItem.isSome { it.index == item.index }) {
+                                        currentItem = Some(item)
+                                        val item = state.items[item.index]
+                                        onToggleItemWithSelection(item.id)
+                                    }
+                                }
+
+                            },
+                            onDrag = { change, dragAmount ->
+                                offset += dragAmount
+                                for (item in lazyGridState.layoutInfo.visibleItemsInfo) {
+                                    val isInX =
+                                        offset.x.toInt() in item.offset.x..(item.offset.x + item.size.width)
+                                    val isInY =
+                                        offset.y.toInt() in item.offset.y..(item.offset.y + item.size.height)
+                                    if (isInX && isInY && !currentItem.isSome { it.index == item.index }) {
+                                        currentItem = Some(item)
+                                        val item = state.items[item.index]
+                                        ToggleItemBySelection(item.id)
+                                    }
+                                }
+                            },
+                            onDragEnd = {
+                                currentItem = None
+                            }
                         )
                     }
                 }
-                items(
-                    items = items,
-                    key = { it.id },
-                    span = { GridItemSpan(section.span) }
-                ) { item ->
-                    Box(
-                        modifier = Modifier
-                    ) {
-                        if (item.type == CollectionItemType.HIEROGLYPH) {
-                            Card(
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .combinedClickable(
-                                        onLongClick = {
-                                            onItemBookmark(item)
-                                        },
-                                        onClick = {
-                                            onItemSelect(item)
-                                        }
-                                    )
-                                    .fillMaxSize(),
-//                                    .padding(vertical = 6.dp),
-//                                elevation = CardDefaults.cardElevation(6.dp),
-//                                onClick = {
-//                                },
-
-                                colors = CardDefaults.cardColors(
-//                                    containerColor = randomColor()
+        ) {
+            items(
+                items = state.items,
+                key = { it.id },
+                span = { GridItemSpan(state.sections.first().span) }
+            ) { item ->
+                Box(
+                    modifier = Modifier
+                ) {
+                    if (item.type == CollectionItemType.HIEROGLYPH) {
+                        Card(
+                            modifier = Modifier
+                                .clip(MaterialTheme.shapes.medium)
+                                .combinedClickable(
+                                    onLongClick = {
+                                        onItemBookmark(item)
+                                    },
+                                    onClick = {
+                                        onItemSelect(item.id, !item.isSelected)
+                                    }
                                 )
+                                .fillMaxSize(),
+                        ) {
+                            Box(
+                                modifier = Modifier.padding(6.dp)
+                                    .align(Alignment.CenterHorizontally),
                             ) {
-                                Box(
-                                    modifier = Modifier.padding(6.dp)
-                                        .align(Alignment.CenterHorizontally),
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Text(
-                                            item.value,
-                                            fontSize = 32.sp,
-                                            softWrap = false
-                                        )
-                                        Text(
-                                            item.transcription,
-                                            fontSize = 16.sp
-                                        )
-                                    }
+                                    Text(
+                                        item.value,
+                                        fontSize = 32.sp,
+                                        softWrap = false
+                                    )
+                                    Text(
+                                        item.transcription,
+                                        fontSize = 16.sp
+                                    )
                                 }
                             }
-                            AnimatedVisibility(
-                                item.isSelected,
-                                enter = fadeIn() + scaleIn(),
-                                exit = fadeOut() + scaleOut(),
+                        }
+                        AnimatedVisibility(
+                            item.isSelected,
+                            enter = fadeIn() + scaleIn(),
+                            exit = fadeOut() + scaleOut(),
+                            modifier = Modifier
+                                .offset(y = (-8).dp, x = (-8).dp)
+                        ) {
+                            Box(
                                 modifier = Modifier
-                                    .offset(y = (-8).dp, x = (-8).dp)
+                                    .width(24.dp)
+                                    .height(24.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        shape = CircleShape
+                                    )
+                                    .clip(CircleShape)
                             ) {
                                 Box(
-                                    modifier = Modifier
-                                        .width(24.dp)
-                                        .height(24.dp)
-                                        .border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.surface,
+                                    Modifier
+                                        .padding(2.dp)
+                                        .background(
+                                            MaterialTheme.colorScheme.primaryContainer,
                                             shape = CircleShape
                                         )
-                                        .clip(CircleShape)
+                                        .fillMaxSize()
                                 ) {
-                                    Box(
-                                        Modifier
-                                            .padding(2.dp)
-                                            .background(
-                                                MaterialTheme.colorScheme.primaryContainer,
-                                                shape = CircleShape
-                                            )
-                                            .fillMaxSize()
-                                    ) {
-                                        Icon(
-                                            Icons.Outlined.School,
-                                            "Selected",
-                                            modifier = Modifier
-                                                .height(16.dp)
-                                                .width(16.dp)
-                                                .align(Alignment.Center),
-                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                        )
-                                    }
+                                    Icon(
+                                        Icons.Outlined.School,
+                                        "Selected",
+                                        modifier = Modifier
+                                            .height(16.dp)
+                                            .width(16.dp)
+                                            .align(Alignment.Center),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
                                 }
                             }
-                            AnimatedVisibility(
-                                item.isBookmarked,
-                                enter = fadeIn() + scaleIn(),
-                                exit = fadeOut() + scaleOut(),
+                        }
+                        AnimatedVisibility(
+                            item.isBookmarked,
+                            enter = fadeIn() + scaleIn(),
+                            exit = fadeOut() + scaleOut(),
+                            modifier = Modifier
+                                .offset(y = (-8).dp, x = (-8).dp)
+                        ) {
+                            Box(
                                 modifier = Modifier
-                                    .offset(y = (-8).dp, x = (-8).dp)
-//                                modifier = Modifier
-//                                    .offset(y = (-8).dp, x = (8).dp)
-//                                    .align(Alignment.TopEnd)
+                                    .width(24.dp)
+                                    .height(24.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        shape = CircleShape
+                                    )
+                                    .clip(CircleShape)
                             ) {
                                 Box(
-                                    modifier = Modifier
-                                        .width(24.dp)
-                                        .height(24.dp)
-                                        .border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.surface,
+                                    Modifier
+                                        .padding(2.dp)
+                                        .background(
+                                            MaterialTheme.colorScheme.primaryContainer,
                                             shape = CircleShape
                                         )
-                                        .clip(CircleShape)
+                                        .fillMaxSize()
                                 ) {
-                                    Box(
-                                        Modifier
-                                            .padding(2.dp)
-                                            .background(
-                                                MaterialTheme.colorScheme.primaryContainer,
-                                                shape = CircleShape
-                                            )
-                                            .fillMaxSize()
-                                    ) {
-                                        Icon(
-                                            Icons.Outlined.BookmarkBorder,
-                                            "Selected",
-                                            modifier = Modifier
-                                                .height(16.dp)
-                                                .width(16.dp)
-                                                .align(Alignment.Center),
-                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                        )
-                                    }
+                                    Icon(
+                                        Icons.Outlined.BookmarkBorder,
+                                        "Selected",
+                                        modifier = Modifier
+                                            .height(16.dp)
+                                            .width(16.dp)
+                                            .align(Alignment.Center),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
                                 }
                             }
                         }
                     }
-
                 }
+
             }
         }
     }
