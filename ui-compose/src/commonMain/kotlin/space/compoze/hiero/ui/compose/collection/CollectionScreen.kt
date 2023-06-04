@@ -1,14 +1,9 @@
-@file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalLayoutApi::class
-)
+@file:OptIn(ExperimentalMaterial3Api::class)
 @file:Suppress("NAME_SHADOWING")
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,11 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.Some
 import space.compoze.hiero.domain.section.model.data.SectionModel
-import space.compoze.hiero.domain.sectionpreview.model.data.SectionPreview
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
 import space.compoze.hiero.ui.shared.collection.store.CollectionStore
@@ -110,18 +101,17 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
             contentPadding = containerPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-//            item {
-//                SectionItem(CollectionComponent.AllSection, None) {
-//                    component.navigateToSection(CollectionComponent.AllSection)
-//                }
-//            }
             items(
                 count = state.sections.size,
                 key = { state.sections[it].id }
             ) {
                 val section = state.sections[it]
-                val preview = state.previews.getOrElse(it) { None }
-                SectionItem(section, preview) { component.navigateToSection(section) }
+                SectionItem(
+                    section,
+                    onClick = {
+                        component.navigateToSection(section)
+                    }
+                )
             }
         }
     }
@@ -130,7 +120,6 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
 @Composable
 private fun SectionItem(
     section: SectionModel,
-    preview: Option<SectionPreview>,
     onClick: () -> Unit,
 ) {
     Card(
@@ -225,30 +214,6 @@ private fun SectionItem(
                             Spacer(Modifier.width(8.dp))
                             Text("${section.bookmarkedCount}", fontWeight = FontWeight.SemiBold)
                         }
-                    }
-                }
-            }
-            when (preview) {
-                None -> {}
-                is Some -> when (val sectionPreview = preview.value) {
-                    is SectionPreview.Generated -> {
-//                            FlowRow(
-//                                modifier = Modifier
-//                                    .height(with(LocalDensity.current) {
-//                                        24.sp.toDp()
-//                                    } + 8.dp)
-//                                    .fillMaxWidth()
-//                                    .clip(RectangleShape),
-//                                horizontalArrangement = Arrangement.SpaceBetween,
-//                            ) {
-//                                sectionPreview.items.forEach {
-//                                    Text(
-//                                        text = it.value,
-//                                        fontSize = 24.sp,
-//                                        softWrap = false
-//                                    )
-//                                }
-//                            }
                     }
                 }
             }

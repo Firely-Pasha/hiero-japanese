@@ -5,7 +5,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.model.data.CollectionModel
 import space.compoze.hiero.domain.section.model.data.SectionModel
-import space.compoze.hiero.domain.sectionpreview.model.data.SectionPreview
 
 
 
@@ -16,7 +15,6 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
         data class Content(
             val collection: CollectionModel,
             val sections: List<SectionModel>,
-            val previews: List<Option<SectionPreview>>,
         ) : State
 
         data class Error(
@@ -28,7 +26,6 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
         data class Loaded(
             val collection: CollectionModel,
             val sections: List<SectionModel>,
-            val previews: List<Option<SectionPreview>>,
         ) : Action
 
         data class LoadingError(
@@ -45,7 +42,6 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
         data class InitCollection(
             val collection: CollectionModel,
             val sections: List<SectionModel>,
-            val previews: List<Option<SectionPreview>>,
         ) : Message
 
         data class Error(
@@ -58,7 +54,6 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
 
         data class SetSections(
             val sections: List<SectionModel>,
-            val previews: List<Option<SectionPreview>>
         ) : Message
     }
 

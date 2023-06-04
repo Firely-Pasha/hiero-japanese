@@ -37,7 +37,7 @@ class CollectionStoreProvider(
             Store<CollectionStore.Intent, CollectionStore.State, CollectionStore.Label> by storeFactory.create<CollectionStore.Intent, CollectionStore.Action, CollectionStore.Message, CollectionStore.State, CollectionStore.Label>(
                 name = "KEK",
                 initialState = CollectionStore.State.Loading,
-                bootstrapper = coroutineBootstrapper {
+                bootstrapper = coroutineBootstrapper(dispatchers.main) {
                     launch(dispatchers.main) {
                         either {
                             val collection = when (
@@ -51,7 +51,6 @@ class CollectionStoreProvider(
                                 CollectionStore.Action.Loaded(
                                     collection = collection,
                                     sections = sections,
-                                    previews = listOf()
                                 )
                             )
                         }.onLeft {
@@ -59,7 +58,7 @@ class CollectionStoreProvider(
                         }
                     }
                 },
-                executorFactory = coroutineExecutorFactory {
+                executorFactory = coroutineExecutorFactory(dispatchers.main) {
                     onAction<CollectionStore.Action.LoadingError> {
                         dispatch(CollectionStore.Message.Error(it.error))
                     }
@@ -68,7 +67,6 @@ class CollectionStoreProvider(
                             CollectionStore.Message.InitCollection(
                                 collection = it.collection,
                                 sections = it.sections,
-                                previews = it.previews
                             )
                         )
                         launch {
@@ -79,7 +77,6 @@ class CollectionStoreProvider(
                                             dispatch(
                                                 CollectionStore.Message.SetSections(
                                                     sections = sections,
-                                                    previews = listOf()
                                                 )
                                             )
                                         }
@@ -94,7 +91,6 @@ class CollectionStoreProvider(
                         is CollectionStore.Message.InitCollection -> CollectionStore.State.Content(
                             collection = msg.collection,
                             sections = msg.sections,
-                            previews = msg.previews
                         )
 
                         is CollectionStore.Message.SetCollection -> applyState { content: CollectionStore.State.Content ->
@@ -104,7 +100,6 @@ class CollectionStoreProvider(
                         is CollectionStore.Message.SetSections -> applyState { content: CollectionStore.State.Content ->
                             content.copy(
                                 sections = msg.sections,
-                                previews = msg.previews
                             )
                         }
 

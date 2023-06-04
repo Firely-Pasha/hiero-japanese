@@ -31,7 +31,6 @@ import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
 import space.compoze.hiero.domain.section.interactor.SectionUpdate
 import space.compoze.hiero.domain.section.interactor.SectionUpdateComputed
-import space.compoze.hiero.domain.sectionpreview.interactor.SectionPreviewGet
 import space.compoze.hiero.domain.settings.interactor.SettingsGetTheme
 import space.compoze.hiero.domain.settings.interactor.SettingsSetTheme
 
@@ -76,8 +75,6 @@ fun domainModule() = module {
     single { SectionGetOfCollection(get()) }
     single { SectionUpdate(get()) }
     single { SectionUpdateComputed(get()) }
-
-    single { SectionPreviewGet(get()) }
 
     single { SettingsGetTheme(get()) }
     single { SettingsSetTheme(get()) }
