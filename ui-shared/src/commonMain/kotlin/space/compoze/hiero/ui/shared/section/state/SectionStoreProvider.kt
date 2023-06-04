@@ -106,12 +106,13 @@ class SectionStoreProvider(
                         state.with { content: SectionStore.State.Content ->
                             launch {
                                 collectionItemNotificationGetFlowUseCase().collect {
-                                    when (it) {
-                                        is CollectionItemNotification.Changed -> {
-                                            if (it.new.sectionId in content.sections.map { it.id }) {
-                                                withContext(dispatchers.main) {
-                                                    dispatch(SectionStore.Message.SetItems(listOf(it.new)))
-                                                }
+                                    if (it !is CollectionItemNotification.Changed) return@collect
+                                    state.with { content: SectionStore.State.Content ->
+                                        if (it.new.sectionId in content.sections.map { it.id }) {
+                                            withContext(dispatchers.main) {
+                                                dispatch(
+                                                    SectionStore.Message.SetItems(listOf(it.new))
+                                                )
                                             }
                                         }
                                     }
@@ -183,7 +184,7 @@ class SectionStoreProvider(
                             }
                         }
                     }
-                    onIntent<SectionStore.Intent.ToggleItemWithSelection> { intent ->
+                    onIntent<SectionStore.Intent.ToggleItemAndSetSelectMode> { intent ->
                         state.with { content: SectionStore.State.Content ->
                             either {
                                 val item = content.items
@@ -206,7 +207,7 @@ class SectionStoreProvider(
                             }
                         }
                     }
-                    onIntent<SectionStore.Intent.ToggleItemBySelection> { intent ->
+                    onIntent<SectionStore.Intent.ToggleItemBySelect> { intent ->
                         state.with { content: SectionStore.State.Content ->
                             either {
                                 collectionItemUpdateByIdUseCase(

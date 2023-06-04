@@ -48,12 +48,12 @@ class DefaultSectionComponent(
         store.accept(SectionStore.Intent.SelectItem(itemId = itemId, isSelected = isSelected))
     }
 
-    override fun ToggleItemWithSelection(itemId: Long) {
-        store.accept(SectionStore.Intent.ToggleItemWithSelection(itemId = itemId))
+    override fun toggleItemAndSetSelectMode(itemId: Long) {
+        store.accept(SectionStore.Intent.ToggleItemAndSetSelectMode(itemId = itemId))
     }
 
-    override fun ToggleItemBySelection(itemId: Long) {
-        store.accept(SectionStore.Intent.ToggleItemBySelection(itemId = itemId))
+    override fun toggleItemBySelect(itemId: Long) {
+        store.accept(SectionStore.Intent.ToggleItemBySelect(itemId = itemId))
     }
 
     override fun toggleItemBookmark(itemId: Long) {

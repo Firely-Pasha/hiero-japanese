@@ -14,6 +14,6 @@ interface SectionComponent {
     fun navigateBack()
     fun navigateToItemDetails()
     fun navigateToSection(section: SectionModel)
-    fun ToggleItemWithSelection(itemId: Long)
-    fun ToggleItemBySelection(itemId: Long)
+    fun toggleItemAndSetSelectMode(itemId: Long)
+    fun toggleItemBySelect(itemId: Long)
 }

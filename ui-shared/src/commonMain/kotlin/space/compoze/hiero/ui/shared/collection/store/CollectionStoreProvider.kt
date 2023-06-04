@@ -71,7 +71,7 @@ class CollectionStoreProvider(
                         )
                         launch {
                             state.with { content: CollectionStore.State.Content ->
-                                sectionGetOfCollection.flow(content.collection.id)
+                                sectionGetOfCollection.asFlow(content.collection.id)
                                     .collect { sections ->
                                         withContext(dispatchers.main) {
                                             dispatch(

@@ -41,11 +41,11 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
             val isSelected: Boolean,
         ) : Intent
 
-        data class ToggleItemWithSelection(
+        data class ToggleItemAndSetSelectMode(
             val itemId: Long
         ) : Intent
 
-        data class ToggleItemBySelection(
+        data class ToggleItemBySelect(
             val itemId: Long
         ) : Intent
 

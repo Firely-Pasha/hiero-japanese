@@ -32,12 +32,12 @@ class ApplicationInit(
         val collections = collectionGetAll().bind()
         collections.forEach {
             val collectionItemCount = collectionItemGetCountOfCollection(it.id).bind()
-            val collection = collectionUpdate(it.id, CollectionMutation.UpdateItemsCount(collectionItemCount)).bind()
+            collectionUpdate(it.id, CollectionMutation.UpdateItemsCount(collectionItemCount)).bind()
         }
         val sections = sectionGetAll().bind()
         sections.forEach {
             val collectionItemCount = collectionItemGetCountOfSection(it.id).bind()
-            val section = sectionUpdate(it.id, SectionMutation.UpdateItemsCount(collectionItemCount)).bind()
+            sectionUpdate(it.id, SectionMutation.UpdateItemsCount(collectionItemCount)).bind()
         }
     }
 

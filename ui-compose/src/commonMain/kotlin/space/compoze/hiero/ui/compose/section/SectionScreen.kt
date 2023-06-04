@@ -43,7 +43,6 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -129,14 +128,14 @@ fun SectionScreen(component: SectionComponent) {
                     component.toggleItemBookmark(it.id)
                 }
             },
-            onToggleItemWithSelection = remember(component) {
+            onToggleItemAndSetSelectMode = remember(component) {
                 {
-                    component.ToggleItemWithSelection(it)
+                    component.toggleItemAndSetSelectMode(it)
                 }
             },
-            ToggleItemBySelection = remember(component) {
+            onToggleItemBySelect = remember(component) {
                 {
-                    component.ToggleItemBySelection(it)
+                    component.toggleItemBySelect(it)
                 }
             }
         )
@@ -160,8 +159,8 @@ private fun SectionContent(
     onStartQuizClick: () -> Unit,
     onItemSelect: (Long, Boolean) -> Unit,
     onItemBookmark: (CollectionItemModel) -> Unit,
-    onToggleItemWithSelection: (itemId: Long) -> Unit,
-    ToggleItemBySelection: (itemId: Long) -> Unit,
+    onToggleItemAndSetSelectMode: (itemId: Long) -> Unit,
+    onToggleItemBySelect: (itemId: Long) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -229,7 +228,7 @@ private fun SectionContent(
                                     if (isInX && isInY && !currentItem.isSome { it.index == item.index }) {
                                         currentItem = Some(item)
                                         val item = state.items[item.index]
-                                        onToggleItemWithSelection(item.id)
+                                        onToggleItemAndSetSelectMode(item.id)
                                     }
                                 }
 
@@ -244,7 +243,7 @@ private fun SectionContent(
                                     if (isInX && isInY && !currentItem.isSome { it.index == item.index }) {
                                         currentItem = Some(item)
                                         val item = state.items[item.index]
-                                        ToggleItemBySelection(item.id)
+                                        onToggleItemBySelect(item.id)
                                     }
                                 }
                             },

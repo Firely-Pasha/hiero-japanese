@@ -11,7 +11,7 @@ class SectionGetOfCollection(
         sectionRepository.getByCollection(collectionId).bind()
     }
 
-    fun flow(collectionId: String) =
+    fun asFlow(collectionId: String) =
         sectionRepository.flowByCollection(collectionId)
 
 }
