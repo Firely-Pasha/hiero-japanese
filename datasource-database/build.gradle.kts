@@ -35,7 +35,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(Dependencies.SqlDelight.AndroidDriver)
+                implementation(Dependencies.SqlDelight.Drivers.Android)
             }
         }
         val androidUnitTest by getting
@@ -43,7 +43,7 @@ kotlin {
         val nativeMain by creating {
             dependsOn(commonMain)
             dependencies {
-                implementation(Dependencies.SqlDelight.NativeDriver)
+                implementation(Dependencies.SqlDelight.Drivers.Native)
             }
         }
         val nativeTest by creating

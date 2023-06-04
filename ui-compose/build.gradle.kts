@@ -24,7 +24,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
-            export("com.arkivanov.decompose:decompose:2.0.0-alpha-02")
+            export(Dependencies.Decompose.Core)
 //                export("com.arkivanov.essenty:lifecycle:<essenty_version>")
 
             // Optional, only if you need state preservation on Darwin (Apple) targets
@@ -50,9 +50,9 @@ kotlin {
                 implementation(compose.components.resources)
 
                 implementation(Dependencies.Arrow.Core)
-                implementation(Dependencies.Decompose.Decompose)
+                implementation(Dependencies.Decompose.Core)
                 implementation(Dependencies.Decompose.Extensions.Compose.JetBrains)
-                implementation(Dependencies.MviKotlin.MviKotlin)
+                implementation(Dependencies.MviKotlin.Core)
                 implementation(Dependencies.MviKotlin.Main)
                 implementation(Dependencies.MviKotlin.Extensions.Coroutines)
                 implementation(Dependencies.KotlinX.Coroutines.Core)

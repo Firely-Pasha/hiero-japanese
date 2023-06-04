@@ -26,7 +26,7 @@ object Dependencies {
     }
 
     object Decompose {
-        const val Decompose = "com.arkivanov.decompose:decompose:${Versions.Decompose}"
+        const val Core = "com.arkivanov.decompose:decompose:${Versions.Decompose}"
 
         object Extensions {
             object Compose {
@@ -37,7 +37,7 @@ object Dependencies {
     }
 
     object MviKotlin {
-        const val MviKotlin = "com.arkivanov.mvikotlin:mvikotlin:${Versions.MviKotlin}"
+        const val Core = "com.arkivanov.mvikotlin:mvikotlin:${Versions.MviKotlin}"
         const val Main = "com.arkivanov.mvikotlin:mvikotlin-main:${Versions.MviKotlin}"
 
         object Extensions {
@@ -51,8 +51,13 @@ object Dependencies {
     }
 
     object SqlDelight {
-        const val AndroidDriver = "app.cash.sqldelight:android-driver:${Versions.SqlDelight}"
-        const val NativeDriver = "app.cash.sqldelight:native-driver:${Versions.SqlDelight}"
+        object Drivers {
+            const val Android = "app.cash.sqldelight:android-driver:${Versions.SqlDelight}"
+            const val Native = "app.cash.sqldelight:native-driver:${Versions.SqlDelight}"
+        }
+        object Extensions {
+            const val Coroutines = "app.cash.sqldelight:coroutines-extensions:${Versions.SqlDelight}"
+        }
     }
 
     object Koin {

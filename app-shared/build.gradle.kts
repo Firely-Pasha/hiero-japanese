@@ -27,7 +27,7 @@ kotlin {
             export(project(Modules.Datasource.Database))
             export(project(Modules.Ui.Shared))
             export(Dependencies.Koin.Core)
-            export(Dependencies.Decompose.Decompose)
+            export(Dependencies.Decompose.Core)
             export(Dependencies.Essenty.Lifecycle)
             export(Dependencies.MviKotlin.Main)
             linkerOpts.add("-lsqlite3")
@@ -46,7 +46,7 @@ kotlin {
                 implementation(Dependencies.KotlinX.Coroutines.Core)
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Koin.Core)
-                implementation(Dependencies.Decompose.Decompose)
+                implementation(Dependencies.Decompose.Core)
                 implementation(Dependencies.MultiplatformSettings.Core)
                 implementation(Dependencies.MultiplatformSettings.Coroutines)
             }

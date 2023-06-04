@@ -14,14 +14,14 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            export(Dependencies.Decompose.Decompose)
+            export(Dependencies.Decompose.Core)
         }
     }
 
@@ -33,7 +33,7 @@ kotlin {
 
                 implementation(Dependencies.Arrow.Core)
                 implementation(Dependencies.Arrow.FX.Coroutines)
-                implementation("app.cash.sqldelight:coroutines-extensions:2.0.0-alpha05")
+                implementation(Dependencies.SqlDelight.Extensions.Coroutines)
                 implementation(Dependencies.MultiplatformSettings.Core)
                 implementation(Dependencies.MultiplatformSettings.Coroutines)
             }

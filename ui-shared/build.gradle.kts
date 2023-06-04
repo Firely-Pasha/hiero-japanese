@@ -38,9 +38,9 @@ kotlin {
             dependencies {
                 implementation(project(Modules.Domain))
 
-                api(Dependencies.Decompose.Decompose)
+                api(Dependencies.Decompose.Core)
                 api(Dependencies.Essenty.Lifecycle)
-                implementation(Dependencies.MviKotlin.MviKotlin)
+                implementation(Dependencies.MviKotlin.Core)
                 api(Dependencies.MviKotlin.Main)
                 implementation(Dependencies.MviKotlin.Extensions.Coroutines)
                 implementation(Dependencies.KotlinX.Coroutines.Core)
