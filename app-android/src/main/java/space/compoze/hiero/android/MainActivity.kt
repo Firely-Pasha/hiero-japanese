@@ -1,6 +1,8 @@
 package space.compoze.hiero.android
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +28,19 @@ class MainActivity : ComponentActivity() {
         val applicationComponent = ApplicationDefaultComponent(
             componentContext = defaultComponentContext(),
             storeFactory = DefaultStoreFactory()
+        )
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    return if (applicationComponent.state.value is ApplicationStore.State.Loading) {
+                        false
+                    } else {
+                        content.viewTreeObserver.removeOnPreDrawListener(this)
+                        true
+                    }
+                }
+            }
         )
         setContent {
             val applicationState by applicationComponent.state.subscribeAsState()
