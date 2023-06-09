@@ -2,11 +2,13 @@
 
 package space.compoze.hiero.ui.shared.section.state
 
+import arrow.core.Option
 import arrow.core.Some
 import arrow.core.flatten
 import arrow.core.getOrElse
 import arrow.core.raise.either
 import arrow.core.some
+import arrow.core.toOption
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
@@ -28,6 +30,7 @@ import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfS
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
 import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
@@ -59,22 +62,6 @@ class SectionStoreProvider(
                 initialState = SectionStore.State.Loading,
                 bootstrapper = coroutineBootstrapper(dispatchers.main) {
                     either {
-                        if (collectionId != null) {
-                            val collection = collectionGetById(collectionId).bind()
-                                .getOrElse { raise(DomainError("Collection not found :(")) }
-                            val sections = sectionGetOfCollection(collectionId).bind()
-                            val sectionItems = collectionItemGetOfSection(
-                                sections.map { it.id }
-                            ).bind()
-                            dispatch(
-                                SectionStore.Action.Loaded(
-                                    collection = collection,
-                                    sections = sections,
-                                    items = sectionItems.values.flatten()
-                                )
-                            )
-                            return@coroutineBootstrapper
-                        }
                         val section = sectionGetByIdUseCase(sectionId).bind()
                             .getOrElse { raise(DomainError("Section not found :(")) }
                         val collection = collectionGetById(section.collectionId).bind()
@@ -83,7 +70,7 @@ class SectionStoreProvider(
                         dispatch(
                             SectionStore.Action.Loaded(
                                 collection = collection,
-                                sections = listOf(section),
+                                section = section,
                                 items = sectionItems
                             )
                         )
@@ -99,7 +86,7 @@ class SectionStoreProvider(
                         dispatch(
                             SectionStore.Message.Init(
                                 collection = it.collection,
-                                sections = it.sections,
+                                section = it.section,
                                 items = it.items,
                             )
                         )
@@ -108,7 +95,7 @@ class SectionStoreProvider(
                                 collectionItemNotificationGetFlowUseCase().collect {
                                     if (it !is CollectionItemNotification.Changed) return@collect
                                     state.with { content: SectionStore.State.Content ->
-                                        if (it.new.sectionId in content.sections.map { it.id }) {
+                                        if (it.new.sectionId == content.section.id) {
                                             withContext(dispatchers.main) {
                                                 dispatch(
                                                     SectionStore.Message.SetItems(listOf(it.new))
@@ -120,16 +107,19 @@ class SectionStoreProvider(
                             }
                         }
                     }
-                    onIntent<SectionStore.Intent.SelectItem> { intent ->
+                    onIntent<SectionStore.Intent.ToggleItemSelect> { intent ->
                         state.with { content: SectionStore.State.Content ->
                             either {
-                                val result = collectionItemUpdateByIdUseCase(
-                                    intent.itemId, CollectionItemMutationData(
-                                        isSelected = Some(intent.isSelected),
-                                        isBookmarked = Some(false)
-                                    )
-                                ).bind()
-                                dispatch(SectionStore.Message.SetItems(listOf(result)))
+                                content.getItem(intent.itemId)
+                                    .onSome { item ->
+                                        val result = collectionItemUpdateByIdUseCase(
+                                            intent.itemId, CollectionItemMutationData(
+                                                isSelected = Some(!item.isSelected && !item.isBookmarked),
+                                                isBookmarked = Some(false)
+                                            )
+                                        ).bind()
+                                        dispatch(SectionStore.Message.SetItems(listOf(result)))
+                                    }
                             }.onLeft {
                                 println(it)
                             }
@@ -138,15 +128,16 @@ class SectionStoreProvider(
                     onIntent<SectionStore.Intent.ToggleItemBookmark> { intent ->
                         state.with { content: SectionStore.State.Content ->
                             either {
-                                val item = content.items.find { item -> item.id == intent.itemId }
-                                        ?: return@either
-                                collectionItemUpdateByIdUseCase(
-                                    intent.itemId,
-                                    CollectionItemMutationData(
-                                        isBookmarked = Some(!item.isBookmarked),
-                                        isSelected = Some(!item.isBookmarked),
-                                    ),
-                                ).bind()
+                                content.getItem(intent.itemId)
+                                    .onSome { item ->
+                                        collectionItemUpdateByIdUseCase(
+                                            item.id,
+                                            CollectionItemMutationData(
+                                                isBookmarked = Some(!item.isBookmarked),
+                                                isSelected = Some(false),
+                                            ),
+                                        ).bind()
+                                    }
                             }.onLeft {
                                 println(it)
                             }
@@ -155,14 +146,12 @@ class SectionStoreProvider(
                     onIntent<SectionStore.Intent.SelectAll> {
                         state.with { content: SectionStore.State.Content ->
                             either {
-                                val sectionItems = content.sections.map {
-                                    collectionItemUpdateBySectionId(
-                                        it.id, CollectionItemMutationData(
-                                            isSelected = true.some()
-                                        )
-                                    ).bind()
-                                }.flatten()
-                                dispatch(SectionStore.Message.SetItems(sectionItems))
+                                val items = collectionItemUpdateBySectionId(
+                                    content.section.id, CollectionItemMutationData(
+                                        isSelected = true.some(),
+                                    )
+                                ).bind()
+                                dispatch(SectionStore.Message.SetItems(items))
                             }.onLeft {
                                 println(it)
                             }
@@ -171,14 +160,12 @@ class SectionStoreProvider(
                     onIntent<SectionStore.Intent.ClearAll> {
                         state.with { content: SectionStore.State.Content ->
                             either {
-                                val sectionItems = content.sections.map {
-                                    collectionItemUpdateBySectionId(
-                                        it.id, CollectionItemMutationData(
-                                            isSelected = false.some()
-                                        )
-                                    ).bind()
-                                }.flatten()
-                                dispatch(SectionStore.Message.SetItems(sectionItems))
+                                val items = collectionItemUpdateBySectionId(
+                                    content.section.id, CollectionItemMutationData(
+                                        isSelected = false.some()
+                                    )
+                                ).bind()
+                                dispatch(SectionStore.Message.SetItems(items))
                             }.onLeft {
                                 println(it)
                             }
@@ -227,7 +214,7 @@ class SectionStoreProvider(
                         is SectionStore.Message.Error -> SectionStore.State.Error(msg.error)
                         is SectionStore.Message.Init -> SectionStore.State.Content(
                             collection = msg.collection,
-                            sections = msg.sections,
+                            section = msg.section,
                             items = msg.items,
                             selectionMode = true
                         )
@@ -261,4 +248,8 @@ class SectionStoreProvider(
                     }
                 }
             ) {}
+}
+
+private fun SectionStore.State.Content.getItem(itemId: Long): Option<CollectionItemModel> {
+    return items.find { item -> item.id == itemId }.toOption()
 }

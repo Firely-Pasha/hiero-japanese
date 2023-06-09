@@ -14,7 +14,11 @@ class CollectionItemUpdateBySectionId(
     ) = either {
         val items = collectionItemGetOfSection(sectionId).bind()
         items.mapNotNull {
-            collectionItemUpdateByIdUseCase(it, data).getOrNull()
+            if (!it.isBookmarked && it.type != "empty") {
+                collectionItemUpdateByIdUseCase(it, data).getOrNull()
+            } else {
+                it
+            }
         }
     }
 

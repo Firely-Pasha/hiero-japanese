@@ -119,8 +119,8 @@ fun SectionScreen(component: SectionComponent) {
                 }
             },
             onItemSelect = remember {
-                { itemId: Long, isSelected: Boolean ->
-                    component.selectItem(itemId, isSelected)
+                { itemId: Long ->
+                    component.toggleItemSelect(itemId)
                 }
             },
             onItemBookmark = remember(component) {
@@ -157,7 +157,7 @@ private fun SectionContent(
     onClearAllClick: () -> Unit,
     onSelectAllClick: () -> Unit,
     onStartQuizClick: () -> Unit,
-    onItemSelect: (Long, Boolean) -> Unit,
+    onItemSelect: (Long) -> Unit,
     onItemBookmark: (CollectionItemModel) -> Unit,
     onToggleItemAndSetSelectMode: (itemId: Long) -> Unit,
     onToggleItemBySelect: (itemId: Long) -> Unit,
@@ -257,7 +257,7 @@ private fun SectionContent(
             items(
                 items = state.items,
                 key = { it.id },
-                span = { GridItemSpan(state.sections.first().span) }
+                span = { GridItemSpan(state.section.span) }
             ) { item ->
                 Box(
                     modifier = Modifier
@@ -271,7 +271,7 @@ private fun SectionContent(
                                         onItemBookmark(item)
                                     },
                                     onClick = {
-                                        onItemSelect(item.id, !item.isSelected)
+                                        onItemSelect(item.id)
                                     }
                                 )
                                 .fillMaxSize(),
@@ -404,13 +404,7 @@ private fun SectionTopBar(
         },
         title = {
             Text(
-                "${state.collection.title}: ${
-                    if (state.sections.size == 1) {
-                        state.sections[0].title
-                    } else {
-                        "All"
-                    }
-                }"
+                "${state.collection.title}: ${state.section.title}"
             )
         },
         actions = {

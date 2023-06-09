@@ -44,8 +44,8 @@ class DefaultSectionComponent(
         state.value = newState
     }
 
-    override fun selectItem(itemId: Long, isSelected: Boolean) {
-        store.accept(SectionStore.Intent.SelectItem(itemId = itemId, isSelected = isSelected))
+    override fun toggleItemSelect(itemId: Long) {
+        store.accept(SectionStore.Intent.ToggleItemSelect(itemId = itemId))
     }
 
     override fun toggleItemAndSetSelectMode(itemId: Long) {
@@ -72,7 +72,10 @@ class DefaultSectionComponent(
         state.value.with { content: SectionStore.State.Content ->
             navigationComponent.navigation.push(
                 StackNavigationComponent.Config.Quiz(
-                    content.items.filter { it.isSelected && it.type != "empty" }.map { it.id }
+                    content.items
+                        .filter { it.type != "empty" }
+                        .filter { it.isSelected || it.isBookmarked }
+                        .map { it.id }
                 )
             )
         }

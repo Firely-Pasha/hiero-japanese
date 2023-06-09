@@ -13,7 +13,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
         object Loading : State
         data class Content(
             val collection: CollectionModel,
-            val sections: List<SectionModel>,
+            val section: SectionModel,
             val items: List<CollectionItemModel>,
             val selectionMode: Boolean,
         ) : State
@@ -26,7 +26,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
     sealed interface Action {
         data class Loaded(
             val collection: CollectionModel,
-            val sections: List<SectionModel>,
+            val section: SectionModel,
             val items: List<CollectionItemModel>,
         ) : Action
 
@@ -36,9 +36,8 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
     }
 
     sealed interface Intent {
-        data class SelectItem(
+        data class ToggleItemSelect(
             val itemId: Long,
-            val isSelected: Boolean,
         ) : Intent
 
         data class ToggleItemAndSetSelectMode(
@@ -65,7 +64,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
 
         data class Init(
             val collection: CollectionModel,
-            val sections: List<SectionModel>,
+            val section: SectionModel,
             val items: List<CollectionItemModel>,
         ) : Message
 
