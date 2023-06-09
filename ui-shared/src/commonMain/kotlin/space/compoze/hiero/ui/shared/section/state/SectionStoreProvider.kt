@@ -27,12 +27,12 @@ import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.interactor.CollectionGetById
 import space.compoze.hiero.domain.collectionitem.CollectionItemNotification
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSection
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
-import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlow
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
-import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
+import space.compoze.hiero.domain.section.interactor.SectionGetById
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
 import space.compoze.hiero.ui.shared.utils.applyState
 import space.compoze.hiero.ui.shared.utils.with
@@ -45,12 +45,12 @@ class SectionStoreProvider(
     private val dispatchers: AppDispatchers by inject()
 
     private val collectionGetById: CollectionGetById by inject()
-    private val sectionGetByIdUseCase: SectionGetByIdUseCase by inject()
+    private val sectionGetById: SectionGetById by inject()
     private val sectionGetOfCollection: SectionGetOfCollection by inject()
     private val collectionItemGetOfSection: CollectionItemGetOfSection by inject()
-    private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
+    private val collectionItemUpdateById: CollectionItemUpdateById by inject()
     private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
-    private val collectionItemNotificationGetFlowUseCase: CollectionItemNotificationGetFlowUseCase by inject()
+    private val collectionItemNotificationGetFlow: CollectionItemNotificationGetFlow by inject()
 
     fun create(
         sectionId: String,
@@ -62,7 +62,7 @@ class SectionStoreProvider(
                 initialState = SectionStore.State.Loading,
                 bootstrapper = coroutineBootstrapper(dispatchers.main) {
                     either {
-                        val section = sectionGetByIdUseCase(sectionId).bind()
+                        val section = sectionGetById(sectionId).bind()
                             .getOrElse { raise(DomainError("Section not found :(")) }
                         val collection = collectionGetById(section.collectionId).bind()
                             .getOrElse { raise(DomainError("Collection not found :(")) }
@@ -92,7 +92,7 @@ class SectionStoreProvider(
                         )
                         state.with { content: SectionStore.State.Content ->
                             launch {
-                                collectionItemNotificationGetFlowUseCase().collect {
+                                collectionItemNotificationGetFlow().collect {
                                     if (it !is CollectionItemNotification.Changed) return@collect
                                     state.with { content: SectionStore.State.Content ->
                                         if (it.new.sectionId == content.section.id) {
@@ -112,7 +112,7 @@ class SectionStoreProvider(
                             either {
                                 content.getItem(intent.itemId)
                                     .onSome { item ->
-                                        val result = collectionItemUpdateByIdUseCase(
+                                        val result = collectionItemUpdateById(
                                             intent.itemId, CollectionItemMutationData(
                                                 isSelected = Some(!item.isSelected && !item.isBookmarked),
                                                 isBookmarked = Some(false)
@@ -130,7 +130,7 @@ class SectionStoreProvider(
                             either {
                                 content.getItem(intent.itemId)
                                     .onSome { item ->
-                                        collectionItemUpdateByIdUseCase(
+                                        collectionItemUpdateById(
                                             item.id,
                                             CollectionItemMutationData(
                                                 isBookmarked = Some(!item.isBookmarked),
@@ -178,7 +178,7 @@ class SectionStoreProvider(
                                     .find { item -> item.id == intent.itemId }
                                     ?: return@either
                                 val selectionMode = !item.isSelected
-                                collectionItemUpdateByIdUseCase(
+                                collectionItemUpdateById(
                                     intent.itemId,
                                     CollectionItemMutationData(
                                         isSelected = Some(selectionMode),
@@ -197,7 +197,7 @@ class SectionStoreProvider(
                     onIntent<SectionStore.Intent.ToggleItemBySelect> { intent ->
                         state.with { content: SectionStore.State.Content ->
                             either {
-                                collectionItemUpdateByIdUseCase(
+                                collectionItemUpdateById(
                                     intent.itemId,
                                     CollectionItemMutationData(
                                         isSelected = Some(content.selectionMode),

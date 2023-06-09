@@ -4,7 +4,7 @@ import arrow.core.raise.either
 import space.compoze.hiero.domain.collection.CollectionRepository
 import space.compoze.hiero.domain.section.repository.SectionRepository
 
-class SectionGetByIdUseCase(
+class SectionGetById(
     private val sectionRepository: SectionRepository
 ) {
 

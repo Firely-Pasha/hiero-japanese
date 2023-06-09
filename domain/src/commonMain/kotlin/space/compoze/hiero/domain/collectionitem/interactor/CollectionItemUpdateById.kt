@@ -7,7 +7,7 @@ import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
-class CollectionItemUpdateByIdUseCase(
+class CollectionItemUpdateById(
     private val collectionItemGetByIds: CollectionItemGetByIds,
     private val collectionItemRepository: CollectionItemRepository,
     private val collectionItemNotifier: CollectionItemNotifier,

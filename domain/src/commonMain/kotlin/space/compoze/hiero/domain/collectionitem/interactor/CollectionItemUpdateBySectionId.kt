@@ -5,7 +5,7 @@ import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMu
 
 class CollectionItemUpdateBySectionId(
     private val collectionItemGetOfSection: CollectionItemGetOfSection,
-    private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase,
+    private val collectionItemUpdateById: CollectionItemUpdateById,
 ) {
 
     operator fun invoke(
@@ -15,7 +15,7 @@ class CollectionItemUpdateBySectionId(
         val items = collectionItemGetOfSection(sectionId).bind()
         items.mapNotNull {
             if (!it.isBookmarked && it.type != "empty") {
-                collectionItemUpdateByIdUseCase(it, data).getOrNull()
+                collectionItemUpdateById(it, data).getOrNull()
             } else {
                 it
             }

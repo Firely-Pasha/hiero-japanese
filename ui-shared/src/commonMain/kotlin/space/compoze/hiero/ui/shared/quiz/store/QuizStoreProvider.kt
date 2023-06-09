@@ -12,7 +12,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIds
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.ui.shared.utils.with
 
@@ -21,7 +21,7 @@ class QuizStoreProvider(
 ) : KoinComponent {
 
     private val collectionItemGetByIds: CollectionItemGetByIds by inject()
-    private val collectionItemUpdateByIdUseCase: CollectionItemUpdateByIdUseCase by inject()
+    private val collectionItemUpdateById: CollectionItemUpdateById by inject()
 
     fun create(items: List<Long>): QuizStore =
         object : QuizStore,
@@ -72,7 +72,7 @@ class QuizStoreProvider(
                     onIntent<QuizStore.Intent.BookmarkCurrentItem> {
                         state.with { content: QuizStore.State.Content ->
                             either {
-                                val result = collectionItemUpdateByIdUseCase(
+                                val result = collectionItemUpdateById(
                                     content.currentItem.id,
                                     CollectionItemMutationData(
                                         isBookmarked = content.currentItem.isBookmarked.some()

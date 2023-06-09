@@ -8,13 +8,13 @@ import space.compoze.hiero.domain.collectionitem.CollectionItemNotification
 import space.compoze.hiero.domain.section.interactor.SectionUpdateComputed
 import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
 
-class CollectionItemNotificationListenUseCase(
-    private val collectionItemNotificationGetFlowUseCase: CollectionItemNotificationGetFlowUseCase,
+class CollectionItemNotificationListen(
+    private val collectionItemNotificationGetFlow: CollectionItemNotificationGetFlow,
     private val sectionUpdateComputed: SectionUpdateComputed,
 ) {
 
     operator fun invoke(): Job {
-        return collectionItemNotificationGetFlowUseCase().onEach {
+        return collectionItemNotificationGetFlow().onEach {
             when (it) {
                 is CollectionItemNotification.Changed -> {
                     if (it.prev.isSelected != it.new.isSelected) {

@@ -3,7 +3,7 @@ package space.compoze.hiero.domain.collectionitem.interactor.notification
 import arrow.core.raise.either
 import space.compoze.hiero.domain.collectionitem.CollectionItemNotifier
 
-class CollectionItemNotificationGetFlowUseCase(
+class CollectionItemNotificationGetFlow(
     private val collectionItemNotifier: CollectionItemNotifier
 ) {
 

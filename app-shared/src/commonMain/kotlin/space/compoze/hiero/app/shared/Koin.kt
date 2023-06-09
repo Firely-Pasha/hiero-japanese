@@ -1,12 +1,8 @@
 package space.compoze.hiero.app.shared
 
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import org.koin.core.Koin
-import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.koin.mp.KoinPlatformTools
 import space.compose.hiero.datasource.database.Database
 import space.compoze.hiero.data.collection.CollectionRepository
 import space.compoze.hiero.data.collectionitem.CollectionItemRepository
@@ -22,12 +18,12 @@ import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByI
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetCountOfCollection
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetCountOfSection
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetOfSection
-import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateByIdUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateBySectionId
-import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlowUseCase
-import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationListenUseCase
+import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationGetFlow
+import space.compoze.hiero.domain.collectionitem.interactor.notification.CollectionItemNotificationListen
 import space.compoze.hiero.domain.section.interactor.SectionGetAll
-import space.compoze.hiero.domain.section.interactor.SectionGetByIdUseCase
+import space.compoze.hiero.domain.section.interactor.SectionGetById
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
 import space.compoze.hiero.domain.section.interactor.SectionUpdate
 import space.compoze.hiero.domain.section.interactor.SectionUpdateComputed
@@ -64,14 +60,14 @@ fun domainModule() = module {
     single { CollectionItemGetCountOfCollection(get()) }
     single { CollectionItemGetCountOfSection(get()) }
     single { CollectionItemGetOfSection(get()) }
-    single { CollectionItemUpdateByIdUseCase(get(), get(), get()) }
+    single { CollectionItemUpdateById(get(), get(), get()) }
     single { CollectionItemUpdateBySectionId(get(), get()) }
     single { CollectionItemNotifier() }
-    single { CollectionItemNotificationGetFlowUseCase(get()) }
-    single { CollectionItemNotificationListenUseCase(get(), get()) }
+    single { CollectionItemNotificationGetFlow(get()) }
+    single { CollectionItemNotificationListen(get(), get()) }
 
     single { SectionGetAll(get()) }
-    single { SectionGetByIdUseCase(get()) }
+    single { SectionGetById(get()) }
     single { SectionGetOfCollection(get()) }
     single { SectionUpdate(get()) }
     single { SectionUpdateComputed(get()) }
