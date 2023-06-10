@@ -176,7 +176,7 @@ private fun SectionContent(
         },
         floatingActionButton = {
             val isSelectedAny = remember(state.items) {
-                state.items.any { it.isSelected }
+                state.items.any { it.isSelected || it.isBookmarked }
             }
             AnimatedVisibility(
                 isSelectedAny,
