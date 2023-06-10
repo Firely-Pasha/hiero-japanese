@@ -25,14 +25,6 @@ kotlin {
         it.binaries.framework {
             baseName = "shared"
             export(Dependencies.Decompose.Core)
-//                export("com.arkivanov.essenty:lifecycle:<essenty_version>")
-
-            // Optional, only if you need state preservation on Darwin (Apple) targets
-//                export("com.arkivanov.essenty:state-keeper:<essenty_version>")
-
-            // Optional, only if you need state preservation on Darwin (Apple) targets
-//                export("com.arkivanov.parcelize.darwin:runtime:<parcelize_darwin_version>")
-
         }
     }
 

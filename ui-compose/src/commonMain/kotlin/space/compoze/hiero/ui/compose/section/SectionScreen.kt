@@ -43,6 +43,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -81,7 +82,6 @@ import arrow.core.Option
 import arrow.core.Some
 import com.arkivanov.decompose.value.Value
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
-import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.ui.compose.utils.select
 import space.compoze.hiero.ui.shared.section.component.SectionComponent
 import space.compoze.hiero.ui.shared.section.state.SectionStore
@@ -97,47 +97,16 @@ fun SectionScreen(component: SectionComponent) {
         is SectionStore.State.Error -> Text(
             state.error.message ?: state.error.cause?.message ?: "UNKNOWN ERROR WTF?????"
         )
-
         is SectionStore.State.Content -> SectionContent(
             state = state,
-            onNavigateBack = {
-                component.navigateBack()
-            },
-            onSelectAllClick = remember {
-                {
-                    component.selectAll()
-                }
-            },
-            onClearAllClick = remember {
-                {
-                    component.clearAll()
-                }
-            },
-            onStartQuizClick = remember {
-                {
-                    component.startQuiz()
-                }
-            },
-            onItemSelect = remember {
-                { itemId: Long ->
-                    component.toggleItemSelect(itemId)
-                }
-            },
-            onItemBookmark = remember(component) {
-                {
-                    component.toggleItemBookmark(it.id)
-                }
-            },
-            onToggleItemAndSetSelectMode = remember(component) {
-                {
-                    component.toggleItemAndSetSelectMode(it)
-                }
-            },
-            onToggleItemBySelect = remember(component) {
-                {
-                    component.toggleItemBySelect(it)
-                }
-            }
+            onNavigateBack = component::navigateBack,
+            onSelectAllClick = component::selectAll,
+            onClearAllClick = component::clearAll,
+            onStartQuizClick = component::startQuiz,
+            onItemSelect = component::toggleItemSelect,
+            onItemBookmark = component::toggleItemBookmark,
+            onToggleItemAndSetSelectMode = component::toggleItemAndSetSelectMode,
+            onToggleItemBySelect = component::toggleItemBySelect
         )
     }
 
@@ -158,7 +127,7 @@ private fun SectionContent(
     onSelectAllClick: () -> Unit,
     onStartQuizClick: () -> Unit,
     onItemSelect: (Long) -> Unit,
-    onItemBookmark: (CollectionItemModel) -> Unit,
+    onItemBookmark: (Long) -> Unit,
     onToggleItemAndSetSelectMode: (itemId: Long) -> Unit,
     onToggleItemBySelect: (itemId: Long) -> Unit,
 ) {
@@ -233,7 +202,7 @@ private fun SectionContent(
                                 }
 
                             },
-                            onDrag = { change, dragAmount ->
+                            onDrag = { _, dragAmount ->
                                 offset += dragAmount
                                 for (item in lazyGridState.layoutInfo.visibleItemsInfo) {
                                     val isInX =
@@ -268,13 +237,14 @@ private fun SectionContent(
                                 .clip(MaterialTheme.shapes.medium)
                                 .combinedClickable(
                                     onLongClick = {
-                                        onItemBookmark(item)
+                                        onItemBookmark(item.id)
                                     },
                                     onClick = {
                                         onItemSelect(item.id)
                                     }
                                 )
                                 .fillMaxSize(),
+                            colors = CardDefaults.cardColors()
                         ) {
                             Box(
                                 modifier = Modifier.padding(6.dp)
