@@ -1,6 +1,8 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @file:Suppress("NAME_SHADOWING")
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -19,14 +22,19 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CropPortrait
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.School
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -39,6 +47,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import space.compoze.hiero.domain.section.model.data.SectionModel
+import space.compoze.hiero.ui.compose.utils.plus
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
 import space.compoze.hiero.ui.shared.collection.store.CollectionStore
@@ -77,6 +86,9 @@ fun CollectionError(component: CollectionComponent, state: CollectionStore.State
     }
 }
 
+private val ListPadding = PaddingValues(16.dp)
+private val ListWithFabPadding = PaddingValues(bottom = 128.dp)
+
 @Composable
 fun CollectionContent(component: CollectionComponent, state: CollectionStore.State.Content) {
     Scaffold(
@@ -86,17 +98,39 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
                     Text(state.collection.title)
                 },
             )
+        },
+        floatingActionButton = {
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                if (state.canStartQuiz) {
+                    if (state.canStartBookmarkedQuiz) {
+                        SmallFloatingActionButton(
+                            onClick = {
+                                component.startQuiz(true)
+                            }
+                        ) {
+                            Icon(
+                                Icons.Rounded.Bookmark,
+                                "Play bookmarked",
+                                modifier = Modifier.size(18.dp),
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    FloatingActionButton(
+                        onClick = {
+                            component.startQuiz(false)
+                        }
+                    ) {
+                        Icon(Icons.Rounded.PlayArrow, "Play")
+                    }
+                }
+            }
         }
     ) {
-        val containerPadding = remember {
-            val padding = 16.dp
-            PaddingValues(
-                start = it.calculateStartPadding(LayoutDirection.Ltr) + padding,
-                top = it.calculateTopPadding() + padding,
-                end = it.calculateEndPadding(LayoutDirection.Ltr) + padding,
-                bottom = it.calculateBottomPadding() + padding,
-            )
-        }
+        val containerPadding = it + ListPadding + ListWithFabPadding
         LazyColumn(
             contentPadding = containerPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp)

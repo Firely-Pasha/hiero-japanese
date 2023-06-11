@@ -6,10 +6,9 @@ import space.compoze.hiero.ui.shared.collection.store.CollectionStore
 
 interface CollectionComponent {
     val state: Value<CollectionStore.State>
-    fun addItem()
     fun navigateBack()
-    fun navigateToItemDetails()
     fun navigateToSection(section: SectionModel)
+    fun startQuiz(isBookmarkOnly: Boolean)
 
     companion object {
         val AllSection = SectionModel(

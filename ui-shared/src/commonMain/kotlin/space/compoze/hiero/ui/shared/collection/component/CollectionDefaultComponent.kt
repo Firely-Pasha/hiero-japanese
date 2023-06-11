@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -25,7 +26,7 @@ class CollectionDefaultComponent(
 ) : CollectionComponent, KoinComponent, ComponentContext by componentContext {
 
     private val dispatchers: AppDispatchers by inject()
-    
+
     private val store = instanceKeeper.getStore {
         CollectionStoreProvider(storeFactory).create(collectionId)
     }
@@ -36,18 +37,29 @@ class CollectionDefaultComponent(
         bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
             store.states bindTo { state.value = it }
         }
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {
+            store.labels bindTo ::onLabel
+        }
     }
 
-    override fun addItem() {
-        store.accept(CollectionStore.Intent.AddSection)
+    private fun onLabel(label: CollectionStore.Label) {
+        when (label) {
+            is CollectionStore.Label.StartQuiz -> {
+                navigateToQuiz(label.items)
+            }
+        }
+    }
+
+    private fun navigateToQuiz(items: List<Long>) {
+        navigationComponent.navigation.push(
+            StackNavigationComponent.Config.Quiz(
+                items = items
+            )
+        )
     }
 
     override fun navigateBack() {
         navigationComponent.navigateBack()
-    }
-
-    override fun navigateToItemDetails() {
-        navigationComponent.navigation.push(StackNavigationComponent.Config.Katakana)
     }
 
     override fun navigateToSection(section: SectionModel) {
@@ -61,5 +73,9 @@ class CollectionDefaultComponent(
                 },
             )
         )
+    }
+
+    override fun startQuiz(isBookmarkOnly: Boolean) {
+        store.accept(CollectionStore.Intent.StartQuiz(isBookmarkOnly))
     }
 }

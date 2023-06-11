@@ -15,6 +15,8 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
         data class Content(
             val collection: CollectionModel,
             val sections: List<SectionModel>,
+            val canStartBookmarkedQuiz: Boolean,
+            val canStartQuiz: Boolean,
         ) : State
 
         data class Error(
@@ -34,7 +36,9 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
     }
 
     sealed interface Intent {
-        object AddSection : Intent
+        data class StartQuiz(
+            val isBookmarkOnly: Boolean
+        ) : Intent
     }
 
     sealed interface Message {
@@ -58,8 +62,8 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
     }
 
     sealed interface Label {
-        data class ShowMessage(
-            val message: String,
+        data class StartQuiz(
+            val items: List<Long>,
         ) : Label
     }
 
