@@ -62,15 +62,10 @@ class CollectionDefaultComponent(
         navigationComponent.navigateBack()
     }
 
-    override fun navigateToSection(section: SectionModel) {
+    override fun navigateToSection(sectionId: String) {
         navigationComponent.navigation.push(
             StackNavigationComponent.Config.Section(
-                sectionId = section.id,
-                collectionId = if (section == CollectionComponent.AllSection) {
-                    collectionId
-                } else {
-                    null
-                },
+                sectionId = sectionId,
             )
         )
     }

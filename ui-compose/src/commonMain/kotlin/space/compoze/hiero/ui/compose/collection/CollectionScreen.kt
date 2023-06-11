@@ -2,6 +2,7 @@
 @file:Suppress("NAME_SHADOWING")
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CropPortrait
@@ -58,31 +60,23 @@ fun CollectionScreen(component: CollectionComponent) {
 
     val state by component.state.subscribeAsState()
     when (val state = state) {
-        is CollectionStore.State.Error -> CollectionError(component, state)
+        is CollectionStore.State.Error -> CollectionError(
+            state = state,
+        )
         CollectionStore.State.Loading -> CircularProgressIndicator()
-        is CollectionStore.State.Content -> CollectionContent(component, state)
+        is CollectionStore.State.Content -> CollectionContent(
+            state = state,
+            onStartQuiz = component::startQuiz,
+            onNavigateToSection = component::navigateToSection
+        )
     }
 }
 
 @Composable
-fun CollectionError(component: CollectionComponent, state: CollectionStore.State.Error) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            component.navigateBack()
-                        }
-                    ) {
-                        Icon(Icons.Default.ArrowBack, "Add item")
-                    }
-                },
-                title = {
-                }
-            )
-        }
-    ) {
+fun CollectionError(
+    state: CollectionStore.State.Error,
+) {
+    Scaffold {
         Text(state.error.message ?: "ERROR!")
     }
 }
@@ -91,7 +85,11 @@ private val ListPadding = PaddingValues(16.dp)
 private val ListWithFabPadding = PaddingValues(bottom = 128.dp)
 
 @Composable
-fun CollectionContent(component: CollectionComponent, state: CollectionStore.State.Content) {
+fun CollectionContent(
+    state: CollectionStore.State.Content,
+    onStartQuiz: (isBookmarkOnly: Boolean) -> Unit,
+    onNavigateToSection: (sectionId: String) -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -109,9 +107,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
                     if (state.canStartBookmarkedQuiz) {
                         SmallFloatingActionButton(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            onClick = {
-                                component.startQuiz(true)
-                            }
+                            onClick = { onStartQuiz(true) }
                         ) {
                             Icon(
                                 Icons.Rounded.Bookmark,
@@ -123,9 +119,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
                     Spacer(modifier = Modifier.height(8.dp))
                     FloatingActionButton(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        onClick = {
-                            component.startQuiz(false)
-                        }
+                        onClick = { onStartQuiz(false) }
                     ) {
                         Icon(Icons.Rounded.PlayArrow, "Play")
                     }
@@ -136,7 +130,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
         val containerPadding = it + ListPadding + ListWithFabPadding
         LazyColumn(
             contentPadding = containerPadding,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(
                 count = state.sections.size,
@@ -145,9 +139,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
                 val section = state.sections[it]
                 SectionItem(
                     section,
-                    onClick = {
-                        component.navigateToSection(section)
-                    }
+                    onClick = { onNavigateToSection(section.id) }
                 )
             }
         }
@@ -192,12 +184,6 @@ private fun SectionItem(
                         .fillMaxWidth()
                 ) {
                     Row(
-//                        modifier = Modifier
-//                            .background(
-//                                color = MaterialTheme.colorScheme.secondaryContainer,
-//                                shape = RoundedCornerShape(99.dp)
-//                            )
-//                            .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -216,12 +202,6 @@ private fun SectionItem(
                         horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
                     ) {
                         Row(
-//                            modifier = Modifier
-//                                .background(
-//                                    color = MaterialTheme.colorScheme.secondaryContainer,
-//                                    shape = RoundedCornerShape(99.dp)
-//                                )
-//                                .padding(horizontal = 12.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -235,12 +215,6 @@ private fun SectionItem(
                         }
 
                         Row(
-//                            modifier = Modifier
-//                                .background(
-//                                    color = MaterialTheme.colorScheme.secondaryContainer,
-//                                    shape = RoundedCornerShape(99.dp)
-//                                )
-//                                .padding(horizontal = 12.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(

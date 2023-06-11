@@ -374,9 +374,16 @@ private fun SectionTopBar(
             }
         },
         title = {
-            Text(
-                "${state.collection.title}: ${state.section.title}"
-            )
+                Column {
+                    Text(
+                        state.section.title,
+                        maxLines = 1
+                    )
+                    Text(
+                        state.collection.title,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
         },
         actions = {
             IconButton(
