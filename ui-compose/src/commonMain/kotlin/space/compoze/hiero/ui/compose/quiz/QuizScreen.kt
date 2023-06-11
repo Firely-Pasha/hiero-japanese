@@ -53,21 +53,9 @@ fun QuizScreen(component: QuizComponent) {
         QuizStore.State.Error -> Text("EERRRIR")
         is QuizStore.State.Content -> QuizContent(
             state = state,
-            onNavigateBack = remember {
-                {
-                    component.navigateBack()
-                }
-            },
-            onNextItemClick = remember {
-                {
-                    component.nextItem()
-                }
-            },
-            onBookmark = remember {
-                {
-                    component.bookmarkCurrentItem()
-                }
-            }
+            onNavigateBack = component::navigateBack,
+            onNextItemClick = component::nextItem,
+            onBookmark = component::bookmarkCurrentItem
         )
     }
 }
