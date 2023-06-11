@@ -27,12 +27,12 @@ fun <T : Any> Value<T>.subscribeAsState(policy: SnapshotMutationPolicy<T> = stru
 }
 
 @Composable
-fun <T : Any, R> Value<T>.select(policy: SnapshotMutationPolicy<R> = structuralEqualityPolicy(), block: (T) -> R): State<R> {
+fun <T : Any> Value<T>.select(policy: SnapshotMutationPolicy<T> = structuralEqualityPolicy()): State<T> {
 
-    val state = remember(this, block) { mutableStateOf(block(value), policy) }
+    val state = remember(this) { mutableStateOf(value, policy) }
 
     DisposableEffect(this) {
-        val observer: (T) -> Unit = { state.value = block(it) }
+        val observer: (T) -> Unit = { state.value = value }
 
         subscribe(observer)
 

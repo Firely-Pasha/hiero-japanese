@@ -29,6 +29,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
@@ -58,10 +60,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SnapshotMutationPolicy
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
@@ -81,8 +86,11 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
 import com.arkivanov.decompose.value.Value
+import space.compoze.hiero.domain.collection.model.data.CollectionModel
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.ui.compose.utils.select
+import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.section.component.SectionComponent
 import space.compoze.hiero.ui.shared.section.state.SectionStore
 import kotlin.random.Random
@@ -90,13 +98,14 @@ import kotlin.random.Random
 @Composable
 fun SectionScreen(component: SectionComponent) {
 
-    val state by component.state.select { it }
+    val state by component.state.subscribeAsState()
 
     when (val state = state) {
         SectionStore.State.Loading -> CircularProgressIndicator()
         is SectionStore.State.Error -> Text(
             state.error.message ?: state.error.cause?.message ?: "UNKNOWN ERROR WTF?????"
         )
+
         is SectionStore.State.Content -> SectionContent(
             state = state,
             onNavigateBack = component::navigateBack,
@@ -111,13 +120,6 @@ fun SectionScreen(component: SectionComponent) {
     }
 
 }
-
-@Composable
-fun <T : Any, R> Value<T>.selectContent(
-    policy: SnapshotMutationPolicy<R> = structuralEqualityPolicy(),
-    block: (SectionStore.State.Content) -> R,
-) =
-    select(policy) { block(it as SectionStore.State.Content) }
 
 @Composable
 private fun SectionContent(
@@ -227,126 +229,14 @@ private fun SectionContent(
             items(
                 items = state.items,
                 key = { it.id },
-                span = { GridItemSpan(state.section.span) }
+                span = { GridItemSpan(state.section.span) },
+                contentType = { it.type }
             ) { item ->
-                Box(
-                    modifier = Modifier
-                ) {
-                    if (item.type == CollectionItemType.HIEROGLYPH) {
-                        Card(
-                            modifier = Modifier
-                                .clip(MaterialTheme.shapes.medium)
-                                .combinedClickable(
-                                    onLongClick = {
-                                        onItemBookmark(item.id)
-                                    },
-                                    onClick = {
-                                        onItemSelect(item.id)
-                                    }
-                                )
-                                .fillMaxSize(),
-                            colors = CardDefaults.cardColors()
-                        ) {
-                            Box(
-                                modifier = Modifier.padding(6.dp)
-                                    .align(Alignment.CenterHorizontally),
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        item.value,
-                                        fontSize = 32.sp,
-                                        softWrap = false
-                                    )
-                                    Text(
-                                        item.transcription,
-                                        fontSize = 16.sp
-                                    )
-                                }
-                            }
-                        }
-                        AnimatedVisibility(
-                            item.isSelected,
-                            enter = fadeIn() + scaleIn(),
-                            exit = fadeOut() + scaleOut(),
-                            modifier = Modifier
-                                .offset(y = (-8).dp, x = (-8).dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .height(24.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = MaterialTheme.colorScheme.surface,
-                                        shape = CircleShape
-                                    )
-                                    .clip(CircleShape)
-                            ) {
-                                Box(
-                                    Modifier
-                                        .padding(2.dp)
-                                        .background(
-                                            MaterialTheme.colorScheme.primaryContainer,
-                                            shape = CircleShape
-                                        )
-                                        .fillMaxSize()
-                                ) {
-                                    Icon(
-                                        Icons.Outlined.School,
-                                        "Selected",
-                                        modifier = Modifier
-                                            .height(16.dp)
-                                            .width(16.dp)
-                                            .align(Alignment.Center),
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                    )
-                                }
-                            }
-                        }
-                        AnimatedVisibility(
-                            item.isBookmarked,
-                            enter = fadeIn() + scaleIn(),
-                            exit = fadeOut() + scaleOut(),
-                            modifier = Modifier
-                                .offset(y = (-8).dp, x = (-8).dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .height(24.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = MaterialTheme.colorScheme.surface,
-                                        shape = CircleShape
-                                    )
-                                    .clip(CircleShape)
-                            ) {
-                                Box(
-                                    Modifier
-                                        .padding(2.dp)
-                                        .background(
-                                            MaterialTheme.colorScheme.primaryContainer,
-                                            shape = CircleShape
-                                        )
-                                        .fillMaxSize()
-                                ) {
-                                    Icon(
-                                        Icons.Outlined.BookmarkBorder,
-                                        "Selected",
-                                        modifier = Modifier
-                                            .height(16.dp)
-                                            .width(16.dp)
-                                            .align(Alignment.Center),
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
+                SectionItem(
+                    item = item,
+                    onItemSelect = onItemSelect,
+                    onItemBookmark = onItemBookmark
+                )
             }
         }
     }
@@ -374,16 +264,16 @@ private fun SectionTopBar(
             }
         },
         title = {
-                Column {
-                    Text(
-                        state.section.title,
-                        maxLines = 1
-                    )
-                    Text(
-                        state.collection.title,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+            Column {
+                Text(
+                    state.section.title,
+                    maxLines = 1
+                )
+                Text(
+                    state.collection.title,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         },
         actions = {
             IconButton(
@@ -438,6 +328,127 @@ private fun SectionTopBar(
             }
         }
     )
+}
+
+@Composable
+private fun SectionItem(
+    item: CollectionItemModel,
+    onItemSelect: (Long) -> Unit,
+    onItemBookmark: (Long) -> Unit,
+) {
+    Box {
+        if (item.type == CollectionItemType.HIEROGLYPH) {
+            Card(
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .combinedClickable(
+                        onLongClick = { onItemBookmark(item.id) },
+                        onClick = { onItemSelect(item.id) }
+                    )
+                    .fillMaxSize(),
+                colors = CardDefaults.cardColors(
+                    containerColor = randomColor()
+                )
+            ) {
+                Box(
+                    modifier = Modifier.padding(6.dp)
+                        .align(Alignment.CenterHorizontally),
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            item.value,
+                            fontSize = 32.sp,
+                            softWrap = false
+                        )
+                        Text(
+                            item.transcription,
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
+            AnimatedVisibility(
+                item.isSelected,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut(),
+                modifier = Modifier
+                    .offset(y = (-8).dp, x = (-8).dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(24.dp)
+                        .height(24.dp)
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = CircleShape
+                        )
+                        .clip(CircleShape)
+                ) {
+                    Box(
+                        Modifier
+                            .padding(2.dp)
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer,
+                                shape = CircleShape
+                            )
+                            .fillMaxSize()
+                    ) {
+                        Icon(
+                            Icons.Outlined.School,
+                            "Selected",
+                            modifier = Modifier
+                                .height(16.dp)
+                                .width(16.dp)
+                                .align(Alignment.Center),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+            }
+            AnimatedVisibility(
+                item.isBookmarked,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut(),
+                modifier = Modifier
+                    .offset(y = (-8).dp, x = (-8).dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(24.dp)
+                        .height(24.dp)
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = CircleShape
+                        )
+                        .clip(CircleShape)
+                ) {
+                    Box(
+                        Modifier
+                            .padding(2.dp)
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer,
+                                shape = CircleShape
+                            )
+                            .fillMaxSize()
+                    ) {
+                        Icon(
+                            Icons.Outlined.BookmarkBorder,
+                            "Selected",
+                            modifier = Modifier
+                                .height(16.dp)
+                                .width(16.dp)
+                                .align(Alignment.Center),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 fun randomColor() = Color(

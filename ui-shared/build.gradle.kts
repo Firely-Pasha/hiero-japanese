@@ -5,6 +5,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("kotlin-parcelize")
+    id("org.jetbrains.compose")
 }
 
 kotlin {
@@ -38,6 +39,9 @@ kotlin {
             dependencies {
                 implementation(project(Modules.Domain))
 
+
+                implementation(compose.runtime)
+                
                 api(Dependencies.Decompose.Core)
                 api(Dependencies.Essenty.Lifecycle)
                 implementation(Dependencies.MviKotlin.Core)

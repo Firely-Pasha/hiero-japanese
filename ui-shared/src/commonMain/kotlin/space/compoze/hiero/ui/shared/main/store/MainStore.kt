@@ -1,9 +1,11 @@
 package space.compoze.hiero.ui.shared.main.store
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
 
 interface MainStore : Store<MainStore.Intent, MainStore.State, MainStore.Label> {
 
+    @Immutable
     data class State(
         val tab: Int,
     )

@@ -1,5 +1,6 @@
 package space.compoze.hiero.ui.shared.settings.store
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 
@@ -7,12 +8,15 @@ interface SettingsStore: Store<SettingsStore.Intent, SettingsStore.State, Nothin
 
     sealed interface State {
 
+        @Immutable
         object Loading : State
 
+        @Immutable
         data class Content(
             val theme: String,
         ) : State
 
+        @Immutable
         data class Error(
             val error: DomainError,
         ) : State

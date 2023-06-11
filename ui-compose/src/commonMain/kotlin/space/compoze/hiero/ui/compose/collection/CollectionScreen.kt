@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import space.compoze.hiero.domain.section.model.data.SectionModel
+import space.compoze.hiero.ui.compose.section.randomColor
 import space.compoze.hiero.ui.compose.utils.plus
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
@@ -133,13 +135,12 @@ fun CollectionContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(
-                count = state.sections.size,
-                key = { state.sections[it].id }
+                items = state.sections,
+                key = { it.id }
             ) {
-                val section = state.sections[it]
                 SectionItem(
-                    section,
-                    onClick = { onNavigateToSection(section.id) }
+                    it,
+                    onClick = { onNavigateToSection(it.id) }
                 )
             }
         }
@@ -154,7 +155,9 @@ private fun SectionItem(
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(),
+        colors = CardDefaults.cardColors(
+//            containerColor = randomColor()
+        ),
         onClick = onClick,
     ) {
         Box(

@@ -1,5 +1,6 @@
 package space.compoze.hiero.ui.shared.quiz.store
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
@@ -17,12 +18,15 @@ interface QuizStore : Store<QuizStore.Intent, QuizStore.State, Nothing> {
     }
 
     sealed interface State {
+        @Immutable
         object Loading: State
+        @Immutable
         data class Content(
             val items: List<CollectionItemModel>,
             val itemPool: List<CollectionItemModel>,
             val currentItem: CollectionItemModel,
         ): State
+        @Immutable
         object Error: State
     }
 

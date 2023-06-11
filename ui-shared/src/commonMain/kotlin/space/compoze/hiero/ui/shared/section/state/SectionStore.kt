@@ -1,5 +1,6 @@
 package space.compoze.hiero.ui.shared.section.state
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.model.data.CollectionModel
@@ -10,7 +11,9 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
 
 
     sealed interface State {
+        @Immutable
         object Loading : State
+        @Immutable
         data class Content(
             val collection: CollectionModel,
             val section: SectionModel,
@@ -18,6 +21,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
             val selectionMode: Boolean,
         ) : State
 
+        @Immutable
         data class Error(
             val error: DomainError,
         ) : State
