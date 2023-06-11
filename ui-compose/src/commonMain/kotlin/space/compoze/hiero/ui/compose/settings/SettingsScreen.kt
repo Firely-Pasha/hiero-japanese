@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -34,6 +35,21 @@ fun SettingsScreen(component: SettingsComponent) {
 
     val state by component.state.subscribeAsState()
 
+    when (val state = state) {
+        is SettingsStore.State.Error -> CircularProgressIndicator()
+        SettingsStore.State.Loading -> CircularProgressIndicator()
+        is SettingsStore.State.Content -> SettingsContent(
+            state = state,
+            onToggleTheme = component::toggleTheme
+        )
+    }
+}
+
+@Composable
+private fun SettingsContent(
+    state: SettingsStore.State.Content,
+    onToggleTheme: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -44,75 +60,73 @@ fun SettingsScreen(component: SettingsComponent) {
             )
         },
     ) {
-        state.with { content: SettingsStore.State.Content ->
-
-            Column(
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+            Text(
                 modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize()
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    text = "Appearance",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                )
-                ListItem(
-                    headlineText = {
-                        Text("Theme")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Outlined.Palette, "Appearance")
-                    },
-                    trailingContent = {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                content.theme.replaceFirstChar { it.uppercaseChar() },
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                    },
-                    colors = ListItemDefaults.colors(
-                        leadingIconColor = MaterialTheme.colorScheme.primary,
-                        trailingIconColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    modifier = Modifier
-                        .clickable {
-                            component.toggleTheme()
-                        }
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    text = "About app",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                )
-                ListItem(
-                    leadingContent = {
-                        Icon(Icons.Outlined.Info, "Info")
-                    },
-                    headlineText = {
+                    .padding(16.dp),
+                text = "Appearance",
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.primary
+                ),
+            )
+            ListItem(
+                headlineText = {
+                    Text("Theme")
+                },
+                leadingContent = {
+                    Icon(Icons.Outlined.Palette, "Appearance")
+                },
+                trailingContent = {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                    ) {
                         Text(
-                            "Hiero Japanese"
-                        )
-                    },
-                    trailingContent = {
-                        Text(
-                            "v0.0.1",
+                            state.theme.replaceFirstChar { it.uppercaseChar() },
                             style = MaterialTheme.typography.bodyMedium,
                         )
-                    },
-                    colors = ListItemDefaults.colors(
-                        leadingIconColor = MaterialTheme.colorScheme.primary,
-                        trailingIconColor = MaterialTheme.colorScheme.primary,
-                    ),
-                )
+                    }
+                },
+                colors = ListItemDefaults.colors(
+                    leadingIconColor = MaterialTheme.colorScheme.primary,
+                    trailingIconColor = MaterialTheme.colorScheme.primary,
+                ),
+                modifier = Modifier
+                    .clickable(
+                        onClick = onToggleTheme
+                    )
+            )
+            Text(
+                modifier = Modifier
+                    .padding(16.dp),
+                text = "About app",
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.primary
+                ),
+            )
+            ListItem(
+                leadingContent = {
+                    Icon(Icons.Outlined.Info, "Info")
+                },
+                headlineText = {
+                    Text(
+                        "Hiero Japanese"
+                    )
+                },
+                trailingContent = {
+                    Text(
+                        "v0.0.1",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
+                colors = ListItemDefaults.colors(
+                    leadingIconColor = MaterialTheme.colorScheme.primary,
+                    trailingIconColor = MaterialTheme.colorScheme.primary,
+                ),
+            )
 //                ListItem(
 //                    leadingContent = {
 //                        Icon(Icons.Outlined.Feedback, "Feedback")
@@ -132,7 +146,6 @@ fun SettingsScreen(component: SettingsComponent) {
 //
 //                        }
 //                )
-            }
         }
     }
 }
