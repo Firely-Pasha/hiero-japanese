@@ -153,7 +153,8 @@ private fun SectionContent(
                 exit = fadeOut() + scaleOut()
             ) {
                 FloatingActionButton(
-                    onClick = onStartQuizClick
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    onClick = onStartQuizClick,
                 ) {
                     Icon(Icons.Rounded.PlayArrow, "as")
                 }

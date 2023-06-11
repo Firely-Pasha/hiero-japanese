@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -107,6 +108,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
                 if (state.canStartQuiz) {
                     if (state.canStartBookmarkedQuiz) {
                         SmallFloatingActionButton(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
                             onClick = {
                                 component.startQuiz(true)
                             }
@@ -120,6 +122,7 @@ fun CollectionContent(component: CollectionComponent, state: CollectionStore.Sta
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     FloatingActionButton(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         onClick = {
                             component.startQuiz(false)
                         }
@@ -159,7 +162,8 @@ private fun SectionItem(
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-        onClick = onClick
+        colors = CardDefaults.cardColors(),
+        onClick = onClick,
     ) {
         Box(
             modifier = Modifier

@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
@@ -76,7 +77,7 @@ fun QuizContent(
     state: QuizStore.State.Content,
     onNavigateBack: () -> Unit,
     onNextItemClick: () -> Unit,
-    onBookmark: () -> Unit
+    onBookmark: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -91,9 +92,10 @@ fun QuizContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton({
-                onNextItemClick()
-            }) {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                onClick = onNextItemClick
+            ) {
                 Icon(Icons.Rounded.NavigateNext, "Next")
             }
         }
