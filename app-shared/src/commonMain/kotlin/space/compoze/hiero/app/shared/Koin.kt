@@ -1,6 +1,7 @@
 package space.compoze.hiero.app.shared
 
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import space.compose.hiero.datasource.database.Database
@@ -34,45 +35,45 @@ internal expect fun appPlatformModule(): Module
 
 fun appModule() = appPlatformModule() + module {
     single { PlatformDispatchers } bind AppDispatchers::class
-    single { Database(get()) }
+    singleOf(Database::invoke)
 } + dataModule() + domainModule()
 
 fun dataModule() = module {
-    single { CollectionRepository(get()) } bind
+    singleOf(::CollectionRepository) bind
             space.compoze.hiero.domain.collection.CollectionRepository::class
-    single { SectionRepository(get()) } bind
+    singleOf(::SectionRepository) bind
             space.compoze.hiero.domain.section.repository.SectionRepository::class
-    single { CollectionItemRepository(get()) } bind
+    singleOf(::CollectionItemRepository) bind
             space.compoze.hiero.domain.collectionitem.CollectionItemRepository::class
-    single { SettingsRepository(get(), get()) } bind
+    singleOf(::SettingsRepository) bind
             space.compoze.hiero.domain.settings.repository.SettingsRepository::class
 }
 
 fun domainModule() = module {
 
-    single { ApplicationInit(get(), get(), get(), get(), get(), get(), get()) }
+    singleOf(::ApplicationInit)
 
-    single { CollectionGetAll(get()) }
-    single { CollectionGetById(get()) }
-    single { CollectionUpdate(get()) }
+    singleOf(::CollectionGetAll)
+    singleOf(::CollectionGetById)
+    singleOf(::CollectionUpdate)
 
-    single { CollectionItemGetByIds(get()) }
-    single { CollectionItemGetCountOfCollection(get()) }
-    single { CollectionItemGetCountOfSection(get()) }
-    single { CollectionItemGetOfSection(get()) }
-    single { CollectionItemUpdateById(get(), get(), get()) }
-    single { CollectionItemUpdateBySectionId(get(), get()) }
-    single { CollectionItemNotifier() }
-    single { CollectionItemNotificationGetFlow(get()) }
-    single { CollectionItemNotificationListen(get(), get()) }
+    singleOf(::CollectionItemGetByIds)
+    singleOf(::CollectionItemGetCountOfCollection)
+    singleOf(::CollectionItemGetCountOfSection)
+    singleOf(::CollectionItemGetOfSection)
+    singleOf(::CollectionItemUpdateById)
+    singleOf(::CollectionItemUpdateBySectionId)
+    singleOf(::CollectionItemNotifier)
+    singleOf(::CollectionItemNotificationGetFlow)
+    singleOf(::CollectionItemNotificationListen)
 
-    single { SectionGetAll(get()) }
-    single { SectionGetById(get()) }
-    single { SectionGetOfCollection(get()) }
-    single { SectionUpdate(get()) }
-    single { SectionUpdateComputed(get()) }
+    singleOf(::SectionGetAll)
+    singleOf(::SectionGetById)
+    singleOf(::SectionGetOfCollection)
+    singleOf(::SectionUpdate)
+    singleOf(::SectionUpdateComputed)
 
-    single { SettingsGetTheme(get()) }
-    single { SettingsSetTheme(get()) }
+    singleOf(::SettingsGetTheme)
+    singleOf(::SettingsSetTheme)
 
 }
