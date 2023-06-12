@@ -347,7 +347,7 @@ private fun SectionItem(
                     )
                     .fillMaxSize(),
                 colors = CardDefaults.cardColors(
-                    containerColor = randomColor()
+//                    containerColor = randomColor()
                 )
             ) {
                 Box(

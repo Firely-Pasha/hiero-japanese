@@ -25,6 +25,8 @@ class DefaultStackNavigationComponent(
 
     private val dispatchers: AppDispatchers by inject()
 
+    override val isRoot = appNavigator == null
+
     private val appNavigator = appNavigator ?: this
 
     override val navigation = StackNavigation<StackNavigationComponent.Config>()

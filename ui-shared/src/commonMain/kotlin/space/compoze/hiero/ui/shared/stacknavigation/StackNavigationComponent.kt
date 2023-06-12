@@ -16,6 +16,8 @@ interface StackNavigationComponent {
     val navigation: StackNavigation<Config>
     val childStack: Value<ChildStack<*, Child>>
 
+    val isRoot: Boolean
+
     fun navigateBack()
 
     sealed interface Child {
