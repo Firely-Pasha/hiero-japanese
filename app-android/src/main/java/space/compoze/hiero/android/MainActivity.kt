@@ -1,5 +1,6 @@
 package space.compoze.hiero.android
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -8,8 +9,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import org.koin.mp.KoinPlatformTools
@@ -44,9 +51,11 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             val applicationState by applicationComponent.state.subscribeAsState()
+            val theme = (applicationState as? ApplicationStore.State.Content)?.theme ?: "system"
             MyApplicationTheme(
-                theme = (applicationState as? ApplicationStore.State.Content)?.theme ?: "system"
+                theme = theme
             ) {
+                StatusBarColorChanger(theme)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
@@ -54,6 +63,21 @@ class MainActivity : ComponentActivity() {
                     StackNavigator(component = applicationComponent.navigator)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun Activity.StatusBarColorChanger(theme: String) {
+    val colorScheme = MaterialTheme.colorScheme
+    LaunchedEffect(theme, colorScheme) {
+        val statusBarsColor = colorScheme.surfaceColorAtElevation(3.dp)
+        window.statusBarColor = statusBarsColor.toArgb()
+        window.navigationBarColor = window.statusBarColor
+        window.decorView.systemUiVisibility = if (statusBarsColor.luminance() > 0.5) {
+            window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
         }
     }
 }
