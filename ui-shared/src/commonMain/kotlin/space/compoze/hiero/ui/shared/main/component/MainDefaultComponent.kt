@@ -56,7 +56,7 @@ class MainDefaultComponent(
         },
         key = "BottomStack",
 //        initialConfiguration = store.state.tab.toConfig(),
-        handleBackButton = true, // Pop the back stack on back button press
+        handleBackButton = false, // Pop the back stack on back button press
         childFactory = { config, componentContext ->
             when (config) {
                 is MainComponent.Config.Hiragana -> MainComponent.Child.Hiragana(
