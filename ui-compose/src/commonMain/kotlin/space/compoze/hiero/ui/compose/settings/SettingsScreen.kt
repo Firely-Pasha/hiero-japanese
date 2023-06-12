@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Javascript
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Superscript
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.settings.component.SettingsComponent
@@ -48,8 +52,10 @@ fun SettingsScreen(component: SettingsComponent) {
 @Composable
 private fun SettingsContent(
     state: SettingsStore.State.Content,
-    onToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit,
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -113,7 +119,7 @@ private fun SettingsContent(
                 },
                 headlineText = {
                     Text(
-                        "Hiero Japanese"
+                        "Hiero"
                     )
                 },
                 trailingContent = {
@@ -126,6 +132,30 @@ private fun SettingsContent(
                     leadingIconColor = MaterialTheme.colorScheme.primary,
                     trailingIconColor = MaterialTheme.colorScheme.primary,
                 ),
+            )
+            ListItem(
+                leadingContent = {
+                    Icon(Icons.Outlined.Code, "GitHub")
+                },
+                headlineText = {
+                    Text(
+                        "GitHub"
+                    )
+                },
+                trailingContent = {
+                    Text(
+                        "by Firely-Pasha",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
+                colors = ListItemDefaults.colors(
+                    leadingIconColor = MaterialTheme.colorScheme.primary,
+                    trailingIconColor = MaterialTheme.colorScheme.primary,
+                ),
+                modifier = Modifier
+                    .clickable {
+                        uriHandler.openUri("https://github.com/Firely-Pasha/hiero-japanese")
+                    }
             )
 //                ListItem(
 //                    leadingContent = {
