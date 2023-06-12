@@ -1,3 +1,26 @@
+CREATE TABLE IF NOT EXISTS Section (
+    id TEXT PRIMARY KEY,
+    collectionId TEXT NOT NULL REFERENCES Collection(id),
+    title TEXT NOT NULL,
+    selectedCount INTEGER NOT NULL DEFAULT 0,
+    bookmarkedCount INTEGER NOT NULL DEFAULT 0,
+    total INTEGER NOT NULL DEFAULT 0,
+    span INTEGER NOT NULL DEFAULT 0,
+    itemsCount INTEGER NOT NULL DEFAULT 0,
+    sort INTEGER NOT NULL
+);
+
+INSERT INTO Section(id, collectionId, title, span, sort) VALUES
+    ("hiragana_gojuon",          "hiragana",     "Gojūon",            3, 100),
+    ("hiragana_gojuon_2",         "hiragana",     "Gojūon 2",     3, 200),
+    ("hiragana_yoon",          "hiragana",     "Yōon",             5, 300),
+    ("hiragana_yoon_2",   "hiragana",     "Yōon 2", 5, 400),
+    ("katakana_gojuon",          "katakana",     "Gojūon",            3, 100),
+    ("katakana_voiced",         "katakana",     "Gojūon 2",     3, 200),
+    ("katakana_yoon",          "katakana",     "Yōon",             5, 300),
+    ("katakana_yoon_2",   "katakana",     "Yōon 2", 5, 400)
+;
+
 getAll:
 SELECT Section.* FROM Section
 ;

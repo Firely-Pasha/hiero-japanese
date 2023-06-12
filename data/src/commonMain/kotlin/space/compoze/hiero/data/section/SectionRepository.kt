@@ -7,7 +7,7 @@ import arrow.core.raise.either
 import arrow.core.toOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import space.compose.hiero.datasource.database.Database
+import space.compose.hiero.datasource.database.HieroDb
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.section.model.data.SectionModel
 import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
@@ -15,7 +15,7 @@ import space.compoze.hiero.domain.section.model.mutate.SectionMutation
 import space.compoze.hiero.domain.section.repository.SectionRepository
 
 class SectionRepository(
-    private val database: Database,
+    private val database: HieroDb,
 ) : SectionRepository {
 
     override fun getById(sectionId: String) = either {

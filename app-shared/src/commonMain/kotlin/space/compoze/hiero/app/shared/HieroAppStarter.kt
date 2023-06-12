@@ -3,7 +3,7 @@ package space.compoze.hiero.app.shared
 import app.cash.sqldelight.db.SqlDriver
 import org.koin.core.Koin
 import org.koin.mp.KoinPlatformTools
-import space.compose.hiero.datasource.database.Database
+import space.compoze.hiero.datasource.database.applyMigrationIfNeeded
 import space.compoze.hiero.domain.application.interactor.ApplicationInit
 
 fun startHieroApp() = KoinPlatformTools.defaultContext().get().run {
@@ -12,9 +12,8 @@ fun startHieroApp() = KoinPlatformTools.defaultContext().get().run {
 }
 
 fun Koin.initDatabase() {
-    val sqlDriver: SqlDriver by inject()
-    val database: Database by inject()
-    Database.Schema.migrate(sqlDriver, 0, Database.Schema.version)
+    val driver: SqlDriver by inject()
+    applyMigrationIfNeeded(driver)
 }
 
 fun Koin.initDomain() {

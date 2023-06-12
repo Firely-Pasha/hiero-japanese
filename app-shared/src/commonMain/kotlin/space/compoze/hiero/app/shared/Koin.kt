@@ -4,7 +4,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import space.compose.hiero.datasource.database.Database
+import space.compose.hiero.datasource.database.HieroDb
 import space.compoze.hiero.data.collection.CollectionRepository
 import space.compoze.hiero.data.collectionitem.CollectionItemRepository
 import space.compoze.hiero.data.section.SectionRepository
@@ -35,7 +35,7 @@ internal expect fun appPlatformModule(): Module
 
 fun appModule() = appPlatformModule() + module {
     single { PlatformDispatchers } bind AppDispatchers::class
-    singleOf(Database::invoke)
+    singleOf(HieroDb::invoke)
 } + dataModule() + domainModule()
 
 fun dataModule() = module {

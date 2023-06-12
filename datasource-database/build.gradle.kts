@@ -80,10 +80,8 @@ android {
 
 sqldelight {
     databases {
-        create("Database") {
+        create("HieroDb") {
             packageName.set("space.compose.hiero.datasource.database")
-            deriveSchemaFromMigrations.set(true)
-            verifyMigrations.set(true)
             linkSqlite.set(true)
         }
     }

@@ -4,14 +4,14 @@ import arrow.core.Option
 import arrow.core.firstOrNone
 import arrow.core.raise.catch
 import arrow.core.raise.either
-import space.compose.hiero.datasource.database.Database
+import space.compose.hiero.datasource.database.HieroDb
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 class CollectionItemRepository(
-    database: Database,
+    database: HieroDb,
 ) : CollectionItemRepository {
 
     private val collectionItems = database.collectionItemQueries

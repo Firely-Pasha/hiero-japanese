@@ -3,14 +3,13 @@ package space.compoze.hiero.data.collection
 import arrow.core.raise.catch
 import arrow.core.raise.either
 import arrow.core.toOption
-import space.compose.hiero.datasource.database.Database
-import space.compoze.hiero.domain.base.AppDispatchers
+import space.compose.hiero.datasource.database.HieroDb
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.CollectionRepository
 import space.compoze.hiero.domain.collection.model.mutation.CollectionMutation
 
 class CollectionRepository(
-    database: Database,
+    database: HieroDb,
 ) : CollectionRepository {
 
     private val collections = database.collectionQueries

@@ -1,6 +1,6 @@
 package space.compoze.hiero.data.collection
 
-import migrations.Collection
+import space.compose.hiero.datasource.database.Collection
 import space.compoze.hiero.domain.collection.model.data.CollectionModel
 
 fun Collection.toDomainModel() = CollectionModel(

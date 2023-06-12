@@ -1,3 +1,304 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS CollectionItemType(
+    code TEXT PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO CollectionItemType VALUES
+    ("hieroglyph", "Hieroglyph"),
+    ("empty", "Empty");
+
+CREATE TABLE IF NOT EXISTS CollectionItem (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sectionId TEXT NOT NULL REFERENCES Section(id),
+    type TEXT NOT NULL REFERENCES CollectionItemType(code),
+    value TEXT NOT NULL,
+    transcription TEXT NOT NULL,
+    sort INTEGER NOT NULL,
+    isSelected INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0
+);
+
+INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
+
+    ("hiragana_gojuon",    "hieroglyph",  "あ",     "a",    10),
+    ("hiragana_gojuon",    "hieroglyph",  "い",     "i",    20),
+    ("hiragana_gojuon",    "hieroglyph",  "う",     "u",    30),
+    ("hiragana_gojuon",    "hieroglyph",  "え",     "e",    40),
+    ("hiragana_gojuon",    "hieroglyph",  "お",     "o",    50),
+
+    ("hiragana_gojuon",    "hieroglyph",   "か",    "ka",   60),
+    ("hiragana_gojuon",    "hieroglyph",   "き",    "ki",   70),
+    ("hiragana_gojuon",    "hieroglyph",   "く",    "ku",   80),
+    ("hiragana_gojuon",    "hieroglyph",   "け",    "ke",   90),
+    ("hiragana_gojuon",    "hieroglyph",   "こ",    "ko",   100),
+
+    ("hiragana_gojuon",    "hieroglyph",   "さ",    "sa",   110),
+    ("hiragana_gojuon",    "hieroglyph",   "し",    "shi",   120),
+    ("hiragana_gojuon",    "hieroglyph",   "す",    "su",   130),
+    ("hiragana_gojuon",    "hieroglyph",   "せ",    "se",   140),
+    ("hiragana_gojuon",    "hieroglyph",   "そ",    "so",   150),
+
+    ("hiragana_gojuon",    "hieroglyph",   "た",    "ta",   160),
+    ("hiragana_gojuon",    "hieroglyph",   "ち",    "chi",   170),
+    ("hiragana_gojuon",    "hieroglyph",   "つ",    "tsu",  180),
+    ("hiragana_gojuon",    "hieroglyph",   "て",    "te",   190),
+    ("hiragana_gojuon",    "hieroglyph",   "と",    "to",   200),
+
+    ("hiragana_gojuon",    "hieroglyph",   "な",    "na",   210),
+    ("hiragana_gojuon",    "hieroglyph",   "に",    "ni",   220),
+    ("hiragana_gojuon",    "hieroglyph",   "ぬ",    "nu",   230),
+    ("hiragana_gojuon",    "hieroglyph",   "ね",    "ne",   240),
+    ("hiragana_gojuon",    "hieroglyph",   "の",    "no",   250),
+
+    ("hiragana_gojuon",    "hieroglyph",   "は",    "ha",   260),
+    ("hiragana_gojuon",    "hieroglyph",   "ひ",    "hi",   270),
+    ("hiragana_gojuon",    "hieroglyph",   "ふ",    "fu",   280),
+    ("hiragana_gojuon",    "hieroglyph",   "へ",    "he",   290),
+    ("hiragana_gojuon",    "hieroglyph",   "ほ",    "ho",   300),
+
+    ("hiragana_gojuon",    "hieroglyph",   "ま",    "ma",   310),
+    ("hiragana_gojuon",    "hieroglyph",   "み",    "mi",   320),
+    ("hiragana_gojuon",    "hieroglyph",   "む",    "mu",   330),
+    ("hiragana_gojuon",    "hieroglyph",   "め",    "me",   340),
+    ("hiragana_gojuon",    "hieroglyph",   "も",    "mo",   350),
+
+    ("hiragana_gojuon",    "hieroglyph",   "や",    "ya",   360),
+    ("hiragana_gojuon",    "empty",        "",      "mi",  370),
+    ("hiragana_gojuon",    "hieroglyph",   "ゆ",    "yu",   380),
+    ("hiragana_gojuon",    "empty",        "",      "",    390),
+    ("hiragana_gojuon",    "hieroglyph",   "よ",    "yo",   400),
+
+    ("hiragana_gojuon",    "hieroglyph",   "ら",    "ra",   410),
+    ("hiragana_gojuon",    "hieroglyph",   "り",    "ri",   420),
+    ("hiragana_gojuon",    "hieroglyph",   "る",    "ru",   430),
+    ("hiragana_gojuon",    "hieroglyph",   "れ",    "re",   440),
+    ("hiragana_gojuon",    "hieroglyph",   "ろ",    "ro",   450),
+
+    ("hiragana_gojuon",    "hieroglyph",   "わ",    "wa",   460),
+    ("hiragana_gojuon",    "empty",        "",     "",     470),
+    ("hiragana_gojuon",    "hieroglyph",   "ん",    "n",    480),
+    ("hiragana_gojuon",    "empty",        "",     "",     490),
+    ("hiragana_gojuon",    "hieroglyph",   "を",    "wo",   500),
+
+    ("hiragana_yoon",    "hieroglyph",   "きゃ",    "kya",   510),
+    ("hiragana_yoon",    "hieroglyph",   "きゅ",    "kyu",   530),
+    ("hiragana_yoon",    "hieroglyph",   "きょ",    "kyo",   540),
+
+    ("hiragana_yoon",    "hieroglyph",   "しゃ",    "sha",   560),
+    ("hiragana_yoon",    "hieroglyph",   "しゅ",    "shu",   570),
+    ("hiragana_yoon",    "hieroglyph",   "しょ",    "sho",   580),
+
+    ("hiragana_yoon",    "hieroglyph",   "ちゃ",    "cha",   590),
+    ("hiragana_yoon",    "hieroglyph",   "ちゅ",    "chu",   600),
+    ("hiragana_yoon",    "hieroglyph",   "ちょ",    "cho",   610),
+
+    ("hiragana_yoon",    "hieroglyph",   "にゃ",    "nya",   620),
+    ("hiragana_yoon",    "hieroglyph",   "にゅ",    "nyu",   630),
+    ("hiragana_yoon",    "hieroglyph",   "にょ",    "nyo",   640),
+
+    ("hiragana_yoon",    "hieroglyph",   "ひゃ",    "hya",   650),
+    ("hiragana_yoon",    "hieroglyph",   "ひゅ",    "hyu",   660),
+    ("hiragana_yoon",    "hieroglyph",   "ひょ",    "hyo",   670),
+
+    ("hiragana_yoon",    "hieroglyph",   "みゃ",    "mya",   680),
+    ("hiragana_yoon",    "hieroglyph",   "みゅ",    "myu",   690),
+    ("hiragana_yoon",    "hieroglyph",   "みょ",    "myo",   700),
+
+    ("hiragana_yoon",    "hieroglyph",   "りゃ",    "rya",   710),
+    ("hiragana_yoon",    "hieroglyph",   "りゅ",    "ryu",   720),
+    ("hiragana_yoon",    "hieroglyph",   "りょ",    "ryo",   730),
+
+    ("hiragana_gojuon_2",    "hieroglyph",   "が",    "ga",   740),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぎ",    "gi",   750),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぐ",    "gu",   760),
+    ("hiragana_gojuon_2",    "hieroglyph",   "げ",    "ge",   770),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ご",    "go",   780),
+
+    ("hiragana_gojuon_2",    "hieroglyph",   "ざ",    "za",   790),
+    ("hiragana_gojuon_2",    "hieroglyph",   "じ",    "ji",   800),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ず",    "zu",   810),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぜ",    "ze",   820),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぞ",    "zo",   830),
+
+    ("hiragana_gojuon_2",    "hieroglyph",   "だ",    "da",   840),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぢ",    "ji",   850),
+    ("hiragana_gojuon_2",    "hieroglyph",   "づ",    "zu",   860),
+    ("hiragana_gojuon_2",    "hieroglyph",   "で",    "de",   870),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ど",    "do",   880),
+
+    ("hiragana_gojuon_2",    "hieroglyph",   "ば",    "ba",   890),
+    ("hiragana_gojuon_2",    "hieroglyph",   "び",    "bi",   900),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぶ",    "bu",   910),
+    ("hiragana_gojuon_2",    "hieroglyph",   "べ",    "be",   920),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぼ",    "bo",   930),
+
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぱ",    "pa",   940),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぴ",    "pi",   950),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぷ",    "pu",   960),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぺ",    "pe",   970),
+    ("hiragana_gojuon_2",    "hieroglyph",   "ぽ",    "po",   980),
+
+    ("hiragana_yoon_2",    "hieroglyph",   "ぎゃ",    "gya",   990),
+    ("hiragana_yoon_2",    "hieroglyph",   "ぎゅ",    "gyu",   1000),
+    ("hiragana_yoon_2",    "hieroglyph",   "ぎょ",    "gyo",   1010),
+
+    ("hiragana_yoon_2",    "hieroglyph",   "じゃ",    "ja",   1020),
+    ("hiragana_yoon_2",    "hieroglyph",   "じゅ",    "ju",   1030),
+    ("hiragana_yoon_2",    "hieroglyph",   "じょ",    "jo",   1040),
+
+    ("hiragana_yoon_2",    "hieroglyph",   "ぢゃ",    "ja",   1050),
+    ("hiragana_yoon_2",    "hieroglyph",   "ぢゅ",    "ju",   1060),
+    ("hiragana_yoon_2",    "hieroglyph",   "ぢょ",    "jo",   1070),
+
+    ("hiragana_yoon_2",    "hieroglyph",   "びゃ",    "bya",   1080),
+    ("hiragana_yoon_2",    "hieroglyph",   "びゅ",    "byu",   1090),
+    ("hiragana_yoon_2",    "hieroglyph",   "びょ",    "byo",   1100),
+
+    ("hiragana_yoon_2",    "hieroglyph",   "ぴゃ",    "pya",   1110),
+    ("hiragana_yoon_2",    "hieroglyph",   "ぴゅ",    "pyu",   1120),
+    ("hiragana_yoon_2",    "hieroglyph",   "ぴょ",    "pyo",   1130),
+
+    ("katakana_gojuon",    "hieroglyph",  "ア",     "a",    10),
+    ("katakana_gojuon",    "hieroglyph",  "イ",     "i",    20),
+    ("katakana_gojuon",    "hieroglyph",  "ウ",     "u",    30),
+    ("katakana_gojuon",    "hieroglyph",  "エ",     "e",    40),
+    ("katakana_gojuon",    "hieroglyph",  "オ",     "o",    50),
+
+    ("katakana_gojuon",    "hieroglyph",   "カ",    "ka",   60),
+    ("katakana_gojuon",    "hieroglyph",   "キ",    "ki",   70),
+    ("katakana_gojuon",    "hieroglyph",   "ク",    "ku",   80),
+    ("katakana_gojuon",    "hieroglyph",   "ケ",    "ke",   90),
+    ("katakana_gojuon",    "hieroglyph",   "コ",    "ko",   100),
+
+    ("katakana_gojuon",    "hieroglyph",   "サ",    "sa",   110),
+    ("katakana_gojuon",    "hieroglyph",   "シ",    "shi",   120),
+    ("katakana_gojuon",    "hieroglyph",   "ス",    "su",   130),
+    ("katakana_gojuon",    "hieroglyph",   "セ",    "se",   140),
+    ("katakana_gojuon",    "hieroglyph",   "ソ",    "so",   150),
+
+    ("katakana_gojuon",    "hieroglyph",   "タ",    "ta",   160),
+    ("katakana_gojuon",    "hieroglyph",   "チ",    "chi",   170),
+    ("katakana_gojuon",    "hieroglyph",   "ツ",    "tsu",  180),
+    ("katakana_gojuon",    "hieroglyph",   "テ",    "te",   190),
+    ("katakana_gojuon",    "hieroglyph",   "ト",    "to",   200),
+
+    ("katakana_gojuon",    "hieroglyph",   "ナ",    "na",   210),
+    ("katakana_gojuon",    "hieroglyph",   "ニ",    "ni",   220),
+    ("katakana_gojuon",    "hieroglyph",   "ヌ",    "nu",   230),
+    ("katakana_gojuon",    "hieroglyph",   "ネ",    "ne",   240),
+    ("katakana_gojuon",    "hieroglyph",   "ノ",    "no",   250),
+
+    ("katakana_gojuon",    "hieroglyph",   "ハ",    "ha",   260),
+    ("katakana_gojuon",    "hieroglyph",   "ヒ",    "hi",   270),
+    ("katakana_gojuon",    "hieroglyph",   "フ",    "fu",   280),
+    ("katakana_gojuon",    "hieroglyph",   "ヘ",    "he",   290),
+    ("katakana_gojuon",    "hieroglyph",   "ホ",    "ho",   300),
+
+    ("katakana_gojuon",    "hieroglyph",   "マ",    "ma",   310),
+    ("katakana_gojuon",    "hieroglyph",   "ミ",    "mi",   320),
+    ("katakana_gojuon",    "hieroglyph",   "ム",    "mu",   330),
+    ("katakana_gojuon",    "hieroglyph",   "メ",    "me",   340),
+    ("katakana_gojuon",    "hieroglyph",   "モ",    "mo",   350),
+
+    ("katakana_gojuon",    "hieroglyph",   "ヤ",    "ya",   360),
+    ("katakana_gojuon",    "empty",        "",      "mi",  370),
+    ("katakana_gojuon",    "hieroglyph",   "ユ",    "yu",   380),
+    ("katakana_gojuon",    "empty",        "",      "",    390),
+    ("katakana_gojuon",    "hieroglyph",   "ヨ",    "yo",   400),
+
+    ("katakana_gojuon",    "hieroglyph",   "ラ",    "ra",   410),
+    ("katakana_gojuon",    "hieroglyph",   "リ",    "ri",   420),
+    ("katakana_gojuon",    "hieroglyph",   "ル",    "ru",   430),
+    ("katakana_gojuon",    "hieroglyph",   "レ",    "re",   440),
+    ("katakana_gojuon",    "hieroglyph",   "ロ",    "ro",   450),
+
+    ("katakana_gojuon",    "hieroglyph",   "ワ",    "wa",   460),
+    ("katakana_gojuon",    "empty",        "",     "",     470),
+    ("katakana_gojuon",    "hieroglyph",   "ン",    "n",    480),
+    ("katakana_gojuon",    "empty",        "",     "",     490),
+    ("katakana_gojuon",    "hieroglyph",   "ヲ",    "wo",   500),
+
+    ("katakana_yoon",    "hieroglyph",   "キャ",    "kya",   510),
+    ("katakana_yoon",    "hieroglyph",   "キュ",    "kyu",   530),
+    ("katakana_yoon",    "hieroglyph",   "キョ",    "kyo",   540),
+
+    ("katakana_yoon",    "hieroglyph",   "シャ",    "sha",   560),
+    ("katakana_yoon",    "hieroglyph",   "シュ",    "shu",   570),
+    ("katakana_yoon",    "hieroglyph",   "ショ",    "sho",   580),
+
+    ("katakana_yoon",    "hieroglyph",   "チャ",    "cha",   590),
+    ("katakana_yoon",    "hieroglyph",   "チュ",    "chu",   600),
+    ("katakana_yoon",    "hieroglyph",   "チョ",    "cho",   610),
+
+    ("katakana_yoon",    "hieroglyph",   "ニャ",    "nya",   620),
+    ("katakana_yoon",    "hieroglyph",   "ニュ",    "nyu",   630),
+    ("katakana_yoon",    "hieroglyph",   "ニョ",    "nyo",   640),
+
+    ("katakana_yoon",    "hieroglyph",   "ヒャ",    "hya",   650),
+    ("katakana_yoon",    "hieroglyph",   "ヒュ",    "hyu",   660),
+    ("katakana_yoon",    "hieroglyph",   "ヒョ",    "hyo",   670),
+
+    ("katakana_yoon",    "hieroglyph",   "ミャ",    "mya",   680),
+    ("katakana_yoon",    "hieroglyph",   "ミュ",    "myu",   690),
+    ("katakana_yoon",    "hieroglyph",   "ミョ",    "myo",   700),
+
+    ("katakana_yoon",    "hieroglyph",   "リャ",    "rya",   710),
+    ("katakana_yoon",    "hieroglyph",   "リュ",    "ryu",   720),
+    ("katakana_yoon",    "hieroglyph",   "リョ",    "ryo",   730),
+
+    ("katakana_voiced",    "hieroglyph",   "ガ",    "ga",   740),
+    ("katakana_voiced",    "hieroglyph",   "ギ",    "gi",   750),
+    ("katakana_voiced",    "hieroglyph",   "グ",    "gu",   760),
+    ("katakana_voiced",    "hieroglyph",   "ゲ",    "ge",   770),
+    ("katakana_voiced",    "hieroglyph",   "ゴ",    "go",   780),
+
+    ("katakana_voiced",    "hieroglyph",   "ザ",    "za",   790),
+    ("katakana_voiced",    "hieroglyph",   "ジ",    "ji",   800),
+    ("katakana_voiced",    "hieroglyph",   "ズ",    "zu",   810),
+    ("katakana_voiced",    "hieroglyph",   "ゼ",    "ze",   820),
+    ("katakana_voiced",    "hieroglyph",   "ゾ",    "zo",   830),
+
+    ("katakana_voiced",    "hieroglyph",   "ダ",    "da",   840),
+    ("katakana_voiced",    "hieroglyph",   "ヂ",    "ji",   850),
+    ("katakana_voiced",    "hieroglyph",   "ヅ",    "zu",   860),
+    ("katakana_voiced",    "hieroglyph",   "デ",    "de",   870),
+    ("katakana_voiced",    "hieroglyph",   "ド",    "do",   880),
+
+    ("katakana_voiced",    "hieroglyph",   "バ",    "ba",   890),
+    ("katakana_voiced",    "hieroglyph",   "ビ",    "bi",   900),
+    ("katakana_voiced",    "hieroglyph",   "ブ",    "bu",   910),
+    ("katakana_voiced",    "hieroglyph",   "ベ",    "be",   920),
+    ("katakana_voiced",    "hieroglyph",   "ボ",    "bo",   930),
+
+    ("katakana_voiced",    "hieroglyph",   "パ",    "pa",   940),
+    ("katakana_voiced",    "hieroglyph",   "ピ",    "pi",   950),
+    ("katakana_voiced",    "hieroglyph",   "プ",    "pu",   960),
+    ("katakana_voiced",    "hieroglyph",   "ペ",    "pe",   970),
+    ("katakana_voiced",    "hieroglyph",   "ポ",    "po",   980),
+
+    ("katakana_yoon_2",    "hieroglyph",   "ギャ",    "gya",   990),
+    ("katakana_yoon_2",    "hieroglyph",   "ギュ",    "gyu",   1000),
+    ("katakana_yoon_2",    "hieroglyph",   "ギョ",    "gyo",   1010),
+
+    ("katakana_yoon_2",    "hieroglyph",   "ジャ",    "ja",   1020),
+    ("katakana_yoon_2",    "hieroglyph",   "ジュ",    "ju",   1030),
+    ("katakana_yoon_2",    "hieroglyph",   "ジョ",    "jo",   1040),
+
+    ("katakana_yoon_2",    "hieroglyph",   "ヂャ",    "ja",   1050),
+    ("katakana_yoon_2",    "hieroglyph",   "ヂュ",    "ju",   1060),
+    ("katakana_yoon_2",    "hieroglyph",   "ヂョ",    "jo",   1070),
+
+    ("katakana_yoon_2",    "hieroglyph",   "ビャ",    "bya",   1080),
+    ("katakana_yoon_2",    "hieroglyph",   "ビュ",    "byu",   1090),
+    ("katakana_yoon_2",    "hieroglyph",   "ビョ",    "byo",   1100),
+
+    ("katakana_yoon_2",    "hieroglyph",   "ピャ",    "pya",   1110),
+    ("katakana_yoon_2",    "hieroglyph",   "ピュ",    "pyu",   1120),
+    ("katakana_yoon_2",    "hieroglyph",   "ピョ",    "pyo",   1130)
+;
+
 getById:
 SELECT CollectionItem.* FROM CollectionItem
     WHERE CollectionItem.id = :collectionItemId

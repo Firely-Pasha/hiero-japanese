@@ -11,7 +11,6 @@ class HieroApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        deleteDatabase("hiero.db")
         startKoin {
             androidLogger()
             androidContext(this@HieroApplication)

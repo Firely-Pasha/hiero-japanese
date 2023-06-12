@@ -1,3 +1,16 @@
+CREATE TABLE IF NOT EXISTS Collection (
+    id TEXT PRIMARY KEY,
+    selectedCount INTEGER NOT NULL DEFAULT 0,
+    cols INTEGER NOT NULL DEFAULT 1,
+    title TEXT NOT NULL,
+    itemsCount INTEGER NOT NULL DEFAULT 0
+);
+
+
+INSERT INTO Collection(id, title, cols) VALUES
+    ("hiragana", "Hiragana", 15),
+    ("katakana", "Katakana", 15);
+
 getByUuid:
 SELECT * FROM Collection
 WHERE Collection.id = :id
