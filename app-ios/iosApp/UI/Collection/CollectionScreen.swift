@@ -31,7 +31,7 @@ struct CollectionScreen : View {
                 List {
                     ForEach(content.sections.indices) {
                         let item = content.sections[$0]
-                        Text("Item \(item)")
+                        SectionItem(section: item)
                             .onTapGesture {
                                 component.navigateToSection(sectionId: item.id)
                             }
@@ -42,5 +42,63 @@ struct CollectionScreen : View {
             }
         }.navigationTitle("Collection")
         
+    }
+}
+
+struct SectionItem: View {
+    
+    let section: DomainSectionModel
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text(section.title)
+                    .fontWeight(.bold)
+                Spacer()
+                Image(systemName: "chevron.forward")
+            }
+            HStack(spacing: 12) {
+                HStack {
+                    Image(systemName: "rectangle.portrait")
+                        .imageScale(.small)
+                    Text("\(section.itemsCount)")
+                }
+                Spacer()
+                HStack {
+                    HStack {
+                        Image(systemName: "graduationcap")
+                            .imageScale(.small)
+                        Text("\(section.itemsCount)")
+                    }
+                }
+                HStack {
+                    HStack {
+                        Image(systemName: "bookmark")
+                            .imageScale(.small)
+                        Text("\(section.itemsCount)")
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SectionItem_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            List {
+                SectionItem(
+                    section: DomainSectionModel(
+                        id: "SECTION_1",
+                        collectionId: "WKK",
+                        title: "Section 1",
+                        selectedCount: 14,
+                        bookmarkedCount: 5,
+                        span: 3,
+                        itemsCount: 23
+                    )
+                )
+            }
+        }
     }
 }

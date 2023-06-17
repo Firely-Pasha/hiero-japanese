@@ -12,7 +12,7 @@ import HieroApp
 struct MainScreen : View {
     
     private let component: MainComponent
-        
+
     @ObservedObject
     private var state: ObservableValue<MainComponentModel>
     
@@ -28,22 +28,50 @@ struct MainScreen : View {
         TabView(selection: $selection) {
             StackNavigator(component.hiraganaTab.component)
                 .tabItem {
+                    TextImage(text: "ひ")
                     Text("Hiragana")
                 }
                 .tag(0)
             StackNavigator(component.katakanaTab.component)
                 .tabItem {
+                    TextImage(text: "カ")
                     Text("Katakana")
                 }
                 .tag(1)
             StackNavigator(component.settingsTab.component)
                 .tabItem {
-                    Text("Settings")
+                    Label {
+                        Text("Settings")
+                    } icon: {
+                        Image(systemName: "gear")
+                    }
                 }
                 .tag(2)
         }
         .onChange(of: selection) { value in
             component.changeTab(index: Int32(selection))
+        }
+    }
+    
+}
+
+struct TextImage : View {
+    
+    let text: String
+    
+    @Environment(\.displayScale) private var displayScale
+    
+    var body: some View {
+        let renderer = ImageRenderer(
+            content: Text(text)
+                .font(.system(
+                    size: 24,
+                    weight: Font.Weight.regular
+                ))
+        )
+        let _ = renderer.scale = displayScale
+        if let image = renderer.uiImage {
+            Image(uiImage: image)
         }
     }
     
