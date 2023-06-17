@@ -4,13 +4,17 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
+import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
+import space.compoze.hiero.ui.shared.settings.component.SettingsComponent
 import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 
 interface MainComponent {
 
     val state: Value<Model>
 
-    val childStack: Value<ChildStack<*, Child>>
+    val hiraganaTab: Child.Hiragana
+    val katakanaTab: Child.Katakana
+    val settingsTab: Child.Settings
 
     fun changeTab(index: Int)
 

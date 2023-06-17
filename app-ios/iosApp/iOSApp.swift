@@ -10,18 +10,12 @@ struct iOSApp: App {
     var scenePhase: ScenePhase
 
     private var rootHolder: RootHolder { appDelegate.getRootHolder() }
+    
+    @State var selection = 0;
 
     var body: some Scene {
         WindowGroup {
-            StackNavigator(rootHolder.root.navigator)
-                .onChange(of: scenePhase) { newPhase in
-                    switch newPhase {
-                    case .background: LifecycleRegistryExtKt.stop(rootHolder.lifecycle)
-                    case .inactive: LifecycleRegistryExtKt.pause(rootHolder.lifecycle)
-                    case .active: LifecycleRegistryExtKt.resume(rootHolder.lifecycle)
-                    @unknown default: break
-                    }
-                }
+            RootNavigation(rootHolder.root.navigator)
         }
     }
     

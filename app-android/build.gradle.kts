@@ -13,7 +13,7 @@ android {
         applicationId = "space.compoze.hiero.android"
         minSdk = 24
         targetSdk = 33
-        versionCode = 2
+        versionCode = 3
         versionName = "0.1.0"
     }
     buildFeatures {

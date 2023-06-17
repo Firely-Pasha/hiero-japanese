@@ -24,20 +24,23 @@ struct CollectionScreen : View {
     var body: some View {
         Group {
 //            if let loading = state.value as? CollectionStoreStateLoading {
-//                VStack{}
-//            } else if let content = state.value as? CollectionStoreStateContent {
-//                List {
-//                    ForEach(content.items.indices) {
-//                        let item = content.items[$0]
-//                        Text("Item \(item)")
-//                            .onTapGesture {
-//                                component.navigateToItemDetails()
-//                            }
-//                    }
+//                VStack {
+//
 //                }
-//            } else {
-//                Text("ERROR")
-//            }
+            if let content = state.value as? CollectionStoreStateContent {
+                List {
+                    ForEach(content.sections.indices) {
+                        let item = content.sections[$0]
+                        Text("Item \(item)")
+                            .onTapGesture {
+                                component.navigateToSection(sectionId: item.id)
+                            }
+                    }
+                }
+            } else if let error = state.value as? CollectionStoreStateError {
+                Text("\(error.error.message ?? "")")
+            }
         }.navigationTitle("Collection")
+        
     }
 }

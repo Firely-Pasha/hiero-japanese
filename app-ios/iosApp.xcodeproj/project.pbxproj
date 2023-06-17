@@ -18,6 +18,7 @@
 		E9D6274A29F8B17800310340 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D6274929F8B17800310340 /* StackView.swift */; };
 		E9D6274F29F8C22C00310340 /* StackNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D6274E29F8C22C00310340 /* StackNavigator.swift */; };
 		E9D6275229F8C73400310340 /* CollectionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D6275129F8C73400310340 /* CollectionScreen.swift */; };
+		E9E916AC2A3B8DBD004FCD6B /* RootNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E916AB2A3B8DBD004FCD6B /* RootNavigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +48,7 @@
 		E9D6274929F8B17800310340 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
 		E9D6274E29F8C22C00310340 /* StackNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackNavigator.swift; sourceTree = "<group>"; };
 		E9D6275129F8C73400310340 /* CollectionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionScreen.swift; sourceTree = "<group>"; };
+		E9E916AB2A3B8DBD004FCD6B /* RootNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				E9D6275029F8C72600310340 /* Collection */,
 				E9D6274D29F8C21600310340 /* StackNavigation */,
 				E9D6274C29F8C1AB00310340 /* Main */,
+				E9E916AB2A3B8DBD004FCD6B /* RootNavigation.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				E9D6274429F8B0E800310340 /* MutableValue.swift in Sources */,
 				E9D6274A29F8B17800310340 /* StackView.swift in Sources */,
 				E9D6274629F8B11200310340 /* ObservableValue.swift in Sources */,
+				E9E916AC2A3B8DBD004FCD6B /* RootNavigation.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				E9D6274829F8B13A00310340 /* SimpleChildStack.swift in Sources */,
 				E9D6274129F8B02B00310340 /* MainScreen.swift in Sources */,
@@ -309,7 +313,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -364,7 +368,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -386,6 +390,7 @@
 					"$(SRCROOT)/../app-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -414,6 +419,7 @@
 					"$(SRCROOT)/../app-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

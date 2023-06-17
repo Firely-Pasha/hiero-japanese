@@ -20,6 +20,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.mp.KoinPlatformTools
 import space.compoze.hiero.domain.base.AppDispatchers
+import space.compoze.hiero.ui.shared.collection.component.CollectionComponent
+import space.compoze.hiero.ui.shared.collection.component.CollectionDefaultComponent
 import space.compoze.hiero.ui.shared.main.store.MainStore
 import space.compoze.hiero.ui.shared.main.store.MainStoreProvider
 import space.compoze.hiero.ui.shared.main.toModel
@@ -43,51 +45,34 @@ class MainDefaultComponent(
 
     override val state = MutableValue(store.state.toModel())
 
-    private val navigation = StackNavigation<MainComponent.Config>()
-
-    override val childStack = childStack(
-        source = navigation,
-        initialStack = {
-            listOf(
-                MainComponent.Config.Settings,
-                MainComponent.Config.Katakana,
-                MainComponent.Config.Hiragana,
-            )
-        },
-        key = "BottomStack",
-//        initialConfiguration = store.state.tab.toConfig(),
-        handleBackButton = false, // Pop the back stack on back button press
-        childFactory = { config, componentContext ->
-            when (config) {
-                is MainComponent.Config.Hiragana -> MainComponent.Child.Hiragana(
-                    space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
-                        componentContext,
-                        storeFactory = storeFactory,
-                        StackNavigationComponent.Config.Hiragana,
-                        appNavigator = appNavigator,
-                    )
-                )
-
-                is MainComponent.Config.Katakana -> MainComponent.Child.Katakana(
-                    space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
-                        componentContext,
-                        storeFactory = storeFactory,
-                        StackNavigationComponent.Config.Katakana,
-                        appNavigator = appNavigator,
-                    )
-                )
-
-                is MainComponent.Config.Settings -> MainComponent.Child.Settings(
-                    space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
-                        componentContext,
-                        storeFactory = storeFactory,
-                        StackNavigationComponent.Config.Settings,
-                        appNavigator = appNavigator,
-                    )
-                )
-            }
-        },
+    override val hiraganaTab = MainComponent.Child.Hiragana(
+        space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
+            componentContext,
+            storeFactory = storeFactory,
+            StackNavigationComponent.Config.Hiragana,
+            appNavigator = appNavigator,
+        )
     )
+
+    override val katakanaTab = MainComponent.Child.Katakana(
+        space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
+            componentContext,
+            storeFactory = storeFactory,
+            StackNavigationComponent.Config.Katakana,
+            appNavigator = appNavigator,
+        )
+    )
+
+    override val settingsTab = MainComponent.Child.Settings(
+        space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent(
+            componentContext,
+            storeFactory = storeFactory,
+            StackNavigationComponent.Config.Settings,
+            appNavigator = appNavigator,
+        )
+    )
+
+    private val navigation = StackNavigation<MainComponent.Config>()
 
     init {
         bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY, dispatchers.unconfined) {

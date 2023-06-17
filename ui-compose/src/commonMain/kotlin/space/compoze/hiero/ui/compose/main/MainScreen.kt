@@ -31,18 +31,21 @@ fun MainScreen(component: MainComponent) {
 
     MainScreenContent(
         state = state,
-        childStack = component.childStack,
-        onChangeTab = component::changeTab
+        hiragana = component.hiraganaTab,
+        katakana = component.katakanaTab,
+        settings = component.settingsTab,
+        onChangeTab = component::changeTab,
     )
 }
 
 @Composable
 private fun MainScreenContent(
     state: MainComponent.Model,
-    childStack: Value<ChildStack<*, MainComponent.Child>>,
+    hiragana: MainComponent.Child.Hiragana,
+    katakana: MainComponent.Child.Katakana,
+    settings: MainComponent.Child.Settings,
     onChangeTab: (tab: Int) -> Unit,
 ) {
-
 
     Scaffold(
         bottomBar = {
@@ -74,14 +77,10 @@ private fun MainScreenContent(
         Box(
             modifier = Modifier.padding(it)
         ) {
-            Children(
-                stack = childStack,
-            ) {
-                when (val child = it.instance) {
-                    is MainComponent.Child.Hiragana -> StackNavigator(child.component)
-                    is MainComponent.Child.Katakana -> StackNavigator(child.component)
-                    is MainComponent.Child.Settings -> StackNavigator(child.component)
-                }
+            when (state.tab) {
+                0 -> StackNavigator(hiragana.component)
+                1 -> StackNavigator(katakana.component)
+                2 -> StackNavigator(settings.component)
             }
         }
     }
