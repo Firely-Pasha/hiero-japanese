@@ -48,7 +48,8 @@ struct RootNavigation : View {
             MainScreen((root as! StackNavigationComponentChildMain).component)
                 .navigationDestination(for: ViewSpec.self) { spec in
                     if (spec == ViewSpec.section) {
-                        Text("SECTION")
+                        if (activeChild as StackNavigationComponentChildSection)
+                        SectionScreen(component: component)
                     } else {
                         EmptyView()
                     }
@@ -60,6 +61,6 @@ struct RootNavigation : View {
 }
 
 enum ViewSpec: Equatable, Hashable {
-    case section
+    case section(component: SectionComponent)
     case unknown
 }
