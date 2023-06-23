@@ -2,6 +2,7 @@ package space.compoze.hiero.android
 
 import android.app.Activity
 import android.os.Bundle
+import android.provider.CalendarContract.Colors
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
@@ -14,9 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import org.koin.mp.KoinPlatformTools
@@ -37,6 +43,7 @@ class MainActivity : ComponentActivity() {
             storeFactory = DefaultStoreFactory()
         )
         val content: View = findViewById(android.R.id.content)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         content.viewTreeObserver.addOnPreDrawListener(
             object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
@@ -72,8 +79,8 @@ private fun Activity.StatusBarColorChanger(theme: String) {
     val colorScheme = MaterialTheme.colorScheme
     LaunchedEffect(theme, colorScheme) {
         val statusBarsColor = colorScheme.surfaceColorAtElevation(3.dp)
-        window.statusBarColor = statusBarsColor.toArgb()
-        window.navigationBarColor = window.statusBarColor
+        window.statusBarColor = resources.getColor(android.R.color.transparent)
+        window.navigationBarColor = statusBarsColor.toArgb()
         window.decorView.systemUiVisibility = if (statusBarsColor.luminance() > 0.5) {
             window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
