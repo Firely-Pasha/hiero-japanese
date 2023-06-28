@@ -9,6 +9,7 @@ object Modules {
     const val Domain = ":domain"
     object Ui {
         const val Compose = ":ui-compose"
+        const val ComposeModal = ":ui-compose-modal"
         const val Shared = ":ui-shared"
     }
     object App {

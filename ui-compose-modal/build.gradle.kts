@@ -31,10 +31,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(Modules.Ui.Shared))
-                implementation(project(Modules.Ui.ComposeModal))
-                implementation(project(Modules.Domain))
-
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)

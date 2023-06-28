@@ -29,8 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
@@ -60,15 +58,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.SnapshotMutationPolicy
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -77,19 +70,17 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
-import com.arkivanov.decompose.value.Value
-import space.compoze.hiero.domain.collection.model.data.CollectionModel
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
-import space.compoze.hiero.ui.compose.utils.select
+import space.compoze.hiero.ui.compose.modal.Anchor
+import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.section.component.SectionComponent
 import space.compoze.hiero.ui.shared.section.state.SectionStore
@@ -276,54 +267,47 @@ private fun SectionTopBar(
             }
         },
         actions = {
-            IconButton(
-                onClick = {
-                    if (!isMenuOpen) {
-                        isMenuOpen = true
-                    }
-                }
-            ) {
-                Icon(Icons.Rounded.MoreVert, "Actions")
-                Popup(
-                    Alignment.TopStart,
-                    offset = IntOffset(x = 0, y = 120),
-                    onDismissRequest = { isMenuOpen = false }
-                ) {
-                    AnimatedVisibility(
-                        isMenuOpen,
-                        enter = fadeIn() + scaleIn(),
-                        exit = fadeOut(),
-                    ) {
-                        Card(
-                            Modifier.background(Color.Transparent)
-                                .width(200.dp),
+            HieroModalConsumer {
+                IconButton(
+                    onClick = {
+                        show(
+                            anchor = Anchor.TopEnd,
+                            alignment = Anchor.TopEnd,
+                            width = 128.dp,
+                            offset = Offset(-12f, 0f)
                         ) {
-                            Column {
-                                ListItem(
-                                    modifier = Modifier
-                                        .clickable(onClick = {
-                                            onSelectAllClick()
-                                            isMenuOpen = false
-                                        }),
-                                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                    headlineText = {
-                                        Text("Select all")
-                                    }
-                                )
-                                ListItem(
-                                    modifier = Modifier
-                                        .clickable(onClick = {
-                                            onClearAllClick()
-                                            isMenuOpen = false
-                                        }),
-                                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                    headlineText = {
-                                        Text("Clear all")
-                                    },
-                                )
+                            Card(
+                                Modifier.background(Color.Transparent)
+                            ) {
+                                Column {
+                                    ListItem(
+                                        modifier = Modifier
+                                            .clickable(onClick = {
+                                                onSelectAllClick()
+                                                dismiss()
+                                            }),
+                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                        headlineText = {
+                                            Text("Select all")
+                                        }
+                                    )
+                                    ListItem(
+                                        modifier = Modifier
+                                            .clickable(onClick = {
+                                                onClearAllClick()
+                                                dismiss()
+                                            }),
+                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                        headlineText = {
+                                            Text("Clear all")
+                                        },
+                                    )
+                                }
                             }
                         }
                     }
+                ) {
+                    Icon(Icons.Rounded.MoreVert, "Actions")
                 }
             }
         }

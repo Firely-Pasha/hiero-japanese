@@ -2,36 +2,25 @@ package space.compoze.hiero.android
 
 import android.app.Activity
 import android.os.Bundle
-import android.provider.CalendarContract.Colors
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import org.koin.mp.KoinPlatformTools
-import space.compoze.hiero.ui.compose.stacknavigation.StackNavigator
+import space.compoze.hiero.ui.compose.application.ApplicationRoot
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.application.component.ApplicationDefaultComponent
 import space.compoze.hiero.ui.shared.application.store.ApplicationStore
-import space.compoze.hiero.ui.shared.stacknavigation.DefaultStackNavigationComponent
-import space.compoze.hiero.ui.shared.stacknavigation.StackNavigationComponent
 
 class MainActivity : ComponentActivity() {
 
@@ -63,12 +52,7 @@ class MainActivity : ComponentActivity() {
                 theme = theme
             ) {
                 StatusBarColorChanger(theme)
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    StackNavigator(component = applicationComponent.navigator)
-                }
+                ApplicationRoot(component = applicationComponent)
             }
         }
     }
