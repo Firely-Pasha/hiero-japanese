@@ -179,9 +179,9 @@ class HieroModalConsumerScope(
     private val containerSize: IntSize,
 ) {
     fun show(
-        anchor: Anchor,
-        alignment: Anchor,
-        offset: Offset,
+        anchor: Anchor = Anchor.Center,
+        alignment: Anchor = Anchor.Center,
+        offset: Offset = Offset.Zero,
         width: Dp,
         content: @Composable () -> Unit,
     ) {

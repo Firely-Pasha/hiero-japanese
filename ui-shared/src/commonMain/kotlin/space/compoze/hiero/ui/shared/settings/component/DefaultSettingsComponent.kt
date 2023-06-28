@@ -52,4 +52,8 @@ class DefaultSettingsComponent(
             }
         }
     }
+
+    override fun setTheme(theme: String) {
+        store.accept(SettingsStore.Intent.ChangeTheme(theme))
+    }
 }

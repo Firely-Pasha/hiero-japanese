@@ -8,4 +8,5 @@ interface SettingsComponent {
     val state: Value<SettingsStore.State>
 
     fun toggleTheme()
+    fun setTheme(theme: String)
 }

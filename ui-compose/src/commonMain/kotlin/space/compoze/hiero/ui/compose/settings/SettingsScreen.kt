@@ -15,6 +15,8 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Javascript
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Superscript
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,8 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import space.compoze.hiero.domain.settings.enums.AppSettings
+import space.compoze.hiero.ui.compose.modal.Anchor
+import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.settings.component.SettingsComponent
 import space.compoze.hiero.ui.shared.settings.store.SettingsStore
@@ -46,7 +53,8 @@ fun SettingsScreen(component: SettingsComponent) {
         SettingsStore.State.Loading -> CircularProgressIndicator()
         is SettingsStore.State.Content -> SettingsContent(
             state = state,
-            onToggleTheme = component::toggleTheme
+            onToggleTheme = component::toggleTheme,
+            onSetTheme = component::setTheme,
         )
     }
 }
@@ -55,6 +63,7 @@ fun SettingsScreen(component: SettingsComponent) {
 private fun SettingsContent(
     state: SettingsStore.State.Content,
     onToggleTheme: () -> Unit,
+    onSetTheme: (String) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -82,32 +91,74 @@ private fun SettingsContent(
                     color = MaterialTheme.colorScheme.primary
                 ),
             )
-            ListItem(
-                headlineText = {
-                    Text("Theme")
-                },
-                leadingContent = {
-                    Icon(Icons.Outlined.Palette, "Appearance")
-                },
-                trailingContent = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            state.theme.replaceFirstChar { it.uppercaseChar() },
-                            style = MaterialTheme.typography.bodyMedium,
+            HieroModalConsumer {
+                ListItem(
+                    headlineText = {
+                        Text("Theme")
+                    },
+                    leadingContent = {
+                        Icon(Icons.Outlined.Palette, "Appearance")
+                    },
+                    trailingContent = {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                state.theme.replaceFirstChar { it.uppercaseChar() },
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    },
+                    colors = ListItemDefaults.colors(
+                        leadingIconColor = MaterialTheme.colorScheme.primary,
+                        trailingIconColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                show(
+                                    anchor = Anchor.TopEnd,
+                                    alignment = Anchor.TopEnd,
+                                    offset = Offset(-48f, 16f),
+                                    width = 128.dp,
+                                ) {
+                                    Card(
+                                        modifier = Modifier
+                                            .shadow(32.dp)
+                                    ) {
+                                        ListItem(
+                                            modifier = Modifier
+                                                .clickable {
+                                                    onSetTheme(AppSettings.Theme.SYSTEM)
+                                                    dismiss()
+                                                },
+                                            headlineText = { Text("System") },
+                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                        )
+                                        ListItem(
+                                            modifier = Modifier
+                                                .clickable {
+                                                    onSetTheme(AppSettings.Theme.LIGHT)
+                                                    dismiss()
+                                                },
+                                            headlineText = { Text("Light") },
+                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                        )
+                                        ListItem(
+                                            modifier = Modifier
+                                                .clickable {
+                                                    onSetTheme(AppSettings.Theme.DARK)
+                                                    dismiss()
+                                                },
+                                            headlineText = { Text("Dark") },
+                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                        )
+                                    }
+                                }
+                            }
                         )
-                    }
-                },
-                colors = ListItemDefaults.colors(
-                    leadingIconColor = MaterialTheme.colorScheme.primary,
-                    trailingIconColor = MaterialTheme.colorScheme.primary,
-                ),
-                modifier = Modifier
-                    .clickable(
-                        onClick = onToggleTheme
-                    )
-            )
+                )
+            }
             Text(
                 modifier = Modifier
                     .padding(16.dp),
