@@ -95,11 +95,9 @@ class SectionStoreProvider(
                                 collectionItemNotificationGetFlow().collect {
                                     if (it !is CollectionItemNotification.Changed) return@collect
                                     state.with { content: SectionStore.State.Content ->
-                                        if (it.new.sectionId == content.section.id) {
+                                        if (it.new.sectionId == content.section.id && !content.items.contains(it.new)) {
                                             withContext(dispatchers.main) {
-                                                dispatch(
-                                                    SectionStore.Message.SetItems(listOf(it.new))
-                                                )
+                                                dispatch(SectionStore.Message.SetItems(listOf(it.new)))
                                             }
                                         }
                                     }
