@@ -81,6 +81,8 @@ import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.ui.compose.modal.Anchor
 import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
+import space.compoze.hiero.ui.compose.modal.horizontal
+import space.compoze.hiero.ui.compose.popover.showMenu
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.section.component.SectionComponent
 import space.compoze.hiero.ui.shared.section.state.SectionStore
@@ -270,40 +272,17 @@ private fun SectionTopBar(
             HieroModalConsumer {
                 IconButton(
                     onClick = {
-                        show(
-                            anchor = Anchor.TopEnd,
-                            alignment = Anchor.TopEnd,
-                            width = 128.dp,
-                            offset = Offset(-12f, 0f)
+                        showMenu(
+                            offset = Offset.horizontal(-12f)
                         ) {
-                            Card(
-                                Modifier.background(Color.Transparent)
-                            ) {
-                                Column {
-                                    ListItem(
-                                        modifier = Modifier
-                                            .clickable(onClick = {
-                                                onSelectAllClick()
-                                                dismiss()
-                                            }),
-                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                        headlineText = {
-                                            Text("Select all")
-                                        }
-                                    )
-                                    ListItem(
-                                        modifier = Modifier
-                                            .clickable(onClick = {
-                                                onClearAllClick()
-                                                dismiss()
-                                            }),
-                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                        headlineText = {
-                                            Text("Clear all")
-                                        },
-                                    )
-                                }
-                            }
+                            clickable(
+                                title = { Text("Select all") },
+                                onClick = { onSelectAllClick() }
+                            )
+                            clickable(
+                                title = { Text("Clear all") },
+                                onClick = { onClearAllClick() }
+                            )
                         }
                     }
                 ) {

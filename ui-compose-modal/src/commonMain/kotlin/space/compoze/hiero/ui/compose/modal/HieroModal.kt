@@ -43,7 +43,8 @@ data class HieroModalData(
     val alignment: Anchor,
     val offset: Offset,
     val width: Dp?,
-    val block: @Composable () -> Unit,
+    val background: (@Composable () -> Unit)?,
+    val content: @Composable () -> Unit,
 )
 
 class HieroModal {
@@ -78,6 +79,7 @@ fun HieroModalProvider(
             Anchor.Center,
             Offset.Zero,
             0.dp,
+            null
         ) {})
     }
     LaunchedEffect(modalData) {
@@ -99,8 +101,8 @@ fun HieroModalProvider(
                             modal.dismiss()
                         }
                     }
-//                    .background(Color.Black.copy(alpha = 0.8f))
             ) {
+                modalDataNotNullable.background?.invoke()
             }
         }
         Layout(
@@ -125,7 +127,7 @@ fun HieroModalProvider(
                                     } ?: this
                                 }
                         ) {
-                            modalDataNotNullable.block()
+                            modalDataNotNullable.content()
 //                            ListItem(
 //                                modifier = Modifier
 //                                    .clickable {
@@ -183,6 +185,7 @@ class HieroModalConsumerScope(
         alignment: Anchor = Anchor.Center,
         offset: Offset = Offset.Zero,
         width: Dp,
+        background: (@Composable () -> Unit)? = null,
         content: @Composable () -> Unit,
     ) {
         modal.show(
@@ -193,6 +196,7 @@ class HieroModalConsumerScope(
                 alignment,
                 offset,
                 width,
+                background,
                 content
             )
         )
@@ -249,3 +253,6 @@ data class Anchor(
         val BottomEnd: Anchor = Anchor(1f, 1f)
     }
 }
+
+fun Offset.Companion.horizontal(value: Float) = Offset(value, 0f)
+fun Offset.Companion.vertical(value: Float) = Offset(0f, value)

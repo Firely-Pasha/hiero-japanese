@@ -2,6 +2,7 @@
 
 package space.compoze.hiero.ui.compose.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,11 +34,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import space.compoze.hiero.domain.settings.enums.AppSettings
 import space.compoze.hiero.ui.compose.modal.Anchor
 import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
+import space.compoze.hiero.ui.compose.modal.horizontal
+import space.compoze.hiero.ui.compose.popover.showMenu
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.settings.component.SettingsComponent
 import space.compoze.hiero.ui.shared.settings.store.SettingsStore
@@ -116,44 +120,22 @@ private fun SettingsContent(
                     modifier = Modifier
                         .clickable(
                             onClick = {
-                                show(
-                                    anchor = Anchor.TopEnd,
-                                    alignment = Anchor.TopEnd,
-                                    offset = Offset(-48f, 16f),
-                                    width = 128.dp,
+                                showMenu(
+                                    offset = Offset.horizontal(-48f),
+                                    showBackground = true
                                 ) {
-                                    Card(
-                                        modifier = Modifier
-                                            .shadow(32.dp)
-                                    ) {
-                                        ListItem(
-                                            modifier = Modifier
-                                                .clickable {
-                                                    onSetTheme(AppSettings.Theme.SYSTEM)
-                                                    dismiss()
-                                                },
-                                            headlineText = { Text("System") },
-                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                        )
-                                        ListItem(
-                                            modifier = Modifier
-                                                .clickable {
-                                                    onSetTheme(AppSettings.Theme.LIGHT)
-                                                    dismiss()
-                                                },
-                                            headlineText = { Text("Light") },
-                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                        )
-                                        ListItem(
-                                            modifier = Modifier
-                                                .clickable {
-                                                    onSetTheme(AppSettings.Theme.DARK)
-                                                    dismiss()
-                                                },
-                                            headlineText = { Text("Dark") },
-                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                        )
-                                    }
+                                    clickable(
+                                        title = { Text("System") },
+                                        onClick = { onSetTheme(AppSettings.Theme.SYSTEM) }
+                                    )
+                                    clickable(
+                                        title = { Text("Light") },
+                                        onClick = { onSetTheme(AppSettings.Theme.LIGHT) }
+                                    )
+                                    clickable(
+                                        title = { Text("Dark") },
+                                        onClick = { onSetTheme(AppSettings.Theme.DARK) }
+                                    )
                                 }
                             }
                         )
