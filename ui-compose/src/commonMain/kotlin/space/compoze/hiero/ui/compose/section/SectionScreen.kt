@@ -61,6 +61,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,8 +69,10 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -77,6 +80,9 @@ import androidx.compose.ui.unit.sp
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.ui.compose.modal.Anchor
@@ -299,13 +305,21 @@ private fun SectionItem(
     onItemSelect: (Long) -> Unit,
     onItemBookmark: (Long) -> Unit,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
     Box {
         if (item.type == CollectionItemType.HIEROGLYPH) {
             Card(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .combinedClickable(
-                        onLongClick = { onItemBookmark(item.id) },
+                        onLongClick = {
+                            scope.launch {
+                                delay(100)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                            }
+                            onItemBookmark(item.id)
+                        },
                         onClick = { onItemSelect(item.id) }
                     )
                     .fillMaxSize(),
