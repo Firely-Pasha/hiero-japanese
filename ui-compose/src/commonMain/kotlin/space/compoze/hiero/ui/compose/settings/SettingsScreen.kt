@@ -121,7 +121,7 @@ private fun SettingsContent(
                         .clickable(
                             onClick = {
                                 showMenu(
-                                    offset = Offset.horizontal(-48f),
+                                    offset = Offset.horizontal(-32f),
                                     showBackground = true
                                 ) {
                                     clickable(
