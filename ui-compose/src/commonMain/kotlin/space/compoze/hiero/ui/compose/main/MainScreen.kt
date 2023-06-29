@@ -53,23 +53,20 @@ private fun MainScreenContent(
                 NavigationBarItem(
                     selected = state.tab == 0,
                     onClick = { onChangeTab(0) },
-                    icon = {
-                        Text("ひ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                    },
+                    icon = { Text("ひ", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+//                    label = { Text("Hiragana") }
                 )
                 NavigationBarItem(
                     selected = state.tab == 1,
                     onClick = { onChangeTab(1) },
-                    icon = {
-                        Text("カ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                    },
+                    icon = { Text("カ", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+//                    label = { Text("Katakana") }
                 )
                 NavigationBarItem(
                     selected = state.tab == 2,
                     onClick = { onChangeTab(2) },
-                    icon = {
-                        Icon(Icons.Outlined.Settings, "Settings")
-                    },
+                    icon = { Icon(Icons.Outlined.Settings, "Settings") },
+//                    label = { Text("Settings") }
                 )
             }
         }
