@@ -6,7 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -50,11 +53,12 @@ fun HieroModalConsumerScope.showMenu(
     showBackground: Boolean = false,
     content: @Composable MenuScope.() -> Unit,
 ) {
+    val cardElevation = 8.dp
     show(
         anchor = anchor,
         alignment = alignment,
         offset = offset,
-        width = width,
+        width = width + cardElevation * 2,
         background = showBackground.takeIf { it }?.let {{
             Box(
                 modifier = Modifier
@@ -64,11 +68,17 @@ fun HieroModalConsumerScope.showMenu(
         }}
     ) {
         val scope = remember { MenuScope() }
-        Card(
+        Box(
             modifier = Modifier
-                .shadow(32.dp)
+                .padding(cardElevation)
         ) {
-            scope.content()
+            Card(
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = cardElevation
+                )
+            ) {
+                scope.content()
+            }
         }
     }
 }

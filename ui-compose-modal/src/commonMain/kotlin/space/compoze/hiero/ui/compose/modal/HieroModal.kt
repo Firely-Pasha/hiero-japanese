@@ -118,35 +118,15 @@ fun HieroModalProvider(
                     ),
                     exit = fadeOut() + slideOut(targetOffset = { IntOffset(0, 50) }),
                 ) {
-                    Card {
-                        Column(
-                            modifier = Modifier
-                                .run {
-                                    modalDataNotNullable.width?.let {
-                                        width(it)
-                                    } ?: this
-                                }
-                        ) {
-                            modalDataNotNullable.content()
-//                            ListItem(
-//                                modifier = Modifier
-//                                    .clickable {
-//                                    },
-//                                headlineContent = { Text(text = "Select all") },
-//                                colors = ListItemDefaults.colors(
-//                                    containerColor = Color.Transparent
-//                                )
-//                            )
-//                            ListItem(
-//                                modifier = Modifier
-//                                    .clickable {
-//                                    },
-//                                headlineContent = { Text(text = "Clear all") },
-//                                colors = ListItemDefaults.colors(
-//                                    containerColor = Color.Transparent
-//                                )
-//                            )
-                        }
+                    Box(
+                        modifier = Modifier
+                            .run {
+                                modalDataNotNullable.width?.let {
+                                    width(it)
+                                } ?: this
+                            }
+                    ) {
+                        modalDataNotNullable.content()
                     }
                 }
             },
