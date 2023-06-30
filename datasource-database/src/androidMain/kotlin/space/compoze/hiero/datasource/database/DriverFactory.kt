@@ -11,7 +11,7 @@ actual class DriverFactory(private val context: Context) {
         return AndroidSqliteDriver(
             HieroDb.Schema,
             context,
-            "hiero.db",
+            "hiero-2.db",
             callback = AndroidSqliteDriver.Callback(
                 schema = HieroDb.Schema,
             )

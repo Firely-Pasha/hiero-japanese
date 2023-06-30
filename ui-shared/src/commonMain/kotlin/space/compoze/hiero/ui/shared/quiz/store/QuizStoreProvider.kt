@@ -23,7 +23,7 @@ class QuizStoreProvider(
     private val collectionItemGetByIds: CollectionItemGetByIds by inject()
     private val collectionItemUpdateById: CollectionItemUpdateById by inject()
 
-    fun create(items: List<Long>): QuizStore =
+    fun create(items: List<String>): QuizStore =
         object : QuizStore,
             Store<QuizStore.Intent, QuizStore.State, Nothing> by storeFactory.create<QuizStore.Intent, QuizStore.Action, QuizStore.Message, QuizStore.State, Nothing>(
                 name = "quiz_store",

@@ -248,6 +248,6 @@ class SectionStoreProvider(
             ) {}
 }
 
-private fun SectionStore.State.Content.getItem(itemId: Long): Option<CollectionItemModel> {
+private fun SectionStore.State.Content.getItem(itemId: String): Option<CollectionItemModel> {
     return items.find { item -> item.id == itemId }.toOption()
 }

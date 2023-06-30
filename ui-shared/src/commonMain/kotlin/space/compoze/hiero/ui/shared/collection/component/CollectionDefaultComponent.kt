@@ -50,7 +50,7 @@ class CollectionDefaultComponent(
         }
     }
 
-    private fun navigateToQuiz(items: List<Long>) {
+    private fun navigateToQuiz(items: List<String>) {
         navigationComponent.navigation.push(
             StackNavigationComponent.Config.Quiz(
                 items = items

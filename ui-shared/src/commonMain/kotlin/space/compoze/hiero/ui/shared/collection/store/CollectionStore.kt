@@ -68,7 +68,7 @@ interface CollectionStore : Store<CollectionStore.Intent, CollectionStore.State,
 
     sealed interface Label {
         data class StartQuiz(
-            val items: List<Long>,
+            val items: List<String>,
         ) : Label
     }
 

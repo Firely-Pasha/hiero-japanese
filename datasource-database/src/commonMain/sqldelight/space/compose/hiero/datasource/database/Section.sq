@@ -11,14 +11,14 @@ CREATE TABLE IF NOT EXISTS Section (
 );
 
 INSERT INTO Section(id, collectionId, title, span, sort) VALUES
-    ("hiragana_gojuon",          "hiragana",     "Gojūon",            3, 100),
-    ("hiragana_gojuon_2",         "hiragana",     "Gojūon 2",     3, 200),
-    ("hiragana_yoon",          "hiragana",     "Yōon",             5, 300),
-    ("hiragana_yoon_2",   "hiragana",     "Yōon 2", 5, 400),
-    ("katakana_gojuon",          "katakana",     "Gojūon",            3, 100),
-    ("katakana_voiced",         "katakana",     "Gojūon 2",     3, 200),
-    ("katakana_yoon",          "katakana",     "Yōon",             5, 300),
-    ("katakana_yoon_2",   "katakana",     "Yōon 2", 5, 400)
+    ("b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "38ddff20-2211-4073-a5f8-b13cc572e473", "Gojūon",      3, 100),
+    ("13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "38ddff20-2211-4073-a5f8-b13cc572e473", "Gojūon 2",    3, 200),
+    ("b23098cc-2409-45eb-9fde-f548e6d10dae", "38ddff20-2211-4073-a5f8-b13cc572e473", "Yōon",        5, 300),
+    ("24ebb295-9899-4dca-9e99-17fa14744503", "38ddff20-2211-4073-a5f8-b13cc572e473", "Yōon 2",      5, 400),
+    ("3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "b4741f39-9fac-4189-b8d7-24b4931db9b3", "Gojūon",      3, 100),
+    ("8cf0dd28-20ed-4807-9da8-b84127c19e2c", "b4741f39-9fac-4189-b8d7-24b4931db9b3", "Gojūon 2",    3, 200),
+    ("eab70e67-3779-4265-86c1-740330482b58", "b4741f39-9fac-4189-b8d7-24b4931db9b3", "Yōon",        5, 300),
+    ("240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "b4741f39-9fac-4189-b8d7-24b4931db9b3", "Yōon 2",      5, 400)
 ;
 
 getAll:

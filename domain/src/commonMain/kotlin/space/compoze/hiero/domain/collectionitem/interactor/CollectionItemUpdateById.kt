@@ -14,7 +14,7 @@ class CollectionItemUpdateById(
 ) {
 
     operator fun invoke(
-        collectionItemId: Long,
+        collectionItemId: String,
         data: CollectionItemMutationData,
     ) = either {
         val item = collectionItemGetByIds(listOf(collectionItemId)).bind().first()

@@ -6,7 +6,7 @@ class CollectionItemGetByIds(
     private val collectionItemRepository: CollectionItemRepository,
 ) {
 
-    operator fun invoke(collectionItemIds: List<Long>) =
+    operator fun invoke(collectionItemIds: List<String>) =
         collectionItemRepository.getByIds(collectionItemIds)
 
 }

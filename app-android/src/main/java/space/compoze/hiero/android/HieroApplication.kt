@@ -16,6 +16,7 @@ class HieroApplication : Application() {
             androidContext(this@HieroApplication)
             modules(appModule())
         }
+        deleteDatabase("hiero-2.db")
         startHieroApp()
     }
 

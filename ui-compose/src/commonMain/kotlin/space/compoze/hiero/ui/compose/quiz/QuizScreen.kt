@@ -130,7 +130,7 @@ fun QuizContent(
                             }
                         }
                         Text(
-                            text = if (isFlipped) targetState.transcription else targetState.value,
+                            text = if (isFlipped) "H" else "R",
                             fontSize = 112.sp,
                             modifier = Modifier
                                 .align(Alignment.Center),

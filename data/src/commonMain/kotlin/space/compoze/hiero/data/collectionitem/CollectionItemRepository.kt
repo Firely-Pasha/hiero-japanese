@@ -4,6 +4,7 @@ import arrow.core.Option
 import arrow.core.firstOrNone
 import arrow.core.raise.catch
 import arrow.core.raise.either
+import space.compose.hiero.datasource.database.CollectionItem
 import space.compose.hiero.datasource.database.HieroDb
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collectionitem.CollectionItemRepository
@@ -16,15 +17,15 @@ class CollectionItemRepository(
 
     private val collectionItems = database.collectionItemQueries
 
-    override fun getById(collectionItemId: Long) = either {
+    override fun getById(collectionItemId: String) = either {
         getByIds(listOf(collectionItemId)).bind().firstOrNone()
     }
 
-    override fun getByIds(collectionItemIds: List<Long>) = either {
+    override fun getByIds(collectionItemIds: List<String>) = either {
         catch({
             collectionItems.getByIds(collectionItemIds)
                 .executeAsList()
-                .map { it.toDomainModel() }
+                .toDomainModel()
         }) {
             raise(DomainError("Db getByIds(${collectionItemIds}) Error", it))
         }
@@ -34,7 +35,7 @@ class CollectionItemRepository(
         catch({
             collectionItems.getOfCollection(collectionId)
                 .executeAsList()
-                .map { it.toDomainModel() }
+                .toDomainModel()
         }) {
             raise(DomainError("Db getOfCollection Error", it))
         }
@@ -42,15 +43,17 @@ class CollectionItemRepository(
 
     override fun getOfSection(sectionIds: List<String>) = either {
         catch({
-            collectionItems.getOfSections(sectionIds = sectionIds)
+            val result = collectionItems.getOfSections(sectionIds = sectionIds)
                 .executeAsList()
-                .groupBy({ it.sectionId }, { it.toDomainModel() })
+                .groupBy { it.sectionId }
+                .mapValues { it.value.toDomainModel() }
+            result
         }) {
             raise(DomainError("Db getOfSection Error", it))
         }
     }
 
-    override fun update(collectionItemId: Long, data: CollectionItemMutationData) = either {
+    override fun update(collectionItemId: String, data: CollectionItemMutationData) = either {
         catch({
             collectionItems.transaction {
                 data.isSelected.onSome {
@@ -88,6 +91,18 @@ class CollectionItemRepository(
                 .associateBy({ it.id!! }) { it.count }
         }) {
             raise(DomainError("Db update Error", it))
+        }
+    }
+
+    private fun List<CollectionItem>.toDomainModel(): List<CollectionItemModel> {
+        val collectionItemIds = collectionItems.getVariants(map { it.id })
+            .executeAsList()
+            .groupBy { it.collectionItemId }
+        return map {
+            val collectionVariants = collectionItemIds[it.id]
+                .orEmpty()
+                .associate { it.collectionItemVariant to it.content }
+            it.toDomainModel(collectionVariants)
         }
     }
 }

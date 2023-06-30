@@ -41,19 +41,19 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
 
     sealed interface Intent {
         data class ToggleItemSelect(
-            val itemId: Long,
+            val itemId: String,
         ) : Intent
 
         data class ToggleItemAndSetSelectMode(
-            val itemId: Long
+            val itemId: String
         ) : Intent
 
         data class ToggleItemBySelect(
-            val itemId: Long
+            val itemId: String
         ) : Intent
 
         data class ToggleItemBookmark(
-            val itemId: Long,
+            val itemId: String,
         ) : Intent
 
 
@@ -73,7 +73,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
         ) : Message
 
         data class SelectItem(
-            val itemId: Long,
+            val itemId: String,
             val value: Boolean,
         ) : Message
 

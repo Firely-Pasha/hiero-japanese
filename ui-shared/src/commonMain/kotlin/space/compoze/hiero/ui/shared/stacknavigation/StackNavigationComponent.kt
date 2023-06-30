@@ -45,7 +45,7 @@ interface StackNavigationComponent {
 
         @Parcelize
         data class Quiz(
-            val items: List<Long>
+            val items: List<String>
         ) : Config
 
         @Parcelize

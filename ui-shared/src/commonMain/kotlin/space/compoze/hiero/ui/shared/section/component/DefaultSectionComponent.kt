@@ -44,19 +44,19 @@ class DefaultSectionComponent(
         state.value = newState
     }
 
-    override fun toggleItemSelect(itemId: Long) {
+    override fun toggleItemSelect(itemId: String) {
         store.accept(SectionStore.Intent.ToggleItemSelect(itemId = itemId))
     }
 
-    override fun toggleItemAndSetSelectMode(itemId: Long) {
+    override fun toggleItemAndSetSelectMode(itemId: String) {
         store.accept(SectionStore.Intent.ToggleItemAndSetSelectMode(itemId = itemId))
     }
 
-    override fun toggleItemBySelect(itemId: Long) {
+    override fun toggleItemBySelect(itemId: String) {
         store.accept(SectionStore.Intent.ToggleItemBySelect(itemId = itemId))
     }
 
-    override fun toggleItemBookmark(itemId: Long) {
+    override fun toggleItemBookmark(itemId: String) {
         store.accept(SectionStore.Intent.ToggleItemBookmark(itemId = itemId))
     }
 

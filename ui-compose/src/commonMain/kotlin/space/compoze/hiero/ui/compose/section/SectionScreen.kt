@@ -127,10 +127,10 @@ private fun SectionContent(
     onClearAllClick: () -> Unit,
     onSelectAllClick: () -> Unit,
     onStartQuizClick: () -> Unit,
-    onItemSelect: (Long) -> Unit,
-    onItemBookmark: (Long) -> Unit,
-    onToggleItemAndSetSelectMode: (itemId: Long) -> Unit,
-    onToggleItemBySelect: (itemId: Long) -> Unit,
+    onItemSelect: (String) -> Unit,
+    onItemBookmark: (String) -> Unit,
+    onToggleItemAndSetSelectMode: (itemId: String) -> Unit,
+    onToggleItemBySelect: (itemId: String) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -302,8 +302,8 @@ private fun SectionTopBar(
 @Composable
 private fun SectionItem(
     item: CollectionItemModel,
-    onItemSelect: (Long) -> Unit,
-    onItemBookmark: (Long) -> Unit,
+    onItemSelect: (String) -> Unit,
+    onItemBookmark: (String) -> Unit,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -335,12 +335,12 @@ private fun SectionItem(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            item.value,
+                            item.variants["47dab697-3ace-42df-9be3-181543845b56"] ?: "",
                             fontSize = 32.sp,
                             softWrap = false
                         )
                         Text(
-                            item.transcription,
+                            item.variants["c524193e-4d77-49e4-89ad-05577234a271"] ?: "",
                             fontSize = 16.sp
                         )
                     }

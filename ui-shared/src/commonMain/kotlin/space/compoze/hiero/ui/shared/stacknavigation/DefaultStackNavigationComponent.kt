@@ -16,6 +16,9 @@ import space.compoze.hiero.ui.shared.quiz.component.QuizComponentDefault
 import space.compoze.hiero.ui.shared.section.component.DefaultSectionComponent
 import space.compoze.hiero.ui.shared.settings.component.DefaultSettingsComponent
 
+private const val HIRAGANA_COLLECTION_ID = "38ddff20-2211-4073-a5f8-b13cc572e473"
+private const val KATAKANA_COLLECTION_ID = "b4741f39-9fac-4189-b8d7-24b4931db9b3"
+
 class DefaultStackNavigationComponent(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
@@ -43,7 +46,7 @@ class DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         this.appNavigator,
-                        "hiragana",
+                        HIRAGANA_COLLECTION_ID,
                     )
                 )
 
@@ -52,7 +55,7 @@ class DefaultStackNavigationComponent(
                         componentContext,
                         storeFactory,
                         this.appNavigator,
-                        "katakana"
+                        KATAKANA_COLLECTION_ID
                     )
                 )
                 is StackNavigationComponent.Config.Section -> StackNavigationComponent.Child.Section(

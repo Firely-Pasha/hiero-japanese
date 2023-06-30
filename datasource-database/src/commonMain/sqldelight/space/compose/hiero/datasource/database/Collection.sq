@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS Collection (
 
 
 INSERT INTO Collection(id, title, cols) VALUES
-    ("hiragana", "Hiragana", 15),
-    ("katakana", "Katakana", 15);
+    ("38ddff20-2211-4073-a5f8-b13cc572e473", "Hiragana", 15),
+    ("b4741f39-9fac-4189-b8d7-24b4931db9b3", "Katakana", 15);
 
 getByUuid:
 SELECT * FROM Collection

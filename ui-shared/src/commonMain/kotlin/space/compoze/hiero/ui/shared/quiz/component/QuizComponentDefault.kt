@@ -21,7 +21,7 @@ class QuizComponentDefault(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
     private val navigationComponent: StackNavigationComponent,
-    private val items: List<Long>,
+    private val items: List<String>,
 ) : QuizComponent, KoinComponent, ComponentContext by componentContext {
 
     private val dispatchers: AppDispatchers by inject()

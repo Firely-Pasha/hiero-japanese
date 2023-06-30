@@ -9,295 +9,1746 @@ INSERT INTO CollectionItemType VALUES
     ("hieroglyph", "Hieroglyph"),
     ("empty", "Empty");
 
+CREATE TABLE IF NOT EXISTS CollectionItemVariant(
+    id TEXT PRIMARY KEY,
+    collectionId TEXT NOT NULL,
+    name TEXT NOT NULL,
+    type INTEGER -- 0 - any, 1 - primary, 2 - secondary
+);
+
+INSERT INTO CollectionItemVariant(id, collectionId, name, type) VALUES
+    ("47dab697-3ace-42df-9be3-181543845b56", "38ddff20-2211-4073-a5f8-b13cc572e473", "Hiragana", 1),
+    ("c524193e-4d77-49e4-89ad-05577234a271", "38ddff20-2211-4073-a5f8-b13cc572e473", "Romaji", 2),
+    ("cfb78984-3fc1-4af7-be8c-52053989a0e4", "b4741f39-9fac-4189-b8d7-24b4931db9b3", "Katakana", 1),
+    ("979dd3ae-0b1b-4c51-913d-d5e85461309a", "b4741f39-9fac-4189-b8d7-24b4931db9b3", "Romaji", 2)
+;
+
 CREATE TABLE IF NOT EXISTS CollectionItem (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     sectionId TEXT NOT NULL REFERENCES Section(id),
     type TEXT NOT NULL REFERENCES CollectionItemType(code),
-    value TEXT NOT NULL,
-    transcription TEXT NOT NULL,
     sort INTEGER NOT NULL,
     isSelected INTEGER AS Boolean NOT NULL DEFAULT 0,
     isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
-INSERT INTO CollectionItem(sectionId, type, value, transcription, sort) VALUES
+CREATE TABLE IF NOT EXISTS CollectionItemVariantItem(
+    collectionItemId TEXT NOT NULL,
+    collectionItemVariant TEXT NOT NULL,
+    content TEXT NOT NULL
+);
 
-    ("hiragana_gojuon",    "hieroglyph",  "あ",     "a",    10),
-    ("hiragana_gojuon",    "hieroglyph",  "い",     "i",    20),
-    ("hiragana_gojuon",    "hieroglyph",  "う",     "u",    30),
-    ("hiragana_gojuon",    "hieroglyph",  "え",     "e",    40),
-    ("hiragana_gojuon",    "hieroglyph",  "お",     "o",    50),
+-- HIRAGANA --
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
-    ("hiragana_gojuon",    "hieroglyph",   "か",    "ka",   60),
-    ("hiragana_gojuon",    "hieroglyph",   "き",    "ki",   70),
-    ("hiragana_gojuon",    "hieroglyph",   "く",    "ku",   80),
-    ("hiragana_gojuon",    "hieroglyph",   "け",    "ke",   90),
-    ("hiragana_gojuon",    "hieroglyph",   "こ",    "ko",   100),
+-- GOJŪON --
 
-    ("hiragana_gojuon",    "hieroglyph",   "さ",    "sa",   110),
-    ("hiragana_gojuon",    "hieroglyph",   "し",    "shi",   120),
-    ("hiragana_gojuon",    "hieroglyph",   "す",    "su",   130),
-    ("hiragana_gojuon",    "hieroglyph",   "せ",    "se",   140),
-    ("hiragana_gojuon",    "hieroglyph",   "そ",    "so",   150),
-
-    ("hiragana_gojuon",    "hieroglyph",   "た",    "ta",   160),
-    ("hiragana_gojuon",    "hieroglyph",   "ち",    "chi",   170),
-    ("hiragana_gojuon",    "hieroglyph",   "つ",    "tsu",  180),
-    ("hiragana_gojuon",    "hieroglyph",   "て",    "te",   190),
-    ("hiragana_gojuon",    "hieroglyph",   "と",    "to",   200),
-
-    ("hiragana_gojuon",    "hieroglyph",   "な",    "na",   210),
-    ("hiragana_gojuon",    "hieroglyph",   "に",    "ni",   220),
-    ("hiragana_gojuon",    "hieroglyph",   "ぬ",    "nu",   230),
-    ("hiragana_gojuon",    "hieroglyph",   "ね",    "ne",   240),
-    ("hiragana_gojuon",    "hieroglyph",   "の",    "no",   250),
-
-    ("hiragana_gojuon",    "hieroglyph",   "は",    "ha",   260),
-    ("hiragana_gojuon",    "hieroglyph",   "ひ",    "hi",   270),
-    ("hiragana_gojuon",    "hieroglyph",   "ふ",    "fu",   280),
-    ("hiragana_gojuon",    "hieroglyph",   "へ",    "he",   290),
-    ("hiragana_gojuon",    "hieroglyph",   "ほ",    "ho",   300),
-
-    ("hiragana_gojuon",    "hieroglyph",   "ま",    "ma",   310),
-    ("hiragana_gojuon",    "hieroglyph",   "み",    "mi",   320),
-    ("hiragana_gojuon",    "hieroglyph",   "む",    "mu",   330),
-    ("hiragana_gojuon",    "hieroglyph",   "め",    "me",   340),
-    ("hiragana_gojuon",    "hieroglyph",   "も",    "mo",   350),
-
-    ("hiragana_gojuon",    "hieroglyph",   "や",    "ya",   360),
-    ("hiragana_gojuon",    "empty",        "",      "mi",  370),
-    ("hiragana_gojuon",    "hieroglyph",   "ゆ",    "yu",   380),
-    ("hiragana_gojuon",    "empty",        "",      "",    390),
-    ("hiragana_gojuon",    "hieroglyph",   "よ",    "yo",   400),
-
-    ("hiragana_gojuon",    "hieroglyph",   "ら",    "ra",   410),
-    ("hiragana_gojuon",    "hieroglyph",   "り",    "ri",   420),
-    ("hiragana_gojuon",    "hieroglyph",   "る",    "ru",   430),
-    ("hiragana_gojuon",    "hieroglyph",   "れ",    "re",   440),
-    ("hiragana_gojuon",    "hieroglyph",   "ろ",    "ro",   450),
-
-    ("hiragana_gojuon",    "hieroglyph",   "わ",    "wa",   460),
-    ("hiragana_gojuon",    "empty",        "",     "",     470),
-    ("hiragana_gojuon",    "hieroglyph",   "ん",    "n",    480),
-    ("hiragana_gojuon",    "empty",        "",     "",     490),
-    ("hiragana_gojuon",    "hieroglyph",   "を",    "wo",   500),
-
-    ("hiragana_yoon",    "hieroglyph",   "きゃ",    "kya",   510),
-    ("hiragana_yoon",    "hieroglyph",   "きゅ",    "kyu",   530),
-    ("hiragana_yoon",    "hieroglyph",   "きょ",    "kyo",   540),
-
-    ("hiragana_yoon",    "hieroglyph",   "しゃ",    "sha",   560),
-    ("hiragana_yoon",    "hieroglyph",   "しゅ",    "shu",   570),
-    ("hiragana_yoon",    "hieroglyph",   "しょ",    "sho",   580),
-
-    ("hiragana_yoon",    "hieroglyph",   "ちゃ",    "cha",   590),
-    ("hiragana_yoon",    "hieroglyph",   "ちゅ",    "chu",   600),
-    ("hiragana_yoon",    "hieroglyph",   "ちょ",    "cho",   610),
-
-    ("hiragana_yoon",    "hieroglyph",   "にゃ",    "nya",   620),
-    ("hiragana_yoon",    "hieroglyph",   "にゅ",    "nyu",   630),
-    ("hiragana_yoon",    "hieroglyph",   "にょ",    "nyo",   640),
-
-    ("hiragana_yoon",    "hieroglyph",   "ひゃ",    "hya",   650),
-    ("hiragana_yoon",    "hieroglyph",   "ひゅ",    "hyu",   660),
-    ("hiragana_yoon",    "hieroglyph",   "ひょ",    "hyo",   670),
-
-    ("hiragana_yoon",    "hieroglyph",   "みゃ",    "mya",   680),
-    ("hiragana_yoon",    "hieroglyph",   "みゅ",    "myu",   690),
-    ("hiragana_yoon",    "hieroglyph",   "みょ",    "myo",   700),
-
-    ("hiragana_yoon",    "hieroglyph",   "りゃ",    "rya",   710),
-    ("hiragana_yoon",    "hieroglyph",   "りゅ",    "ryu",   720),
-    ("hiragana_yoon",    "hieroglyph",   "りょ",    "ryo",   730),
-
-    ("hiragana_gojuon_2",    "hieroglyph",   "が",    "ga",   740),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぎ",    "gi",   750),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぐ",    "gu",   760),
-    ("hiragana_gojuon_2",    "hieroglyph",   "げ",    "ge",   770),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ご",    "go",   780),
-
-    ("hiragana_gojuon_2",    "hieroglyph",   "ざ",    "za",   790),
-    ("hiragana_gojuon_2",    "hieroglyph",   "じ",    "ji",   800),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ず",    "zu",   810),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぜ",    "ze",   820),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぞ",    "zo",   830),
-
-    ("hiragana_gojuon_2",    "hieroglyph",   "だ",    "da",   840),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぢ",    "ji",   850),
-    ("hiragana_gojuon_2",    "hieroglyph",   "づ",    "zu",   860),
-    ("hiragana_gojuon_2",    "hieroglyph",   "で",    "de",   870),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ど",    "do",   880),
-
-    ("hiragana_gojuon_2",    "hieroglyph",   "ば",    "ba",   890),
-    ("hiragana_gojuon_2",    "hieroglyph",   "び",    "bi",   900),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぶ",    "bu",   910),
-    ("hiragana_gojuon_2",    "hieroglyph",   "べ",    "be",   920),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぼ",    "bo",   930),
-
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぱ",    "pa",   940),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぴ",    "pi",   950),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぷ",    "pu",   960),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぺ",    "pe",   970),
-    ("hiragana_gojuon_2",    "hieroglyph",   "ぽ",    "po",   980),
-
-    ("hiragana_yoon_2",    "hieroglyph",   "ぎゃ",    "gya",   990),
-    ("hiragana_yoon_2",    "hieroglyph",   "ぎゅ",    "gyu",   1000),
-    ("hiragana_yoon_2",    "hieroglyph",   "ぎょ",    "gyo",   1010),
-
-    ("hiragana_yoon_2",    "hieroglyph",   "じゃ",    "ja",   1020),
-    ("hiragana_yoon_2",    "hieroglyph",   "じゅ",    "ju",   1030),
-    ("hiragana_yoon_2",    "hieroglyph",   "じょ",    "jo",   1040),
-
-    ("hiragana_yoon_2",    "hieroglyph",   "ぢゃ",    "ja",   1050),
-    ("hiragana_yoon_2",    "hieroglyph",   "ぢゅ",    "ju",   1060),
-    ("hiragana_yoon_2",    "hieroglyph",   "ぢょ",    "jo",   1070),
-
-    ("hiragana_yoon_2",    "hieroglyph",   "びゃ",    "bya",   1080),
-    ("hiragana_yoon_2",    "hieroglyph",   "びゅ",    "byu",   1090),
-    ("hiragana_yoon_2",    "hieroglyph",   "びょ",    "byo",   1100),
-
-    ("hiragana_yoon_2",    "hieroglyph",   "ぴゃ",    "pya",   1110),
-    ("hiragana_yoon_2",    "hieroglyph",   "ぴゅ",    "pyu",   1120),
-    ("hiragana_yoon_2",    "hieroglyph",   "ぴょ",    "pyo",   1130),
-
-    ("katakana_gojuon",    "hieroglyph",  "ア",     "a",    10),
-    ("katakana_gojuon",    "hieroglyph",  "イ",     "i",    20),
-    ("katakana_gojuon",    "hieroglyph",  "ウ",     "u",    30),
-    ("katakana_gojuon",    "hieroglyph",  "エ",     "e",    40),
-    ("katakana_gojuon",    "hieroglyph",  "オ",     "o",    50),
-
-    ("katakana_gojuon",    "hieroglyph",   "カ",    "ka",   60),
-    ("katakana_gojuon",    "hieroglyph",   "キ",    "ki",   70),
-    ("katakana_gojuon",    "hieroglyph",   "ク",    "ku",   80),
-    ("katakana_gojuon",    "hieroglyph",   "ケ",    "ke",   90),
-    ("katakana_gojuon",    "hieroglyph",   "コ",    "ko",   100),
-
-    ("katakana_gojuon",    "hieroglyph",   "サ",    "sa",   110),
-    ("katakana_gojuon",    "hieroglyph",   "シ",    "shi",   120),
-    ("katakana_gojuon",    "hieroglyph",   "ス",    "su",   130),
-    ("katakana_gojuon",    "hieroglyph",   "セ",    "se",   140),
-    ("katakana_gojuon",    "hieroglyph",   "ソ",    "so",   150),
-
-    ("katakana_gojuon",    "hieroglyph",   "タ",    "ta",   160),
-    ("katakana_gojuon",    "hieroglyph",   "チ",    "chi",   170),
-    ("katakana_gojuon",    "hieroglyph",   "ツ",    "tsu",  180),
-    ("katakana_gojuon",    "hieroglyph",   "テ",    "te",   190),
-    ("katakana_gojuon",    "hieroglyph",   "ト",    "to",   200),
-
-    ("katakana_gojuon",    "hieroglyph",   "ナ",    "na",   210),
-    ("katakana_gojuon",    "hieroglyph",   "ニ",    "ni",   220),
-    ("katakana_gojuon",    "hieroglyph",   "ヌ",    "nu",   230),
-    ("katakana_gojuon",    "hieroglyph",   "ネ",    "ne",   240),
-    ("katakana_gojuon",    "hieroglyph",   "ノ",    "no",   250),
-
-    ("katakana_gojuon",    "hieroglyph",   "ハ",    "ha",   260),
-    ("katakana_gojuon",    "hieroglyph",   "ヒ",    "hi",   270),
-    ("katakana_gojuon",    "hieroglyph",   "フ",    "fu",   280),
-    ("katakana_gojuon",    "hieroglyph",   "ヘ",    "he",   290),
-    ("katakana_gojuon",    "hieroglyph",   "ホ",    "ho",   300),
-
-    ("katakana_gojuon",    "hieroglyph",   "マ",    "ma",   310),
-    ("katakana_gojuon",    "hieroglyph",   "ミ",    "mi",   320),
-    ("katakana_gojuon",    "hieroglyph",   "ム",    "mu",   330),
-    ("katakana_gojuon",    "hieroglyph",   "メ",    "me",   340),
-    ("katakana_gojuon",    "hieroglyph",   "モ",    "mo",   350),
-
-    ("katakana_gojuon",    "hieroglyph",   "ヤ",    "ya",   360),
-    ("katakana_gojuon",    "empty",        "",      "mi",  370),
-    ("katakana_gojuon",    "hieroglyph",   "ユ",    "yu",   380),
-    ("katakana_gojuon",    "empty",        "",      "",    390),
-    ("katakana_gojuon",    "hieroglyph",   "ヨ",    "yo",   400),
-
-    ("katakana_gojuon",    "hieroglyph",   "ラ",    "ra",   410),
-    ("katakana_gojuon",    "hieroglyph",   "リ",    "ri",   420),
-    ("katakana_gojuon",    "hieroglyph",   "ル",    "ru",   430),
-    ("katakana_gojuon",    "hieroglyph",   "レ",    "re",   440),
-    ("katakana_gojuon",    "hieroglyph",   "ロ",    "ro",   450),
-
-    ("katakana_gojuon",    "hieroglyph",   "ワ",    "wa",   460),
-    ("katakana_gojuon",    "empty",        "",     "",     470),
-    ("katakana_gojuon",    "hieroglyph",   "ン",    "n",    480),
-    ("katakana_gojuon",    "empty",        "",     "",     490),
-    ("katakana_gojuon",    "hieroglyph",   "ヲ",    "wo",   500),
-
-    ("katakana_yoon",    "hieroglyph",   "キャ",    "kya",   510),
-    ("katakana_yoon",    "hieroglyph",   "キュ",    "kyu",   530),
-    ("katakana_yoon",    "hieroglyph",   "キョ",    "kyo",   540),
-
-    ("katakana_yoon",    "hieroglyph",   "シャ",    "sha",   560),
-    ("katakana_yoon",    "hieroglyph",   "シュ",    "shu",   570),
-    ("katakana_yoon",    "hieroglyph",   "ショ",    "sho",   580),
-
-    ("katakana_yoon",    "hieroglyph",   "チャ",    "cha",   590),
-    ("katakana_yoon",    "hieroglyph",   "チュ",    "chu",   600),
-    ("katakana_yoon",    "hieroglyph",   "チョ",    "cho",   610),
-
-    ("katakana_yoon",    "hieroglyph",   "ニャ",    "nya",   620),
-    ("katakana_yoon",    "hieroglyph",   "ニュ",    "nyu",   630),
-    ("katakana_yoon",    "hieroglyph",   "ニョ",    "nyo",   640),
-
-    ("katakana_yoon",    "hieroglyph",   "ヒャ",    "hya",   650),
-    ("katakana_yoon",    "hieroglyph",   "ヒュ",    "hyu",   660),
-    ("katakana_yoon",    "hieroglyph",   "ヒョ",    "hyo",   670),
-
-    ("katakana_yoon",    "hieroglyph",   "ミャ",    "mya",   680),
-    ("katakana_yoon",    "hieroglyph",   "ミュ",    "myu",   690),
-    ("katakana_yoon",    "hieroglyph",   "ミョ",    "myo",   700),
-
-    ("katakana_yoon",    "hieroglyph",   "リャ",    "rya",   710),
-    ("katakana_yoon",    "hieroglyph",   "リュ",    "ryu",   720),
-    ("katakana_yoon",    "hieroglyph",   "リョ",    "ryo",   730),
-
-    ("katakana_voiced",    "hieroglyph",   "ガ",    "ga",   740),
-    ("katakana_voiced",    "hieroglyph",   "ギ",    "gi",   750),
-    ("katakana_voiced",    "hieroglyph",   "グ",    "gu",   760),
-    ("katakana_voiced",    "hieroglyph",   "ゲ",    "ge",   770),
-    ("katakana_voiced",    "hieroglyph",   "ゴ",    "go",   780),
-
-    ("katakana_voiced",    "hieroglyph",   "ザ",    "za",   790),
-    ("katakana_voiced",    "hieroglyph",   "ジ",    "ji",   800),
-    ("katakana_voiced",    "hieroglyph",   "ズ",    "zu",   810),
-    ("katakana_voiced",    "hieroglyph",   "ゼ",    "ze",   820),
-    ("katakana_voiced",    "hieroglyph",   "ゾ",    "zo",   830),
-
-    ("katakana_voiced",    "hieroglyph",   "ダ",    "da",   840),
-    ("katakana_voiced",    "hieroglyph",   "ヂ",    "ji",   850),
-    ("katakana_voiced",    "hieroglyph",   "ヅ",    "zu",   860),
-    ("katakana_voiced",    "hieroglyph",   "デ",    "de",   870),
-    ("katakana_voiced",    "hieroglyph",   "ド",    "do",   880),
-
-    ("katakana_voiced",    "hieroglyph",   "バ",    "ba",   890),
-    ("katakana_voiced",    "hieroglyph",   "ビ",    "bi",   900),
-    ("katakana_voiced",    "hieroglyph",   "ブ",    "bu",   910),
-    ("katakana_voiced",    "hieroglyph",   "ベ",    "be",   920),
-    ("katakana_voiced",    "hieroglyph",   "ボ",    "bo",   930),
-
-    ("katakana_voiced",    "hieroglyph",   "パ",    "pa",   940),
-    ("katakana_voiced",    "hieroglyph",   "ピ",    "pi",   950),
-    ("katakana_voiced",    "hieroglyph",   "プ",    "pu",   960),
-    ("katakana_voiced",    "hieroglyph",   "ペ",    "pe",   970),
-    ("katakana_voiced",    "hieroglyph",   "ポ",    "po",   980),
-
-    ("katakana_yoon_2",    "hieroglyph",   "ギャ",    "gya",   990),
-    ("katakana_yoon_2",    "hieroglyph",   "ギュ",    "gyu",   1000),
-    ("katakana_yoon_2",    "hieroglyph",   "ギョ",    "gyo",   1010),
-
-    ("katakana_yoon_2",    "hieroglyph",   "ジャ",    "ja",   1020),
-    ("katakana_yoon_2",    "hieroglyph",   "ジュ",    "ju",   1030),
-    ("katakana_yoon_2",    "hieroglyph",   "ジョ",    "jo",   1040),
-
-    ("katakana_yoon_2",    "hieroglyph",   "ヂャ",    "ja",   1050),
-    ("katakana_yoon_2",    "hieroglyph",   "ヂュ",    "ju",   1060),
-    ("katakana_yoon_2",    "hieroglyph",   "ヂョ",    "jo",   1070),
-
-    ("katakana_yoon_2",    "hieroglyph",   "ビャ",    "bya",   1080),
-    ("katakana_yoon_2",    "hieroglyph",   "ビュ",    "byu",   1090),
-    ("katakana_yoon_2",    "hieroglyph",   "ビョ",    "byo",   1100),
-
-    ("katakana_yoon_2",    "hieroglyph",   "ピャ",    "pya",   1110),
-    ("katakana_yoon_2",    "hieroglyph",   "ピュ",    "pyu",   1120),
-    ("katakana_yoon_2",    "hieroglyph",   "ピョ",    "pyo",   1130)
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a4b8151a-0237-456b-8b3a-99a8aec71554", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 10);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a4b8151a-0237-456b-8b3a-99a8aec71554", "47dab697-3ace-42df-9be3-181543845b56", "あ"),
+    ("a4b8151a-0237-456b-8b3a-99a8aec71554", "c524193e-4d77-49e4-89ad-05577234a271", "a")
 ;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a9b4eca3-6854-46a1-bf68-dba789881294", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 20);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a9b4eca3-6854-46a1-bf68-dba789881294", "47dab697-3ace-42df-9be3-181543845b56", "い"),
+    ("a9b4eca3-6854-46a1-bf68-dba789881294", "c524193e-4d77-49e4-89ad-05577234a271", "i")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("b8a64508-530d-4fb8-8ae1-eb5bffd60a02", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 30);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("b8a64508-530d-4fb8-8ae1-eb5bffd60a02", "47dab697-3ace-42df-9be3-181543845b56", "う"),
+    ("b8a64508-530d-4fb8-8ae1-eb5bffd60a02", "c524193e-4d77-49e4-89ad-05577234a271", "u")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("62ccb1cf-dfc5-4b17-81ae-178b7b5d72e0", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 40);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("62ccb1cf-dfc5-4b17-81ae-178b7b5d72e0", "47dab697-3ace-42df-9be3-181543845b56", "え"),
+    ("62ccb1cf-dfc5-4b17-81ae-178b7b5d72e0", "c524193e-4d77-49e4-89ad-05577234a271", "e")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a0c48594-7b0a-4f4a-ad9c-aa4eeb700942", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 50);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a0c48594-7b0a-4f4a-ad9c-aa4eeb700942", "47dab697-3ace-42df-9be3-181543845b56", "お"),
+    ("a0c48594-7b0a-4f4a-ad9c-aa4eeb700942", "c524193e-4d77-49e4-89ad-05577234a271", "o")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("3475d655-0036-49bf-86c8-83d86242e941", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 60);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("3475d655-0036-49bf-86c8-83d86242e941", "47dab697-3ace-42df-9be3-181543845b56", "か"),
+    ("3475d655-0036-49bf-86c8-83d86242e941", "c524193e-4d77-49e4-89ad-05577234a271", "ka")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("03191613-929c-4a52-a851-b6d99957e02b", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 70);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("03191613-929c-4a52-a851-b6d99957e02b", "47dab697-3ace-42df-9be3-181543845b56", "き"),
+    ("03191613-929c-4a52-a851-b6d99957e02b", "c524193e-4d77-49e4-89ad-05577234a271", "ki")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("612fd5d0-1701-4f05-bdec-c11e666cf8b1", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 80);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("612fd5d0-1701-4f05-bdec-c11e666cf8b1", "47dab697-3ace-42df-9be3-181543845b56", "く"),
+    ("612fd5d0-1701-4f05-bdec-c11e666cf8b1", "c524193e-4d77-49e4-89ad-05577234a271", "ku")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("13f13b1a-4300-4e65-818a-eb9ca8837575", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 90);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("13f13b1a-4300-4e65-818a-eb9ca8837575", "47dab697-3ace-42df-9be3-181543845b56", "け"),
+    ("13f13b1a-4300-4e65-818a-eb9ca8837575", "c524193e-4d77-49e4-89ad-05577234a271", "ke")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f780cd55-45cd-4a08-9f94-417553de8ac2", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 100);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f780cd55-45cd-4a08-9f94-417553de8ac2", "47dab697-3ace-42df-9be3-181543845b56", "こ"),
+    ("f780cd55-45cd-4a08-9f94-417553de8ac2", "c524193e-4d77-49e4-89ad-05577234a271", "ko")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("b913cb2f-2261-449e-b190-b7102f6a377c", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 110);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("b913cb2f-2261-449e-b190-b7102f6a377c", "47dab697-3ace-42df-9be3-181543845b56", "さ"),
+    ("b913cb2f-2261-449e-b190-b7102f6a377c", "c524193e-4d77-49e4-89ad-05577234a271", "sa")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("3d221170-df43-4e58-a6bb-7acb143d4b67", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 120);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("3d221170-df43-4e58-a6bb-7acb143d4b67", "47dab697-3ace-42df-9be3-181543845b56", "し"),
+    ("3d221170-df43-4e58-a6bb-7acb143d4b67", "c524193e-4d77-49e4-89ad-05577234a271", "shi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e97075a2-94ee-4886-b21c-a7aa0b5de5a3", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 130);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e97075a2-94ee-4886-b21c-a7aa0b5de5a3", "47dab697-3ace-42df-9be3-181543845b56", "す"),
+    ("e97075a2-94ee-4886-b21c-a7aa0b5de5a3", "c524193e-4d77-49e4-89ad-05577234a271", "su")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0935f8ec-91e8-46f9-91d8-cc665b99765d", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 140);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0935f8ec-91e8-46f9-91d8-cc665b99765d", "47dab697-3ace-42df-9be3-181543845b56", "せ"),
+    ("0935f8ec-91e8-46f9-91d8-cc665b99765d", "c524193e-4d77-49e4-89ad-05577234a271", "se")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e8bb0b11-dc0e-41b5-a52e-8851c5e2bcd5", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 150);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e8bb0b11-dc0e-41b5-a52e-8851c5e2bcd5", "47dab697-3ace-42df-9be3-181543845b56", "そ"),
+    ("e8bb0b11-dc0e-41b5-a52e-8851c5e2bcd5", "c524193e-4d77-49e4-89ad-05577234a271", "so")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c035f292-6c78-4375-a458-9aa988c0e778", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 160);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("c035f292-6c78-4375-a458-9aa988c0e778", "47dab697-3ace-42df-9be3-181543845b56", "た"),
+    ("c035f292-6c78-4375-a458-9aa988c0e778", "c524193e-4d77-49e4-89ad-05577234a271", "ta")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d2f9506f-8e09-414e-ae6d-1a8e8f7f1f12", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 170);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d2f9506f-8e09-414e-ae6d-1a8e8f7f1f12", "47dab697-3ace-42df-9be3-181543845b56", "ち"),
+    ("d2f9506f-8e09-414e-ae6d-1a8e8f7f1f12", "c524193e-4d77-49e4-89ad-05577234a271", "chi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e095edc3-b50f-45e4-99e6-c10987c98a52", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 180);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e095edc3-b50f-45e4-99e6-c10987c98a52", "47dab697-3ace-42df-9be3-181543845b56", "つ"),
+    ("e095edc3-b50f-45e4-99e6-c10987c98a52", "c524193e-4d77-49e4-89ad-05577234a271", "tsu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e3a61c98-2092-4d2c-894c-47ba317f4ef2", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 190);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e3a61c98-2092-4d2c-894c-47ba317f4ef2", "47dab697-3ace-42df-9be3-181543845b56", "て"),
+    ("e3a61c98-2092-4d2c-894c-47ba317f4ef2", "c524193e-4d77-49e4-89ad-05577234a271", "te")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("124bc465-42bf-4386-bfc5-19477cffba9b", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 200);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("124bc465-42bf-4386-bfc5-19477cffba9b", "47dab697-3ace-42df-9be3-181543845b56", "と"),
+    ("124bc465-42bf-4386-bfc5-19477cffba9b", "c524193e-4d77-49e4-89ad-05577234a271", "to")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("98c8f477-fd93-4eb2-8c5a-7d96de21b9db", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 210);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("98c8f477-fd93-4eb2-8c5a-7d96de21b9db", "47dab697-3ace-42df-9be3-181543845b56", "な"),
+    ("98c8f477-fd93-4eb2-8c5a-7d96de21b9db", "c524193e-4d77-49e4-89ad-05577234a271", "na")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d1baf51c-2d13-4445-87cf-8b5445d11604", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 220);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d1baf51c-2d13-4445-87cf-8b5445d11604", "47dab697-3ace-42df-9be3-181543845b56", "に"),
+    ("d1baf51c-2d13-4445-87cf-8b5445d11604", "c524193e-4d77-49e4-89ad-05577234a271", "ni")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f1242012-f262-4201-b119-458627962205", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 230);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f1242012-f262-4201-b119-458627962205", "47dab697-3ace-42df-9be3-181543845b56", "ぬ"),
+    ("f1242012-f262-4201-b119-458627962205", "c524193e-4d77-49e4-89ad-05577234a271", "nu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("45ad17b9-8d82-4cbd-9c88-5713eea4a985", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 240);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("45ad17b9-8d82-4cbd-9c88-5713eea4a985", "47dab697-3ace-42df-9be3-181543845b56", "ね"),
+    ("45ad17b9-8d82-4cbd-9c88-5713eea4a985", "c524193e-4d77-49e4-89ad-05577234a271", "ne")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("489e19bd-3daf-4d85-8339-59ad0b3c8a98", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 250);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("489e19bd-3daf-4d85-8339-59ad0b3c8a98", "47dab697-3ace-42df-9be3-181543845b56", "の"),
+    ("489e19bd-3daf-4d85-8339-59ad0b3c8a98", "c524193e-4d77-49e4-89ad-05577234a271", "no")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("396dd617-e0fa-4634-8c6d-c86296a12efe", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 260);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("396dd617-e0fa-4634-8c6d-c86296a12efe", "47dab697-3ace-42df-9be3-181543845b56", "は"),
+    ("396dd617-e0fa-4634-8c6d-c86296a12efe", "c524193e-4d77-49e4-89ad-05577234a271", "ha")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("93196c48-0ca2-43f5-a496-d45de5ebecb6", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 270);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("93196c48-0ca2-43f5-a496-d45de5ebecb6", "47dab697-3ace-42df-9be3-181543845b56", "ひ"),
+    ("93196c48-0ca2-43f5-a496-d45de5ebecb6", "c524193e-4d77-49e4-89ad-05577234a271", "hi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a79f6853-6fa8-4dd6-9098-9119c361628e", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 280);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a79f6853-6fa8-4dd6-9098-9119c361628e", "47dab697-3ace-42df-9be3-181543845b56", "ふ"),
+    ("a79f6853-6fa8-4dd6-9098-9119c361628e", "c524193e-4d77-49e4-89ad-05577234a271", "fu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c43ea4fa-1fce-4c39-bee3-96aa50be8270", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 290);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("c43ea4fa-1fce-4c39-bee3-96aa50be8270", "47dab697-3ace-42df-9be3-181543845b56", "へ"),
+    ("c43ea4fa-1fce-4c39-bee3-96aa50be8270", "c524193e-4d77-49e4-89ad-05577234a271", "he")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("48452661-7255-4686-aced-9b479db83794", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 300);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("48452661-7255-4686-aced-9b479db83794", "47dab697-3ace-42df-9be3-181543845b56", "ほ"),
+    ("48452661-7255-4686-aced-9b479db83794", "c524193e-4d77-49e4-89ad-05577234a271", "ho")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d5e3f79b-9f7e-44b7-bade-fb485141a031", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 310);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d5e3f79b-9f7e-44b7-bade-fb485141a031", "47dab697-3ace-42df-9be3-181543845b56", "ま"),
+    ("d5e3f79b-9f7e-44b7-bade-fb485141a031", "c524193e-4d77-49e4-89ad-05577234a271", "ma")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ae905edf-5e44-49af-9cb9-1fa09cea9320", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 320);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ae905edf-5e44-49af-9cb9-1fa09cea9320", "47dab697-3ace-42df-9be3-181543845b56", "み"),
+    ("ae905edf-5e44-49af-9cb9-1fa09cea9320", "c524193e-4d77-49e4-89ad-05577234a271", "mi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("1951db23-adda-4503-a1d0-2c8211e35f48", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 330);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("1951db23-adda-4503-a1d0-2c8211e35f48", "47dab697-3ace-42df-9be3-181543845b56", "む"),
+    ("1951db23-adda-4503-a1d0-2c8211e35f48", "c524193e-4d77-49e4-89ad-05577234a271", "mu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("980bfbe2-edac-4236-aadf-a2b53c61a574", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 340);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("980bfbe2-edac-4236-aadf-a2b53c61a574", "47dab697-3ace-42df-9be3-181543845b56", "め"),
+    ("980bfbe2-edac-4236-aadf-a2b53c61a574", "c524193e-4d77-49e4-89ad-05577234a271", "me")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("b0c77275-518c-41ee-a9c1-614303839e1a", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 350);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("b0c77275-518c-41ee-a9c1-614303839e1a", "47dab697-3ace-42df-9be3-181543845b56", "も"),
+    ("b0c77275-518c-41ee-a9c1-614303839e1a", "c524193e-4d77-49e4-89ad-05577234a271", "mo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("09974a9c-92d1-4efb-8fb9-9a52c989be69", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 360);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("09974a9c-92d1-4efb-8fb9-9a52c989be69", "47dab697-3ace-42df-9be3-181543845b56", "や"),
+    ("09974a9c-92d1-4efb-8fb9-9a52c989be69", "c524193e-4d77-49e4-89ad-05577234a271", "ya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("be8214b5-6a6c-44c0-8be5-f611e470ac29", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "empty", 370);
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f40bcadf-4950-4175-bfb5-e50196ee942c", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 380);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f40bcadf-4950-4175-bfb5-e50196ee942c", "47dab697-3ace-42df-9be3-181543845b56", "ゆ"),
+    ("f40bcadf-4950-4175-bfb5-e50196ee942c", "c524193e-4d77-49e4-89ad-05577234a271", "yu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("4c9399f4-c3aa-4f8f-8152-a3601eb61634", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "empty", 390);
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("b39ca47d-0c0f-4cee-8e4e-fbd275b8231d", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 400);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("b39ca47d-0c0f-4cee-8e4e-fbd275b8231d", "47dab697-3ace-42df-9be3-181543845b56", "よ"),
+    ("b39ca47d-0c0f-4cee-8e4e-fbd275b8231d", "c524193e-4d77-49e4-89ad-05577234a271", "yo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2ca157c0-8848-4d8a-bdb7-b583173fb655", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 410);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2ca157c0-8848-4d8a-bdb7-b583173fb655", "47dab697-3ace-42df-9be3-181543845b56", "ら"),
+    ("2ca157c0-8848-4d8a-bdb7-b583173fb655", "c524193e-4d77-49e4-89ad-05577234a271", "ra")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e1af9ffe-acca-4744-b146-bc01b4c2d8f2", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 420);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e1af9ffe-acca-4744-b146-bc01b4c2d8f2", "47dab697-3ace-42df-9be3-181543845b56", "り"),
+    ("e1af9ffe-acca-4744-b146-bc01b4c2d8f2", "c524193e-4d77-49e4-89ad-05577234a271", "ri")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("5bfe9906-745f-41b9-a077-e14040ef5a6a", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 430);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("5bfe9906-745f-41b9-a077-e14040ef5a6a", "47dab697-3ace-42df-9be3-181543845b56", "る"),
+    ("5bfe9906-745f-41b9-a077-e14040ef5a6a", "c524193e-4d77-49e4-89ad-05577234a271", "ru")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2670c2b9-7da9-40bb-992c-842a60cd1a32", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 440);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2670c2b9-7da9-40bb-992c-842a60cd1a32", "47dab697-3ace-42df-9be3-181543845b56", "れ"),
+    ("2670c2b9-7da9-40bb-992c-842a60cd1a32", "c524193e-4d77-49e4-89ad-05577234a271", "re")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("247ac86e-24fc-476c-b5e5-8334ef2bcc85", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 450);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("247ac86e-24fc-476c-b5e5-8334ef2bcc85", "47dab697-3ace-42df-9be3-181543845b56", "ろ"),
+    ("247ac86e-24fc-476c-b5e5-8334ef2bcc85", "c524193e-4d77-49e4-89ad-05577234a271", "ro")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("de3c5361-f8b2-4db9-9cab-7dc5b094dda0", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 460);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("de3c5361-f8b2-4db9-9cab-7dc5b094dda0", "47dab697-3ace-42df-9be3-181543845b56", "わ"),
+    ("de3c5361-f8b2-4db9-9cab-7dc5b094dda0", "c524193e-4d77-49e4-89ad-05577234a271", "wa")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("31af18e0-adaa-4b25-b288-f2c466187963", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "empty", 470);
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("8005ad99-72bb-4b59-afcc-e6d9b2c398f4", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 480);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("8005ad99-72bb-4b59-afcc-e6d9b2c398f4", "47dab697-3ace-42df-9be3-181543845b56", "ん"),
+    ("8005ad99-72bb-4b59-afcc-e6d9b2c398f4", "c524193e-4d77-49e4-89ad-05577234a271", "n")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c34ceaac-c216-4480-829a-fadb570d99e1", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "empty", 490);
+
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ee16ba7a-3ff5-4ba8-851c-9562868a689e", "b9c50c23-76b7-4941-b9b1-8abb63f8f7e6", "primary_secondary", 500);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ee16ba7a-3ff5-4ba8-851c-9562868a689e", "47dab697-3ace-42df-9be3-181543845b56", "を"),
+    ("ee16ba7a-3ff5-4ba8-851c-9562868a689e", "c524193e-4d77-49e4-89ad-05577234a271", "wo")
+;
+
+-- GOJŪON --
+
+-- YŌON --
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c01a2f0b-1810-4875-822b-ae81b1199afa", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 510);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("c01a2f0b-1810-4875-822b-ae81b1199afa", "47dab697-3ace-42df-9be3-181543845b56", "きゃ"),
+    ("c01a2f0b-1810-4875-822b-ae81b1199afa", "c524193e-4d77-49e4-89ad-05577234a271", "kya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e17738ed-5738-49f7-8ded-6aaae603603a", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 530);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e17738ed-5738-49f7-8ded-6aaae603603a", "47dab697-3ace-42df-9be3-181543845b56", "きゅ"),
+    ("e17738ed-5738-49f7-8ded-6aaae603603a", "c524193e-4d77-49e4-89ad-05577234a271", "kyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("7e13b492-6418-45e2-b267-51057101ff16", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 540);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("7e13b492-6418-45e2-b267-51057101ff16", "47dab697-3ace-42df-9be3-181543845b56", "きょ"),
+    ("7e13b492-6418-45e2-b267-51057101ff16", "c524193e-4d77-49e4-89ad-05577234a271", "kyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e49d9b27-831f-409a-bce9-80b29120fda2", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 560);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e49d9b27-831f-409a-bce9-80b29120fda2", "47dab697-3ace-42df-9be3-181543845b56", "しゃ"),
+    ("e49d9b27-831f-409a-bce9-80b29120fda2", "c524193e-4d77-49e4-89ad-05577234a271", "sha")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2bb8255c-66cf-4fee-acef-36d063d7d7df", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 570);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2bb8255c-66cf-4fee-acef-36d063d7d7df", "47dab697-3ace-42df-9be3-181543845b56", "しゅ"),
+    ("2bb8255c-66cf-4fee-acef-36d063d7d7df", "c524193e-4d77-49e4-89ad-05577234a271", "shu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("7c8a831f-2436-4357-b320-4ff3c3936891", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 580);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("7c8a831f-2436-4357-b320-4ff3c3936891", "47dab697-3ace-42df-9be3-181543845b56", "しょ"),
+    ("7c8a831f-2436-4357-b320-4ff3c3936891", "c524193e-4d77-49e4-89ad-05577234a271", "sho")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("b12751b8-4de3-4e04-8cb4-d3223ab8d940", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 590);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("b12751b8-4de3-4e04-8cb4-d3223ab8d940", "47dab697-3ace-42df-9be3-181543845b56", "ちゃ"),
+    ("b12751b8-4de3-4e04-8cb4-d3223ab8d940", "c524193e-4d77-49e4-89ad-05577234a271", "cha")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e2a4f614-fc52-4db8-816d-941ee0aacd30", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 600);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e2a4f614-fc52-4db8-816d-941ee0aacd30", "47dab697-3ace-42df-9be3-181543845b56", "ちゅ"),
+    ("e2a4f614-fc52-4db8-816d-941ee0aacd30", "c524193e-4d77-49e4-89ad-05577234a271", "chu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("1af63b6c-7768-478a-950b-9668b6437763", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 610);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("1af63b6c-7768-478a-950b-9668b6437763", "47dab697-3ace-42df-9be3-181543845b56", "ちょ"),
+    ("1af63b6c-7768-478a-950b-9668b6437763", "c524193e-4d77-49e4-89ad-05577234a271", "cho")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("7e0e321a-89f0-4f3f-bdea-46ae83510cb1", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 620);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("7e0e321a-89f0-4f3f-bdea-46ae83510cb1", "47dab697-3ace-42df-9be3-181543845b56", "にゃ"),
+    ("7e0e321a-89f0-4f3f-bdea-46ae83510cb1", "c524193e-4d77-49e4-89ad-05577234a271", "nya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("746c6b2c-8391-4711-817f-cf4bbfcfe066", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 630);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("746c6b2c-8391-4711-817f-cf4bbfcfe066", "47dab697-3ace-42df-9be3-181543845b56", "にゅ"),
+    ("746c6b2c-8391-4711-817f-cf4bbfcfe066", "c524193e-4d77-49e4-89ad-05577234a271", "nyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0ba90e6a-c454-4054-9036-d2f6abcad9dd", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 640);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0ba90e6a-c454-4054-9036-d2f6abcad9dd", "47dab697-3ace-42df-9be3-181543845b56", "にょ"),
+    ("0ba90e6a-c454-4054-9036-d2f6abcad9dd", "c524193e-4d77-49e4-89ad-05577234a271", "nyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("19c99cdd-c701-487d-add9-b3f016486bac", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 650);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("19c99cdd-c701-487d-add9-b3f016486bac", "47dab697-3ace-42df-9be3-181543845b56", "ひゃ"),
+    ("19c99cdd-c701-487d-add9-b3f016486bac", "c524193e-4d77-49e4-89ad-05577234a271", "hya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f5d84bf1-81b6-41da-989a-f86d98fea26d", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 660);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f5d84bf1-81b6-41da-989a-f86d98fea26d", "47dab697-3ace-42df-9be3-181543845b56", "ひゅ"),
+    ("f5d84bf1-81b6-41da-989a-f86d98fea26d", "c524193e-4d77-49e4-89ad-05577234a271", "hyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e5382dee-da0a-4047-85a8-36c5ce5ef736", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 670);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e5382dee-da0a-4047-85a8-36c5ce5ef736", "47dab697-3ace-42df-9be3-181543845b56", "ひょ"),
+    ("e5382dee-da0a-4047-85a8-36c5ce5ef736", "c524193e-4d77-49e4-89ad-05577234a271", "hyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("4ce120ab-7f1d-4b22-80e0-344bf4d31067", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 680);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("4ce120ab-7f1d-4b22-80e0-344bf4d31067", "47dab697-3ace-42df-9be3-181543845b56", "みゃ"),
+    ("4ce120ab-7f1d-4b22-80e0-344bf4d31067", "c524193e-4d77-49e4-89ad-05577234a271", "mya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("70127257-a680-4d03-b5ad-d2d60ab9999d", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 690);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("70127257-a680-4d03-b5ad-d2d60ab9999d", "47dab697-3ace-42df-9be3-181543845b56", "みゅ"),
+    ("70127257-a680-4d03-b5ad-d2d60ab9999d", "c524193e-4d77-49e4-89ad-05577234a271", "myu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("4e394375-dbfb-449c-9e37-90c83ed12be2", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 700);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("4e394375-dbfb-449c-9e37-90c83ed12be2", "47dab697-3ace-42df-9be3-181543845b56", "みょ"),
+    ("4e394375-dbfb-449c-9e37-90c83ed12be2", "c524193e-4d77-49e4-89ad-05577234a271", "myo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("931cf4bc-08e7-49e4-afa3-6e5dd2f860bd", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 710);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("931cf4bc-08e7-49e4-afa3-6e5dd2f860bd", "47dab697-3ace-42df-9be3-181543845b56", "りゃ"),
+    ("931cf4bc-08e7-49e4-afa3-6e5dd2f860bd", "c524193e-4d77-49e4-89ad-05577234a271", "rya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("5c1053eb-64cd-497b-ada2-6b4be6903c4b", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 720);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("5c1053eb-64cd-497b-ada2-6b4be6903c4b", "47dab697-3ace-42df-9be3-181543845b56", "りゅ"),
+    ("5c1053eb-64cd-497b-ada2-6b4be6903c4b", "c524193e-4d77-49e4-89ad-05577234a271", "ryu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("6d088105-cc91-47c6-b528-f91c1a10cc64", "b23098cc-2409-45eb-9fde-f548e6d10dae", "primary_secondary", 730);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("6d088105-cc91-47c6-b528-f91c1a10cc64", "47dab697-3ace-42df-9be3-181543845b56", "りょ"),
+    ("6d088105-cc91-47c6-b528-f91c1a10cc64", "c524193e-4d77-49e4-89ad-05577234a271", "ryo")
+;
+
+-- YŌON --
+
+-- GOJŪON 2 --
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("94572526-813e-475e-a682-ff75a84279b9", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 740);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("94572526-813e-475e-a682-ff75a84279b9", "47dab697-3ace-42df-9be3-181543845b56", "が"),
+    ("94572526-813e-475e-a682-ff75a84279b9", "c524193e-4d77-49e4-89ad-05577234a271", "ga")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("5f69c94d-e2d5-4d44-bfc2-3e711b33d581", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 750);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("5f69c94d-e2d5-4d44-bfc2-3e711b33d581", "47dab697-3ace-42df-9be3-181543845b56", "ぎ"),
+    ("5f69c94d-e2d5-4d44-bfc2-3e711b33d581", "c524193e-4d77-49e4-89ad-05577234a271", "gi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("17db54c7-d70e-47f0-a688-883e279b6723", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 760);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("17db54c7-d70e-47f0-a688-883e279b6723", "47dab697-3ace-42df-9be3-181543845b56", "ぐ"),
+    ("17db54c7-d70e-47f0-a688-883e279b6723", "c524193e-4d77-49e4-89ad-05577234a271", "gu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e08fb791-6685-4414-9dc9-9426f8862a67", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 770);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e08fb791-6685-4414-9dc9-9426f8862a67", "47dab697-3ace-42df-9be3-181543845b56", "げ"),
+    ("e08fb791-6685-4414-9dc9-9426f8862a67", "c524193e-4d77-49e4-89ad-05577234a271", "ge")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("26ae1f13-8086-4c85-95c5-48c2456973cf", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 780);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("26ae1f13-8086-4c85-95c5-48c2456973cf", "47dab697-3ace-42df-9be3-181543845b56", "ご"),
+    ("26ae1f13-8086-4c85-95c5-48c2456973cf", "c524193e-4d77-49e4-89ad-05577234a271", "go")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("053ce563-a0c1-4da2-a767-f9b0a379a4a7", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 790);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("053ce563-a0c1-4da2-a767-f9b0a379a4a7", "47dab697-3ace-42df-9be3-181543845b56", "ざ"),
+    ("053ce563-a0c1-4da2-a767-f9b0a379a4a7", "c524193e-4d77-49e4-89ad-05577234a271", "za")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("8b88205d-d83e-4ffa-93fe-f8b5dac2cca4", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 800);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("8b88205d-d83e-4ffa-93fe-f8b5dac2cca4", "47dab697-3ace-42df-9be3-181543845b56", "じ"),
+    ("8b88205d-d83e-4ffa-93fe-f8b5dac2cca4", "c524193e-4d77-49e4-89ad-05577234a271", "ji")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("9c80d2a3-060f-4dda-9e00-99bbf69aeb3f", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 810);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("9c80d2a3-060f-4dda-9e00-99bbf69aeb3f", "47dab697-3ace-42df-9be3-181543845b56", "ず"),
+    ("9c80d2a3-060f-4dda-9e00-99bbf69aeb3f", "c524193e-4d77-49e4-89ad-05577234a271", "zu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ca9b2fa3-ebf6-4757-848e-a69a7ea2563d", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 820);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ca9b2fa3-ebf6-4757-848e-a69a7ea2563d", "47dab697-3ace-42df-9be3-181543845b56", "ぜ"),
+    ("ca9b2fa3-ebf6-4757-848e-a69a7ea2563d", "c524193e-4d77-49e4-89ad-05577234a271", "ze")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("6e9db31a-d49f-4b3f-95fd-8cf5e1430e9a", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 830);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("6e9db31a-d49f-4b3f-95fd-8cf5e1430e9a", "47dab697-3ace-42df-9be3-181543845b56", "ぞ"),
+    ("6e9db31a-d49f-4b3f-95fd-8cf5e1430e9a", "c524193e-4d77-49e4-89ad-05577234a271", "zo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("dfc6c0d2-5c3b-4a17-9901-58eeb35e54ce", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 840);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("dfc6c0d2-5c3b-4a17-9901-58eeb35e54ce", "47dab697-3ace-42df-9be3-181543845b56", "だ"),
+    ("dfc6c0d2-5c3b-4a17-9901-58eeb35e54ce", "c524193e-4d77-49e4-89ad-05577234a271", "da")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("99d5f4e8-25c9-4a4c-8593-90346cfd16e3", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 850);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("99d5f4e8-25c9-4a4c-8593-90346cfd16e3", "47dab697-3ace-42df-9be3-181543845b56", "ぢ"),
+    ("99d5f4e8-25c9-4a4c-8593-90346cfd16e3", "c524193e-4d77-49e4-89ad-05577234a271", "ji")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("5447d51a-74e7-432d-bd5e-0a3798a68498", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 860);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("5447d51a-74e7-432d-bd5e-0a3798a68498", "47dab697-3ace-42df-9be3-181543845b56", "づ"),
+    ("5447d51a-74e7-432d-bd5e-0a3798a68498", "c524193e-4d77-49e4-89ad-05577234a271", "zu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("728e1593-6069-4ba9-a328-9a771b03f991", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 870);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("728e1593-6069-4ba9-a328-9a771b03f991", "47dab697-3ace-42df-9be3-181543845b56", "で"),
+    ("728e1593-6069-4ba9-a328-9a771b03f991", "c524193e-4d77-49e4-89ad-05577234a271", "de")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("3613e63e-f0cc-4fda-91f3-56c474267ee8", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 880);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("3613e63e-f0cc-4fda-91f3-56c474267ee8", "47dab697-3ace-42df-9be3-181543845b56", "ど"),
+    ("3613e63e-f0cc-4fda-91f3-56c474267ee8", "c524193e-4d77-49e4-89ad-05577234a271", "do")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a557967f-bb54-4ec8-adab-38c814468cf6", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 890);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a557967f-bb54-4ec8-adab-38c814468cf6", "47dab697-3ace-42df-9be3-181543845b56", "ば"),
+    ("a557967f-bb54-4ec8-adab-38c814468cf6", "c524193e-4d77-49e4-89ad-05577234a271", "ba")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2b12874f-d6b5-455f-9ee5-5c77e1d40d3d", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 900);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2b12874f-d6b5-455f-9ee5-5c77e1d40d3d", "47dab697-3ace-42df-9be3-181543845b56", "び"),
+    ("2b12874f-d6b5-455f-9ee5-5c77e1d40d3d", "c524193e-4d77-49e4-89ad-05577234a271", "bi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ce303c02-9b17-46f3-8d3f-a7ad44cf540f", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 910);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ce303c02-9b17-46f3-8d3f-a7ad44cf540f", "47dab697-3ace-42df-9be3-181543845b56", "ぶ"),
+    ("ce303c02-9b17-46f3-8d3f-a7ad44cf540f", "c524193e-4d77-49e4-89ad-05577234a271", "bu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ad6a4939-6a52-4b9b-8fa3-e768f5aa3cae", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 920);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ad6a4939-6a52-4b9b-8fa3-e768f5aa3cae", "47dab697-3ace-42df-9be3-181543845b56", "べ"),
+    ("ad6a4939-6a52-4b9b-8fa3-e768f5aa3cae", "c524193e-4d77-49e4-89ad-05577234a271", "be")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("432dc6a0-3fc4-4416-977f-34581561e5ce", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 930);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("432dc6a0-3fc4-4416-977f-34581561e5ce", "47dab697-3ace-42df-9be3-181543845b56", "ぼ"),
+    ("432dc6a0-3fc4-4416-977f-34581561e5ce", "c524193e-4d77-49e4-89ad-05577234a271", "bo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("31a71d5e-ae45-4c4c-8124-92f131bbff09", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 940);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("31a71d5e-ae45-4c4c-8124-92f131bbff09", "47dab697-3ace-42df-9be3-181543845b56", "ぱ"),
+    ("31a71d5e-ae45-4c4c-8124-92f131bbff09", "c524193e-4d77-49e4-89ad-05577234a271", "pa")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("018abe38-4363-4ae9-a53c-91acf7a7cde9", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 950);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("018abe38-4363-4ae9-a53c-91acf7a7cde9", "47dab697-3ace-42df-9be3-181543845b56", "ぴ"),
+    ("018abe38-4363-4ae9-a53c-91acf7a7cde9", "c524193e-4d77-49e4-89ad-05577234a271", "pi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("56a101b8-79cf-4aca-99d4-824fbb9d4ebd", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 960);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("56a101b8-79cf-4aca-99d4-824fbb9d4ebd", "47dab697-3ace-42df-9be3-181543845b56", "ぷ"),
+    ("56a101b8-79cf-4aca-99d4-824fbb9d4ebd", "c524193e-4d77-49e4-89ad-05577234a271", "pu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d7a45d93-5233-4894-9178-30b671bd9cbc", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 970);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d7a45d93-5233-4894-9178-30b671bd9cbc", "47dab697-3ace-42df-9be3-181543845b56", "ぺ"),
+    ("d7a45d93-5233-4894-9178-30b671bd9cbc", "c524193e-4d77-49e4-89ad-05577234a271", "pe")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a2e0dcaa-13fc-4e66-b29c-e795c2c89905", "13b026db-ed1b-4c7f-8f71-a46ef76b9d5f", "primary_secondary", 980);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a2e0dcaa-13fc-4e66-b29c-e795c2c89905", "47dab697-3ace-42df-9be3-181543845b56", "ぽ"),
+    ("a2e0dcaa-13fc-4e66-b29c-e795c2c89905", "c524193e-4d77-49e4-89ad-05577234a271", "po")
+;
+
+-- GOJŪON 2 --
+
+-- YŌON 2--
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("5ba88e39-4260-4117-a256-4b9efd6a4fbb", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 990);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("5ba88e39-4260-4117-a256-4b9efd6a4fbb", "47dab697-3ace-42df-9be3-181543845b56", "ぎゃ"),
+    ("5ba88e39-4260-4117-a256-4b9efd6a4fbb", "c524193e-4d77-49e4-89ad-05577234a271", "gya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e9f5e6f3-ed10-4c42-8ffe-d5e268d20f91", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1000);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e9f5e6f3-ed10-4c42-8ffe-d5e268d20f91", "47dab697-3ace-42df-9be3-181543845b56", "ぎゅ"),
+    ("e9f5e6f3-ed10-4c42-8ffe-d5e268d20f91", "c524193e-4d77-49e4-89ad-05577234a271", "gyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a621bfd4-b3cf-417c-8b4d-e0200454888b", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1010);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a621bfd4-b3cf-417c-8b4d-e0200454888b", "47dab697-3ace-42df-9be3-181543845b56", "ぎょ"),
+    ("a621bfd4-b3cf-417c-8b4d-e0200454888b", "c524193e-4d77-49e4-89ad-05577234a271", "gyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("68e6f57a-2189-44aa-8a9d-99c0fa454990", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1020);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("68e6f57a-2189-44aa-8a9d-99c0fa454990", "47dab697-3ace-42df-9be3-181543845b56", "じゃ"),
+    ("68e6f57a-2189-44aa-8a9d-99c0fa454990", "c524193e-4d77-49e4-89ad-05577234a271", "ja")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f967fe8f-a1a7-46fa-9e02-f7a030b97a47", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1030);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f967fe8f-a1a7-46fa-9e02-f7a030b97a47", "47dab697-3ace-42df-9be3-181543845b56", "じゅ"),
+    ("f967fe8f-a1a7-46fa-9e02-f7a030b97a47", "c524193e-4d77-49e4-89ad-05577234a271", "ju")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("83d4636a-7985-460d-8941-205819df2437", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1040);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("83d4636a-7985-460d-8941-205819df2437", "47dab697-3ace-42df-9be3-181543845b56", "じょ"),
+    ("83d4636a-7985-460d-8941-205819df2437", "c524193e-4d77-49e4-89ad-05577234a271", "jo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("93afd233-a129-4545-b9cd-60ef068e1c6f", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1050);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("93afd233-a129-4545-b9cd-60ef068e1c6f", "47dab697-3ace-42df-9be3-181543845b56", "ぢゃ"),
+    ("93afd233-a129-4545-b9cd-60ef068e1c6f", "c524193e-4d77-49e4-89ad-05577234a271", "ja")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("251f8b55-f793-4c3e-ae71-b75c3daeb7c1", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1060);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("251f8b55-f793-4c3e-ae71-b75c3daeb7c1", "47dab697-3ace-42df-9be3-181543845b56", "ぢゅ"),
+    ("251f8b55-f793-4c3e-ae71-b75c3daeb7c1", "c524193e-4d77-49e4-89ad-05577234a271", "ju")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("83b0dfc5-17c9-4459-93fe-2d139cadad9e", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1070);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("83b0dfc5-17c9-4459-93fe-2d139cadad9e", "47dab697-3ace-42df-9be3-181543845b56", "ぢょ"),
+    ("83b0dfc5-17c9-4459-93fe-2d139cadad9e", "c524193e-4d77-49e4-89ad-05577234a271", "jo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("fc5fdfba-46f1-423d-9051-377e33bd4f5e", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1080);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("fc5fdfba-46f1-423d-9051-377e33bd4f5e", "47dab697-3ace-42df-9be3-181543845b56", "びゃ"),
+    ("fc5fdfba-46f1-423d-9051-377e33bd4f5e", "c524193e-4d77-49e4-89ad-05577234a271", "bya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("efe82bf5-60d9-4d5d-a4a2-2454c1ac5d40", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1090);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("efe82bf5-60d9-4d5d-a4a2-2454c1ac5d40", "47dab697-3ace-42df-9be3-181543845b56", "びゅ"),
+    ("efe82bf5-60d9-4d5d-a4a2-2454c1ac5d40", "c524193e-4d77-49e4-89ad-05577234a271", "byu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0823eb10-08cb-4b63-8ed5-a1a15cbbec8c", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1100);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0823eb10-08cb-4b63-8ed5-a1a15cbbec8c", "47dab697-3ace-42df-9be3-181543845b56", "びょ"),
+    ("0823eb10-08cb-4b63-8ed5-a1a15cbbec8c", "c524193e-4d77-49e4-89ad-05577234a271", "byo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("cb17893b-89ad-46f7-8083-d3824786623a", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1110);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("cb17893b-89ad-46f7-8083-d3824786623a", "47dab697-3ace-42df-9be3-181543845b56", "ぴゃ"),
+    ("cb17893b-89ad-46f7-8083-d3824786623a", "c524193e-4d77-49e4-89ad-05577234a271", "pya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("752c5268-6d30-4360-9114-b143e74111d1", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1120);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("752c5268-6d30-4360-9114-b143e74111d1", "47dab697-3ace-42df-9be3-181543845b56", "ぴゅ"),
+    ("752c5268-6d30-4360-9114-b143e74111d1", "c524193e-4d77-49e4-89ad-05577234a271", "pyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("86cb427f-43fe-41ee-8730-cd9239d2d0bc", "24ebb295-9899-4dca-9e99-17fa14744503", "primary_secondary", 1130);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("86cb427f-43fe-41ee-8730-cd9239d2d0bc", "47dab697-3ace-42df-9be3-181543845b56", "ぴょ"),
+    ("86cb427f-43fe-41ee-8730-cd9239d2d0bc", "c524193e-4d77-49e4-89ad-05577234a271", "pyo")
+;
+
+-- YŌON 2--
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+
+-- KATAKANA --
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+-- GOJŪON --
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("7012cefc-6115-494e-a116-26c5ee3126d1", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 10);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("7012cefc-6115-494e-a116-26c5ee3126d1", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ア"),
+    ("7012cefc-6115-494e-a116-26c5ee3126d1", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "a")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("9dec4596-fd6d-499a-b4c5-8538bf73959f", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 20);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("9dec4596-fd6d-499a-b4c5-8538bf73959f", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "イ"),
+    ("9dec4596-fd6d-499a-b4c5-8538bf73959f", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "i")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ed24ac1d-70d4-40f5-9cd2-1020bf671bca", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 30);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ed24ac1d-70d4-40f5-9cd2-1020bf671bca", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ウ"),
+    ("ed24ac1d-70d4-40f5-9cd2-1020bf671bca", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "u")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d2183aee-4c28-4163-8b59-748dec1f34ad", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 40);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d2183aee-4c28-4163-8b59-748dec1f34ad", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "エ"),
+    ("d2183aee-4c28-4163-8b59-748dec1f34ad", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "e")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("225496b4-c30b-4d7f-b116-00fc7c2f1017", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 50);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("225496b4-c30b-4d7f-b116-00fc7c2f1017", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "オ"),
+    ("225496b4-c30b-4d7f-b116-00fc7c2f1017", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "o")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f4be6134-1d16-4863-8d0b-c2eb45cc5573", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 60);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f4be6134-1d16-4863-8d0b-c2eb45cc5573", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "カ"),
+    ("f4be6134-1d16-4863-8d0b-c2eb45cc5573", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ka")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("52dd3eed-fdba-4709-8354-eb4424531aff", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 70);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("52dd3eed-fdba-4709-8354-eb4424531aff", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "キ"),
+    ("52dd3eed-fdba-4709-8354-eb4424531aff", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ki")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0a2da29d-640e-4526-ae0a-b0a75f354653", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 80);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0a2da29d-640e-4526-ae0a-b0a75f354653", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ク"),
+    ("0a2da29d-640e-4526-ae0a-b0a75f354653", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ku")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a8b4b407-449e-493b-a4d8-c1c868ac2910", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 90);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a8b4b407-449e-493b-a4d8-c1c868ac2910", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ケ"),
+    ("a8b4b407-449e-493b-a4d8-c1c868ac2910", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ke")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2b4afa9c-f227-4b3c-9a09-5bc49590c79e", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 100);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2b4afa9c-f227-4b3c-9a09-5bc49590c79e", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "コ"),
+    ("2b4afa9c-f227-4b3c-9a09-5bc49590c79e", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ko")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("26bddf68-02a4-428e-b514-90d197c754e6", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 110);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("26bddf68-02a4-428e-b514-90d197c754e6", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "サ"),
+    ("26bddf68-02a4-428e-b514-90d197c754e6", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "sa")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("edd84ca7-94d5-4e7c-857a-0a49c7ffa7b5", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 120);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("edd84ca7-94d5-4e7c-857a-0a49c7ffa7b5", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "シ"),
+    ("edd84ca7-94d5-4e7c-857a-0a49c7ffa7b5", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "shi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2c561fa4-d5b6-49de-9c94-2501cd1f55a1", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 130);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2c561fa4-d5b6-49de-9c94-2501cd1f55a1", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ス"),
+    ("2c561fa4-d5b6-49de-9c94-2501cd1f55a1", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "su")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("9fde5b1b-f61f-4746-ad84-37f07c6e1b8d", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 140);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("9fde5b1b-f61f-4746-ad84-37f07c6e1b8d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "セ"),
+    ("9fde5b1b-f61f-4746-ad84-37f07c6e1b8d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "se")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c058f70f-254d-4e98-b2f4-e70a533d994d", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 150);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("c058f70f-254d-4e98-b2f4-e70a533d994d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ソ"),
+    ("c058f70f-254d-4e98-b2f4-e70a533d994d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "so")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("13909e8c-f3c3-4bb9-ae35-224580f75fd9", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 160);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("13909e8c-f3c3-4bb9-ae35-224580f75fd9", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "タ"),
+    ("13909e8c-f3c3-4bb9-ae35-224580f75fd9", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ta")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f39c4d8b-ef9f-4a03-9a2c-118ec848752f", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 170);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f39c4d8b-ef9f-4a03-9a2c-118ec848752f", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "チ"),
+    ("f39c4d8b-ef9f-4a03-9a2c-118ec848752f", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "chi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("69f6fa26-057f-4400-994c-e08b928346a6", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 180);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("69f6fa26-057f-4400-994c-e08b928346a6", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ツ"),
+    ("69f6fa26-057f-4400-994c-e08b928346a6", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "tsu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("5ad275fd-46f8-4231-9c7c-22135b3d9bb5", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 190);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("5ad275fd-46f8-4231-9c7c-22135b3d9bb5", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "テ"),
+    ("5ad275fd-46f8-4231-9c7c-22135b3d9bb5", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "te")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("23abe80c-2968-44bf-a58c-900fa5222d94", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 200);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("23abe80c-2968-44bf-a58c-900fa5222d94", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ト"),
+    ("23abe80c-2968-44bf-a58c-900fa5222d94", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "to")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("8c23fa5c-1df9-4723-a754-509d5face7e1", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 210);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("8c23fa5c-1df9-4723-a754-509d5face7e1", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ナ"),
+    ("8c23fa5c-1df9-4723-a754-509d5face7e1", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "na")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("6eae37f7-b36d-4cfb-865b-4e1cfb16ab0a", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 220);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("6eae37f7-b36d-4cfb-865b-4e1cfb16ab0a", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ニ"),
+    ("6eae37f7-b36d-4cfb-865b-4e1cfb16ab0a", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ni")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("12a65713-2762-477b-a428-6bceeb06ce15", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 230);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("12a65713-2762-477b-a428-6bceeb06ce15", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヌ"),
+    ("12a65713-2762-477b-a428-6bceeb06ce15", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "nu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("77baba27-5886-493d-bdfe-3b138e07cd5a", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 240);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("77baba27-5886-493d-bdfe-3b138e07cd5a", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ネ"),
+    ("77baba27-5886-493d-bdfe-3b138e07cd5a", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ne")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("39fc2926-8f24-4212-8612-7eeb22af0ba1", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 250);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("39fc2926-8f24-4212-8612-7eeb22af0ba1", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ノ"),
+    ("39fc2926-8f24-4212-8612-7eeb22af0ba1", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "no")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("6df647c7-7e07-4ae0-ae09-c369df078110", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 260);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("6df647c7-7e07-4ae0-ae09-c369df078110", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ハ"),
+    ("6df647c7-7e07-4ae0-ae09-c369df078110", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ha")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("476d9015-7929-4714-b6bf-e0ae8db0853d", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 270);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("476d9015-7929-4714-b6bf-e0ae8db0853d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヒ"),
+    ("476d9015-7929-4714-b6bf-e0ae8db0853d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "hi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("21bccf30-839d-46a9-85f6-6d64d83bf2e4", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 280);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("21bccf30-839d-46a9-85f6-6d64d83bf2e4", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "フ"),
+    ("21bccf30-839d-46a9-85f6-6d64d83bf2e4", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "fu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("9465fdf3-800d-43c6-8114-42adc4a87147", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 290);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("9465fdf3-800d-43c6-8114-42adc4a87147", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヘ"),
+    ("9465fdf3-800d-43c6-8114-42adc4a87147", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "he")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("9d1d654b-42df-4d77-82c3-e56f710f5a7e", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 300);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("9d1d654b-42df-4d77-82c3-e56f710f5a7e", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ホ"),
+    ("9d1d654b-42df-4d77-82c3-e56f710f5a7e", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ho")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("625f3294-c019-4370-a812-1fd62744f55f", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 310);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("625f3294-c019-4370-a812-1fd62744f55f", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "マ"),
+    ("625f3294-c019-4370-a812-1fd62744f55f", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ma")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("687a8207-c9bc-4484-9b06-906110a647be", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 320);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("687a8207-c9bc-4484-9b06-906110a647be", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ミ"),
+    ("687a8207-c9bc-4484-9b06-906110a647be", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "mi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("733ba7e2-3967-4a38-b764-c4bbaf63cf4d", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 330);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("733ba7e2-3967-4a38-b764-c4bbaf63cf4d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ム"),
+    ("733ba7e2-3967-4a38-b764-c4bbaf63cf4d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "mu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d3fd90dc-713b-4034-9d08-aaaa1eb06ef7", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 340);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d3fd90dc-713b-4034-9d08-aaaa1eb06ef7", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "メ"),
+    ("d3fd90dc-713b-4034-9d08-aaaa1eb06ef7", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "me")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("8af7b064-e285-403b-89ac-03a36f4afb02", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 350);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("8af7b064-e285-403b-89ac-03a36f4afb02", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "モ"),
+    ("8af7b064-e285-403b-89ac-03a36f4afb02", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "mo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("cbd60d40-1334-46bd-ad0e-5c02a8de0cc3", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 360);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("cbd60d40-1334-46bd-ad0e-5c02a8de0cc3", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヤ"),
+    ("cbd60d40-1334-46bd-ad0e-5c02a8de0cc3", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f98f1c42-12f1-4463-8bb6-1c8533884b76", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "empty", 370);
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("354f08eb-863b-40ca-90a2-12065551db20", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 380);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("354f08eb-863b-40ca-90a2-12065551db20", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ユ"),
+    ("354f08eb-863b-40ca-90a2-12065551db20", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "yu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("91b2cd73-b63c-40de-8727-8a622b822f41", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "empty", 390);
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("dac8cf19-bf45-4861-bd76-0254e5a55b63", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 400);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("dac8cf19-bf45-4861-bd76-0254e5a55b63", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヨ"),
+    ("dac8cf19-bf45-4861-bd76-0254e5a55b63", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "yo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("de747496-e47e-45b3-aa1f-094dbdb19857", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 410);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("de747496-e47e-45b3-aa1f-094dbdb19857", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ラ"),
+    ("de747496-e47e-45b3-aa1f-094dbdb19857", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ra")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("06152a90-44b4-4867-b783-857a416c8635", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 420);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("06152a90-44b4-4867-b783-857a416c8635", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "リ"),
+    ("06152a90-44b4-4867-b783-857a416c8635", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ri")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a324fb89-79f5-4d70-bedc-c0e3e3b41f81", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 430);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a324fb89-79f5-4d70-bedc-c0e3e3b41f81", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ル"),
+    ("a324fb89-79f5-4d70-bedc-c0e3e3b41f81", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ru")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2d95eae0-16f6-4fe8-a3d3-6e7eaafc4f74", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 440);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2d95eae0-16f6-4fe8-a3d3-6e7eaafc4f74", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "レ"),
+    ("2d95eae0-16f6-4fe8-a3d3-6e7eaafc4f74", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "re")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d7a8c4d1-ae6a-45a4-b2dd-c156ff151e09", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 450);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d7a8c4d1-ae6a-45a4-b2dd-c156ff151e09", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ロ"),
+    ("d7a8c4d1-ae6a-45a4-b2dd-c156ff151e09", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ro")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c3460769-a74e-48dd-be6f-4b2af5cd4b29", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 460);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("c3460769-a74e-48dd-be6f-4b2af5cd4b29", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ワ"),
+    ("c3460769-a74e-48dd-be6f-4b2af5cd4b29", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "wa")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("24fad191-9ed8-45ae-801d-63f233c7e629", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "empty", 470);
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("b8d52447-9f87-4f9a-a98b-1f396490c09c", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 480);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("b8d52447-9f87-4f9a-a98b-1f396490c09c", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ン"),
+    ("b8d52447-9f87-4f9a-a98b-1f396490c09c", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "n")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("8cd9d5cf-3d1d-4144-b6ec-c202c81fb28c", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "empty", 490);
+
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0a321134-e130-47ca-bd73-dbd1039afb56", "3c611fba-56e8-4aed-9bc6-8d08486ad1ad", "primary_secondary", 500);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0a321134-e130-47ca-bd73-dbd1039afb56", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヲ"),
+    ("0a321134-e130-47ca-bd73-dbd1039afb56", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "wo")
+;
+
+-- GOJŪON --
+
+-- YŌON --
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ff915eef-d881-4ea4-99a7-6272ba00c6bc", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 510);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ff915eef-d881-4ea4-99a7-6272ba00c6bc", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "キャ"),
+    ("ff915eef-d881-4ea4-99a7-6272ba00c6bc", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "kya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("34360393-9c42-4090-89fa-56589e3f3859", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 530);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("34360393-9c42-4090-89fa-56589e3f3859", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "キュ"),
+    ("34360393-9c42-4090-89fa-56589e3f3859", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "kyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2946562c-c009-48cb-a000-01a2409077d3", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 540);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2946562c-c009-48cb-a000-01a2409077d3", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "キョ"),
+    ("2946562c-c009-48cb-a000-01a2409077d3", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "kyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("1df9c1b9-0f82-411a-9917-f84499fcee6f", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 560);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("1df9c1b9-0f82-411a-9917-f84499fcee6f", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "シャ"),
+    ("1df9c1b9-0f82-411a-9917-f84499fcee6f", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "sha")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("af4e1e0b-75e1-4407-acf2-b89de268ebc5", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 570);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("af4e1e0b-75e1-4407-acf2-b89de268ebc5", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "シュ"),
+    ("af4e1e0b-75e1-4407-acf2-b89de268ebc5", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "shu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("a7213070-dd85-4fbc-ade1-fe456383bad9", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 580);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("a7213070-dd85-4fbc-ade1-fe456383bad9", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ショ"),
+    ("a7213070-dd85-4fbc-ade1-fe456383bad9", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "sho")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("216a47d7-3319-47dc-8aae-d5183dc7992e", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 590);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("216a47d7-3319-47dc-8aae-d5183dc7992e", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "チャ"),
+    ("216a47d7-3319-47dc-8aae-d5183dc7992e", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "cha")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("70970530-b185-4b79-805d-c7e845fd3599", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 600);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("70970530-b185-4b79-805d-c7e845fd3599", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "チュ"),
+    ("70970530-b185-4b79-805d-c7e845fd3599", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "chu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("c4eb5c2b-1619-4af8-91f2-781f316e847b", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 610);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("c4eb5c2b-1619-4af8-91f2-781f316e847b", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "チョ"),
+    ("c4eb5c2b-1619-4af8-91f2-781f316e847b", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "cho")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0d035ec6-272e-4a69-a354-a12108216966", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 620);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0d035ec6-272e-4a69-a354-a12108216966", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ニャ"),
+    ("0d035ec6-272e-4a69-a354-a12108216966", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "nya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ace10796-fc2d-44f2-a131-4654ffa0b44d", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 630);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ace10796-fc2d-44f2-a131-4654ffa0b44d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ニュ"),
+    ("ace10796-fc2d-44f2-a131-4654ffa0b44d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "nyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("800505ce-3b8a-4ea6-a4fb-607a82899759", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 640);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("800505ce-3b8a-4ea6-a4fb-607a82899759", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ニョ"),
+    ("800505ce-3b8a-4ea6-a4fb-607a82899759", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "nyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("01b71e8e-0b1a-434c-97c3-6b7e5a577e9e", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 650);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("01b71e8e-0b1a-434c-97c3-6b7e5a577e9e", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヒャ"),
+    ("01b71e8e-0b1a-434c-97c3-6b7e5a577e9e", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "hya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ae8b9b08-b634-4264-8b50-0b24c5c41d6a", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 660);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ae8b9b08-b634-4264-8b50-0b24c5c41d6a", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヒュ"),
+    ("ae8b9b08-b634-4264-8b50-0b24c5c41d6a", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "hyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("00d8fbf9-20c7-4903-98b6-94cea2fdd903", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 670);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("00d8fbf9-20c7-4903-98b6-94cea2fdd903", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヒョ"),
+    ("00d8fbf9-20c7-4903-98b6-94cea2fdd903", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "hyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ff1aac50-2d85-48ab-b0a1-56df436b9f11", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 680);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ff1aac50-2d85-48ab-b0a1-56df436b9f11", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ミャ"),
+    ("ff1aac50-2d85-48ab-b0a1-56df436b9f11", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "mya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("62b59ab2-c4c1-405e-a18e-1e8d818c0690", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 690);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("62b59ab2-c4c1-405e-a18e-1e8d818c0690", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ミュ"),
+    ("62b59ab2-c4c1-405e-a18e-1e8d818c0690", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "myu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("1c940979-6601-487d-a1f8-4e7455567f2d", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 700);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("1c940979-6601-487d-a1f8-4e7455567f2d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ミョ"),
+    ("1c940979-6601-487d-a1f8-4e7455567f2d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "myo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("4c967c06-ae59-487d-9524-8f7b23dbd93a", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 710);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("4c967c06-ae59-487d-9524-8f7b23dbd93a", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "リャ"),
+    ("4c967c06-ae59-487d-9524-8f7b23dbd93a", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "rya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("03acef59-5634-4cd7-9ed1-8347af49ee9f", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 720);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("03acef59-5634-4cd7-9ed1-8347af49ee9f", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "リュ"),
+    ("03acef59-5634-4cd7-9ed1-8347af49ee9f", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ryu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("862dbd84-0ae9-4c98-a7c7-ade8213e2063", "eab70e67-3779-4265-86c1-740330482b58", "primary_secondary", 730);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("862dbd84-0ae9-4c98-a7c7-ade8213e2063", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "リョ"),
+    ("862dbd84-0ae9-4c98-a7c7-ade8213e2063", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ryo")
+;
+
+-- YŌON --
+
+-- GOJŪON 2 --
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d4b52693-675e-4462-8809-096f23a3c720", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 740);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d4b52693-675e-4462-8809-096f23a3c720", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ガ"),
+    ("d4b52693-675e-4462-8809-096f23a3c720", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ga")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ebc2e7e3-f6bd-4f3f-b3a1-38d8adbdbdf4", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 750);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ebc2e7e3-f6bd-4f3f-b3a1-38d8adbdbdf4", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ギ"),
+    ("ebc2e7e3-f6bd-4f3f-b3a1-38d8adbdbdf4", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "gi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("41123857-bf87-4164-9870-fd325f78aab6", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 760);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("41123857-bf87-4164-9870-fd325f78aab6", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "グ"),
+    ("41123857-bf87-4164-9870-fd325f78aab6", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "gu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("3214a02d-0269-4d37-8f99-a3ec9f303f15", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 770);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("3214a02d-0269-4d37-8f99-a3ec9f303f15", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ゲ"),
+    ("3214a02d-0269-4d37-8f99-a3ec9f303f15", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ge")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("64647aaa-2d5f-4317-b175-b26e0deed4d3", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 780);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("64647aaa-2d5f-4317-b175-b26e0deed4d3", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ゴ"),
+    ("64647aaa-2d5f-4317-b175-b26e0deed4d3", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "go")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("41369994-6d8c-4ad1-b6d9-e14a40a0be80", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 790);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("41369994-6d8c-4ad1-b6d9-e14a40a0be80", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ザ"),
+    ("41369994-6d8c-4ad1-b6d9-e14a40a0be80", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "za")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("6afe7141-9170-4018-a579-835391a49534", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 800);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("6afe7141-9170-4018-a579-835391a49534", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ジ"),
+    ("6afe7141-9170-4018-a579-835391a49534", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ji")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("1091930e-075a-428f-93d4-0731b2cc4a8c", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 810);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("1091930e-075a-428f-93d4-0731b2cc4a8c", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ズ"),
+    ("1091930e-075a-428f-93d4-0731b2cc4a8c", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "zu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("28fad4c5-ad70-4906-af03-03eb4ff8c98d", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 820);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("28fad4c5-ad70-4906-af03-03eb4ff8c98d", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ゼ"),
+    ("28fad4c5-ad70-4906-af03-03eb4ff8c98d", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ze")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2abc7809-fda3-4de6-a0eb-418c37caf609", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 830);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2abc7809-fda3-4de6-a0eb-418c37caf609", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ゾ"),
+    ("2abc7809-fda3-4de6-a0eb-418c37caf609", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "zo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("18309197-e5f3-44f6-a556-c4df8aa23185", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 840);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("18309197-e5f3-44f6-a556-c4df8aa23185", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ダ"),
+    ("18309197-e5f3-44f6-a556-c4df8aa23185", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "da")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("171f0f67-18fe-4cec-8f31-97ea19000088", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 850);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("171f0f67-18fe-4cec-8f31-97ea19000088", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヂ"),
+    ("171f0f67-18fe-4cec-8f31-97ea19000088", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ji")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("fec75b48-2213-49f7-8ceb-ed4d61499de0", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 860);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("fec75b48-2213-49f7-8ceb-ed4d61499de0", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヅ"),
+    ("fec75b48-2213-49f7-8ceb-ed4d61499de0", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "zu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2fe60658-90a3-4b68-990c-1abfeac2bc03", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 870);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2fe60658-90a3-4b68-990c-1abfeac2bc03", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "デ"),
+    ("2fe60658-90a3-4b68-990c-1abfeac2bc03", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "de")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("22a9363c-553a-43e3-9f53-4a57f821db01", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 880);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("22a9363c-553a-43e3-9f53-4a57f821db01", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ド"),
+    ("22a9363c-553a-43e3-9f53-4a57f821db01", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "do")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("29bc6fdb-f981-439a-8c7c-f6090d2b8812", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 890);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("29bc6fdb-f981-439a-8c7c-f6090d2b8812", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "バ"),
+    ("29bc6fdb-f981-439a-8c7c-f6090d2b8812", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ba")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("62b1b80c-6934-4489-8bfa-4a1645b532de", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 900);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("62b1b80c-6934-4489-8bfa-4a1645b532de", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ビ"),
+    ("62b1b80c-6934-4489-8bfa-4a1645b532de", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "bi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e9724668-a75d-492e-98d6-f7ce93d8487c", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 910);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e9724668-a75d-492e-98d6-f7ce93d8487c", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ブ"),
+    ("e9724668-a75d-492e-98d6-f7ce93d8487c", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "bu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("56e6f537-0fb6-491f-8e0a-bb2acb9deb88", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 920);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("56e6f537-0fb6-491f-8e0a-bb2acb9deb88", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ベ"),
+    ("56e6f537-0fb6-491f-8e0a-bb2acb9deb88", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "be")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("e669f119-3d5d-45fb-a29d-bc824e619b8c", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 930);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("e669f119-3d5d-45fb-a29d-bc824e619b8c", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ボ"),
+    ("e669f119-3d5d-45fb-a29d-bc824e619b8c", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "bo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2be2df0c-0160-4c5c-8aea-4d1b89176a1f", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 940);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2be2df0c-0160-4c5c-8aea-4d1b89176a1f", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "パ"),
+    ("2be2df0c-0160-4c5c-8aea-4d1b89176a1f", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pa")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("98842b59-573b-458b-8446-aaacb407ee95", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 950);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("98842b59-573b-458b-8446-aaacb407ee95", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ピ"),
+    ("98842b59-573b-458b-8446-aaacb407ee95", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pi")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("d8c7b5ab-c884-44ee-9c31-363d5fcbf286", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 960);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("d8c7b5ab-c884-44ee-9c31-363d5fcbf286", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "プ"),
+    ("d8c7b5ab-c884-44ee-9c31-363d5fcbf286", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("45599ec9-8ceb-41b7-8f3f-2676015c1206", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 970);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("45599ec9-8ceb-41b7-8f3f-2676015c1206", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ペ"),
+    ("45599ec9-8ceb-41b7-8f3f-2676015c1206", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pe")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("02bc85a7-793a-46fd-bf98-00ad17896ca9", "8cf0dd28-20ed-4807-9da8-b84127c19e2c", "primary_secondary", 980);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("02bc85a7-793a-46fd-bf98-00ad17896ca9", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ポ"),
+    ("02bc85a7-793a-46fd-bf98-00ad17896ca9", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "po")
+;
+
+-- GOJŪON 2 --
+
+-- YŌON 2--
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("7ba71892-2138-4433-a0a9-5af513b00a5a", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 990);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("7ba71892-2138-4433-a0a9-5af513b00a5a", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ギャ"),
+    ("7ba71892-2138-4433-a0a9-5af513b00a5a", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "gya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("ba5e52dc-b183-460d-8e6c-1cdeaf18ad06", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1000);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("ba5e52dc-b183-460d-8e6c-1cdeaf18ad06", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ギュ"),
+    ("ba5e52dc-b183-460d-8e6c-1cdeaf18ad06", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "gyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("1fe4386c-d00f-4083-b8ee-738a2227a0e7", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1010);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("1fe4386c-d00f-4083-b8ee-738a2227a0e7", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ギョ"),
+    ("1fe4386c-d00f-4083-b8ee-738a2227a0e7", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "gyo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("209c6c63-dc7c-4a48-bb64-74b411a77387", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1020);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("209c6c63-dc7c-4a48-bb64-74b411a77387", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ジャ"),
+    ("209c6c63-dc7c-4a48-bb64-74b411a77387", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ja")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f58ef2d6-6d1a-499f-a5e9-f3d43b5fbe44", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1030);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f58ef2d6-6d1a-499f-a5e9-f3d43b5fbe44", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ジュ"),
+    ("f58ef2d6-6d1a-499f-a5e9-f3d43b5fbe44", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ju")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("84e1f884-93da-4147-94be-87d9f5aab366", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1040);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("84e1f884-93da-4147-94be-87d9f5aab366", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ジョ"),
+    ("84e1f884-93da-4147-94be-87d9f5aab366", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "jo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("f08bc94d-b55a-47f6-a4e0-46cfdaf70065", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1050);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("f08bc94d-b55a-47f6-a4e0-46cfdaf70065", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヂャ"),
+    ("f08bc94d-b55a-47f6-a4e0-46cfdaf70065", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ja")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("0aaae921-e23d-4568-8406-4d99c8d70ccb", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1060);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("0aaae921-e23d-4568-8406-4d99c8d70ccb", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヂュ"),
+    ("0aaae921-e23d-4568-8406-4d99c8d70ccb", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "ju")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("81b91c4c-b532-4bc2-ab7e-7e195a066b44", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1070);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("81b91c4c-b532-4bc2-ab7e-7e195a066b44", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ヂョ"),
+    ("81b91c4c-b532-4bc2-ab7e-7e195a066b44", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "jo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("48df7901-8791-4db7-92ba-9bdf6f5bcb72", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1080);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("48df7901-8791-4db7-92ba-9bdf6f5bcb72", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ビャ"),
+    ("48df7901-8791-4db7-92ba-9bdf6f5bcb72", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "bya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("72b1748d-7f5a-4cc6-8f2b-d174147c8fbe", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1090);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("72b1748d-7f5a-4cc6-8f2b-d174147c8fbe", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ビュ"),
+    ("72b1748d-7f5a-4cc6-8f2b-d174147c8fbe", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "byu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("44253502-823a-46c0-993a-0ce9d4f30694", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1100);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("44253502-823a-46c0-993a-0ce9d4f30694", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ビョ"),
+    ("44253502-823a-46c0-993a-0ce9d4f30694", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "byo")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("06924871-7a96-400f-a82e-e0231e0e6fe6", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1110);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("06924871-7a96-400f-a82e-e0231e0e6fe6", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ピャ"),
+    ("06924871-7a96-400f-a82e-e0231e0e6fe6", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pya")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("98c374f6-e8fd-4e46-b046-16c6cd279fb1", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1120);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("98c374f6-e8fd-4e46-b046-16c6cd279fb1", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ピュ"),
+    ("98c374f6-e8fd-4e46-b046-16c6cd279fb1", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pyu")
+;
+
+INSERT INTO CollectionItem(id, sectionId, type, sort) VALUES
+    ("2472c350-9ac4-4778-be99-64cf2b8d4abd", "240dcbef-51ef-4416-8fac-3dcd7e8cfb70", "primary_secondary", 1130);
+INSERT INTO CollectionItemVariantItem(collectionItemId, collectionItemVariant, content) VALUES
+    ("2472c350-9ac4-4778-be99-64cf2b8d4abd", "cfb78984-3fc1-4af7-be8c-52053989a0e4", "ピョ"),
+    ("2472c350-9ac4-4778-be99-64cf2b8d4abd", "979dd3ae-0b1b-4c51-913d-d5e85461309a", "pyo")
+;
+
+-- YŌON 2--
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+-- INSERT INTO CollectionItem(sectionId, type, sort) VALUES
+--
+--     ("katakana_gojuon",    "hieroglyph",  "ア",     "a",    10),
+--     ("katakana_gojuon",    "hieroglyph",  "イ",     "i",    20),
+--     ("katakana_gojuon",    "hieroglyph",  "ウ",     "u",    30),
+--     ("katakana_gojuon",    "hieroglyph",  "エ",     "e",    40),
+--     ("katakana_gojuon",    "hieroglyph",  "オ",     "o",    50),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "カ",    "ka",   60),
+--     ("katakana_gojuon",    "hieroglyph",   "キ",    "ki",   70),
+--     ("katakana_gojuon",    "hieroglyph",   "ク",    "ku",   80),
+--     ("katakana_gojuon",    "hieroglyph",   "ケ",    "ke",   90),
+--     ("katakana_gojuon",    "hieroglyph",   "コ",    "ko",   100),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "サ",    "sa",   110),
+--     ("katakana_gojuon",    "hieroglyph",   "シ",    "shi",   120),
+--     ("katakana_gojuon",    "hieroglyph",   "ス",    "su",   130),
+--     ("katakana_gojuon",    "hieroglyph",   "セ",    "se",   140),
+--     ("katakana_gojuon",    "hieroglyph",   "ソ",    "so",   150),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "タ",    "ta",   160),
+--     ("katakana_gojuon",    "hieroglyph",   "チ",    "chi",   170),
+--     ("katakana_gojuon",    "hieroglyph",   "ツ",    "tsu",  180),
+--     ("katakana_gojuon",    "hieroglyph",   "テ",    "te",   190),
+--     ("katakana_gojuon",    "hieroglyph",   "ト",    "to",   200),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "ナ",    "na",   210),
+--     ("katakana_gojuon",    "hieroglyph",   "ニ",    "ni",   220),
+--     ("katakana_gojuon",    "hieroglyph",   "ヌ",    "nu",   230),
+--     ("katakana_gojuon",    "hieroglyph",   "ネ",    "ne",   240),
+--     ("katakana_gojuon",    "hieroglyph",   "ノ",    "no",   250),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "ハ",    "ha",   260),
+--     ("katakana_gojuon",    "hieroglyph",   "ヒ",    "hi",   270),
+--     ("katakana_gojuon",    "hieroglyph",   "フ",    "fu",   280),
+--     ("katakana_gojuon",    "hieroglyph",   "ヘ",    "he",   290),
+--     ("katakana_gojuon",    "hieroglyph",   "ホ",    "ho",   300),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "マ",    "ma",   310),
+--     ("katakana_gojuon",    "hieroglyph",   "ミ",    "mi",   320),
+--     ("katakana_gojuon",    "hieroglyph",   "ム",    "mu",   330),
+--     ("katakana_gojuon",    "hieroglyph",   "メ",    "me",   340),
+--     ("katakana_gojuon",    "hieroglyph",   "モ",    "mo",   350),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "ヤ",    "ya",   360),
+--     ("katakana_gojuon",    "empty",        "",      "mi",  370),
+--     ("katakana_gojuon",    "hieroglyph",   "ユ",    "yu",   380),
+--     ("katakana_gojuon",    "empty",        "",      "",    390),
+--     ("katakana_gojuon",    "hieroglyph",   "ヨ",    "yo",   400),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "ラ",    "ra",   410),
+--     ("katakana_gojuon",    "hieroglyph",   "リ",    "ri",   420),
+--     ("katakana_gojuon",    "hieroglyph",   "ル",    "ru",   430),
+--     ("katakana_gojuon",    "hieroglyph",   "レ",    "re",   440),
+--     ("katakana_gojuon",    "hieroglyph",   "ロ",    "ro",   450),
+--
+--     ("katakana_gojuon",    "hieroglyph",   "ワ",    "wa",   460),
+--     ("katakana_gojuon",    "empty",        "",     "",     470),
+--     ("katakana_gojuon",    "hieroglyph",   "ン",    "n",    480),
+--     ("katakana_gojuon",    "empty",        "",     "",     490),
+--     ("katakana_gojuon",    "hieroglyph",   "ヲ",    "wo",   500),
+--
+--     ("katakana_yoon",    "hieroglyph",   "キャ",    "kya",   510),
+--     ("katakana_yoon",    "hieroglyph",   "キュ",    "kyu",   530),
+--     ("katakana_yoon",    "hieroglyph",   "キョ",    "kyo",   540),
+--
+--     ("katakana_yoon",    "hieroglyph",   "シャ",    "sha",   560),
+--     ("katakana_yoon",    "hieroglyph",   "シュ",    "shu",   570),
+--     ("katakana_yoon",    "hieroglyph",   "ショ",    "sho",   580),
+--
+--     ("katakana_yoon",    "hieroglyph",   "チャ",    "cha",   590),
+--     ("katakana_yoon",    "hieroglyph",   "チュ",    "chu",   600),
+--     ("katakana_yoon",    "hieroglyph",   "チョ",    "cho",   610),
+--
+--     ("katakana_yoon",    "hieroglyph",   "ニャ",    "nya",   620),
+--     ("katakana_yoon",    "hieroglyph",   "ニュ",    "nyu",   630),
+--     ("katakana_yoon",    "hieroglyph",   "ニョ",    "nyo",   640),
+--
+--     ("katakana_yoon",    "hieroglyph",   "ヒャ",    "hya",   650),
+--     ("katakana_yoon",    "hieroglyph",   "ヒュ",    "hyu",   660),
+--     ("katakana_yoon",    "hieroglyph",   "ヒョ",    "hyo",   670),
+--
+--     ("katakana_yoon",    "hieroglyph",   "ミャ",    "mya",   680),
+--     ("katakana_yoon",    "hieroglyph",   "ミュ",    "myu",   690),
+--     ("katakana_yoon",    "hieroglyph",   "ミョ",    "myo",   700),
+--
+--     ("katakana_yoon",    "hieroglyph",   "リャ",    "rya",   710),
+--     ("katakana_yoon",    "hieroglyph",   "リュ",    "ryu",   720),
+--     ("katakana_yoon",    "hieroglyph",   "リョ",    "ryo",   730),
+--
+--     ("katakana_voiced",    "hieroglyph",   "ガ",    "ga",   740),
+--     ("katakana_voiced",    "hieroglyph",   "ギ",    "gi",   750),
+--     ("katakana_voiced",    "hieroglyph",   "グ",    "gu",   760),
+--     ("katakana_voiced",    "hieroglyph",   "ゲ",    "ge",   770),
+--     ("katakana_voiced",    "hieroglyph",   "ゴ",    "go",   780),
+--
+--     ("katakana_voiced",    "hieroglyph",   "ザ",    "za",   790),
+--     ("katakana_voiced",    "hieroglyph",   "ジ",    "ji",   800),
+--     ("katakana_voiced",    "hieroglyph",   "ズ",    "zu",   810),
+--     ("katakana_voiced",    "hieroglyph",   "ゼ",    "ze",   820),
+--     ("katakana_voiced",    "hieroglyph",   "ゾ",    "zo",   830),
+--
+--     ("katakana_voiced",    "hieroglyph",   "ダ",    "da",   840),
+--     ("katakana_voiced",    "hieroglyph",   "ヂ",    "ji",   850),
+--     ("katakana_voiced",    "hieroglyph",   "ヅ",    "zu",   860),
+--     ("katakana_voiced",    "hieroglyph",   "デ",    "de",   870),
+--     ("katakana_voiced",    "hieroglyph",   "ド",    "do",   880),
+--
+--     ("katakana_voiced",    "hieroglyph",   "バ",    "ba",   890),
+--     ("katakana_voiced",    "hieroglyph",   "ビ",    "bi",   900),
+--     ("katakana_voiced",    "hieroglyph",   "ブ",    "bu",   910),
+--     ("katakana_voiced",    "hieroglyph",   "ベ",    "be",   920),
+--     ("katakana_voiced",    "hieroglyph",   "ボ",    "bo",   930),
+--
+--     ("katakana_voiced",    "hieroglyph",   "パ",    "pa",   940),
+--     ("katakana_voiced",    "hieroglyph",   "ピ",    "pi",   950),
+--     ("katakana_voiced",    "hieroglyph",   "プ",    "pu",   960),
+--     ("katakana_voiced",    "hieroglyph",   "ペ",    "pe",   970),
+--     ("katakana_voiced",    "hieroglyph",   "ポ",    "po",   980),
+--
+--     ("katakana_yoon_2",    "hieroglyph",   "ギャ",    "gya",   990),
+--     ("katakana_yoon_2",    "hieroglyph",   "ギュ",    "gyu",   1000),
+--     ("katakana_yoon_2",    "hieroglyph",   "ギョ",    "gyo",   1010),
+--
+--     ("katakana_yoon_2",    "hieroglyph",   "ジャ",    "ja",   1020),
+--     ("katakana_yoon_2",    "hieroglyph",   "ジュ",    "ju",   1030),
+--     ("katakana_yoon_2",    "hieroglyph",   "ジョ",    "jo",   1040),
+--
+--     ("katakana_yoon_2",    "hieroglyph",   "ヂャ",    "ja",   1050),
+--     ("katakana_yoon_2",    "hieroglyph",   "ヂュ",    "ju",   1060),
+--     ("katakana_yoon_2",    "hieroglyph",   "ヂョ",    "jo",   1070),
+--
+--     ("katakana_yoon_2",    "hieroglyph",   "ビャ",    "bya",   1080),
+--     ("katakana_yoon_2",    "hieroglyph",   "ビュ",    "byu",   1090),
+--     ("katakana_yoon_2",    "hieroglyph",   "ビョ",    "byo",   1100),
+--
+--     ("katakana_yoon_2",    "hieroglyph",   "ピャ",    "pya",   1110),
+--     ("katakana_yoon_2",    "hieroglyph",   "ピュ",    "pyu",   1120),
+--     ("katakana_yoon_2",    "hieroglyph",   "ピョ",    "pyo",   1130)
+-- ;
 
 getById:
 SELECT CollectionItem.* FROM CollectionItem
@@ -354,4 +1805,10 @@ SELECT Section.collectionId, count(CollectionItem.id)
     WHERE Section.collectionId IN :collectionId
         AND CollectionItem.type != "empty"
     GROUP BY Section.collectionId
+;
+
+getVariants:
+SELECT CollectionItemVariantItem.*
+    FROM CollectionItemVariantItem
+    WHERE CollectionItemVariantItem.collectionItemId IN :collectionItemIds
 ;
