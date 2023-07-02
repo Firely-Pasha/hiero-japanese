@@ -166,14 +166,14 @@ fun QuizContent(
                         modifier = Modifier
                             .padding(8.dp),
                         shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
                         onClick = { onSwapVariants() }
                     ) {
                         Text(
                             modifier = Modifier
                                 .padding(vertical = 4.dp, horizontal = 8.dp),
                             text = currentVariant.name,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                            color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                         )
                     }
                 }
