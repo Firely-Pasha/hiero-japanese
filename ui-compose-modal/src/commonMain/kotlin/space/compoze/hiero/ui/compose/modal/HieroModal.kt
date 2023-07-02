@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.backhandler.BackDispatcher
+import space.compoze.hiero.ui.compose.modal.types.HieroModalDialogue
 import space.compoze.hiero.ui.compose.modal.types.HieroModalPopup
 
 sealed interface HieroModal {
@@ -99,6 +100,7 @@ fun HieroModalProvider(
     CompositionLocalProvider(LocalHieroModal provides controller) {
         content()
     }
+    HieroModalDialogue(controller)
     HieroModalPopup(controller)
 }
 
@@ -130,9 +132,33 @@ class HieroModalConsumerScope(
             )
         )
     }
+    fun showDialogue(
+        anchor: Anchor = Anchor.Center,
+        alignment: Anchor = Anchor.Center,
+        width: Dp? = null,
+        height: Dp? = null,
+        background: (@Composable () -> Unit)? = null,
+        content: @Composable () -> Unit,
+    ) {
+        controller.showDialog(
+            HieroModal.Dialog(
+                anchor = anchor,
+                alignment = alignment,
+                containerSize = containerSize,
+                width = width,
+                height = height,
+                background = background,
+                content = content
+            )
+        )
+    }
 
     fun dismissPopup() {
         controller.dismissPopup()
+    }
+
+    fun dismissDialogue() {
+        controller.dismissDialog()
     }
 }
 

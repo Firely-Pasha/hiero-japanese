@@ -7,6 +7,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.NavigateNext
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -42,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import space.compoze.hiero.domain.collectionitem.model.data.isPrimary
 import space.compoze.hiero.domain.collectionitem.model.data.isSecondary
+import space.compoze.hiero.ui.compose.modal.Anchor
+import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.quiz.store.QuizStore
@@ -162,19 +167,58 @@ fun QuizContent(
                             )
                         }
                     }
-                    Surface(
-                        modifier = Modifier
-                            .padding(8.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
-                        onClick = { onSwapVariants() }
-                    ) {
-                        Text(
+                    HieroModalConsumer {
+                        Surface(
                             modifier = Modifier
-                                .padding(vertical = 4.dp, horizontal = 8.dp),
-                            text = currentVariant.name,
-                            color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
-                        )
+                                .padding(8.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
+                            onClick = {
+                                onSwapVariants()
+                                showDialogue(
+                                    alignment = Anchor.Center,
+                                    width = 300.dp
+                                ) {
+                                    Card {
+                                        Column(
+                                            modifier = Modifier
+                                                .padding(12.dp),
+                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                        ) {
+                                            Text("Sides are swapped", style = MaterialTheme.typography.titleLarge)
+                                            Row(
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text("Primary", style = MaterialTheme.typography.titleMedium)
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                // Swapping it manually,
+                                                // because they are not swapping... for some reasons
+                                                // TODO: Investigate it later
+                                                Text(secondaryVariant.name)
+                                            }
+                                            Row {
+                                                Text("Secondary", style = MaterialTheme.typography.titleMedium)
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Text(primaryVariant.name)
+                                            }
+                                            Row {
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Button({dismissDialogue()}) {
+                                                    Text("OK")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(vertical = 4.dp, horizontal = 8.dp),
+                                text = currentVariant.name,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
+                            )
+                        }
                     }
                 }
             }

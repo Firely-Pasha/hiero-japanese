@@ -3,6 +3,7 @@
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -57,6 +59,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import space.compoze.hiero.domain.section.model.data.SectionModel
+import space.compoze.hiero.ui.compose.modal.Anchor
+import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
+import space.compoze.hiero.ui.compose.popover.showMenu
 import space.compoze.hiero.ui.compose.section.randomColor
 import space.compoze.hiero.ui.compose.utils.plus
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
@@ -71,6 +76,7 @@ fun CollectionScreen(component: CollectionComponent) {
         is CollectionStore.State.Error -> CollectionError(
             state = state,
         )
+
         CollectionStore.State.Loading -> CircularProgressIndicator()
         is CollectionStore.State.Content -> CollectionContent(
             state = state,
