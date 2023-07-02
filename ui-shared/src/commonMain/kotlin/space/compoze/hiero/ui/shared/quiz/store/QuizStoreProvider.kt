@@ -14,6 +14,8 @@ import org.koin.core.component.inject
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemGetByIds
 import space.compoze.hiero.domain.collectionitem.interactor.CollectionItemUpdateById
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
+import space.compoze.hiero.domain.section.interactor.SectionGetById
+import space.compoze.hiero.domain.variant.VariantGetOfCollection
 import space.compoze.hiero.ui.shared.utils.with
 
 class QuizStoreProvider(
@@ -22,6 +24,8 @@ class QuizStoreProvider(
 
     private val collectionItemGetByIds: CollectionItemGetByIds by inject()
     private val collectionItemUpdateById: CollectionItemUpdateById by inject()
+    private val sectionGetById: SectionGetById by inject()
+    private val variantGetOfCollection: VariantGetOfCollection by inject()
 
     fun create(items: List<String>): QuizStore =
         object : QuizStore,
@@ -31,8 +35,15 @@ class QuizStoreProvider(
                 bootstrapper = coroutineBootstrapper {
                     either {
                         val result = collectionItemGetByIds(items).bind()
+                        val sections = sectionGetById(result.map { it.sectionId }.distinct())
+                            .bind()
+                            .mapNotNull { it.value.getOrNull() }
+                        val variants =
+                            variantGetOfCollection(sections.map { it.collectionId }).bind()
                         dispatch(
                             QuizStore.Action.Loaded(
+                                sections = sections,
+                                variants = variants.values.flatten(),
                                 items = result,
                             )
                         )
@@ -45,9 +56,12 @@ class QuizStoreProvider(
                         val itemPull = it.items.toTypedArray().also { it.shuffle() }.toList()
                         dispatch(
                             QuizStore.Message.Init(
+                                sections = it.sections,
+                                variants = it.variants,
                                 items = it.items,
                                 currentItem = itemPull.first(),
-                                itemPull = itemPull.takeLast(itemPull.size - 1).ifEmpty { it.items }
+                                itemPull = itemPull.takeLast(itemPull.size - 1)
+                                    .ifEmpty { it.items },
                             )
                         )
                     }
@@ -90,6 +104,8 @@ class QuizStoreProvider(
                 reducer = {
                     when {
                         it is QuizStore.Message.Init -> QuizStore.State.Content(
+                            sections = it.sections,
+                            variants = it.variants,
                             items = it.items,
                             currentItem = it.currentItem,
                             itemPool = it.itemPull,

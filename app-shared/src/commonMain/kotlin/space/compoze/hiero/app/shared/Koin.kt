@@ -30,6 +30,7 @@ import space.compoze.hiero.domain.section.interactor.SectionUpdate
 import space.compoze.hiero.domain.section.interactor.SectionUpdateComputed
 import space.compoze.hiero.domain.settings.interactor.SettingsGetTheme
 import space.compoze.hiero.domain.settings.interactor.SettingsSetTheme
+import space.compoze.hiero.domain.variant.VariantGetOfCollection
 
 internal expect fun appPlatformModule(): Module
 
@@ -75,5 +76,7 @@ fun domainModule() = module {
 
     singleOf(::SettingsGetTheme)
     singleOf(::SettingsSetTheme)
+
+    singleOf(::VariantGetOfCollection)
 
 }

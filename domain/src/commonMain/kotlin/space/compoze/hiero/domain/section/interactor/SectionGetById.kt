@@ -8,8 +8,12 @@ class SectionGetById(
     private val sectionRepository: SectionRepository
 ) {
 
-    operator fun invoke(collectionId: String) = either {
-        sectionRepository.getById(collectionId).bind()
+    operator fun invoke(sectionId: String) = either {
+        sectionRepository.getById(sectionId).bind()
+    }
+
+    operator fun invoke(sectionIds: List<String>) = either {
+        sectionRepository.getByIds(sectionIds).bind()
     }
 
 }

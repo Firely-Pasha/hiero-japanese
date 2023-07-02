@@ -85,6 +85,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import space.compoze.hiero.domain.collectionitem.enums.CollectionItemType
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemVariantModel
 import space.compoze.hiero.ui.compose.modal.Anchor
 import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
 import space.compoze.hiero.ui.compose.modal.horizontal
@@ -233,6 +234,8 @@ private fun SectionContent(
             ) { item ->
                 SectionItem(
                     item = item,
+                    primaryVariant = state.primaryVariant,
+                    secondaryVariant = state.secondaryVariant,
                     onItemSelect = onItemSelect,
                     onItemBookmark = onItemBookmark
                 )
@@ -302,6 +305,8 @@ private fun SectionTopBar(
 @Composable
 private fun SectionItem(
     item: CollectionItemModel,
+    primaryVariant: CollectionItemVariantModel,
+    secondaryVariant: CollectionItemVariantModel,
     onItemSelect: (String) -> Unit,
     onItemBookmark: (String) -> Unit,
 ) {
@@ -335,12 +340,12 @@ private fun SectionItem(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            item.variants["47dab697-3ace-42df-9be3-181543845b56"] ?: "",
+                            item.variants[primaryVariant.id] ?: "",
                             fontSize = 32.sp,
                             softWrap = false
                         )
                         Text(
-                            item.variants["c524193e-4d77-49e4-89ad-05577234a271"] ?: "",
+                            item.variants[secondaryVariant.id] ?: "",
                             fontSize = 16.sp
                         )
                     }

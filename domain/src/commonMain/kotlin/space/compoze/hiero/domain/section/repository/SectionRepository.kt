@@ -10,10 +10,11 @@ import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
 import space.compoze.hiero.domain.section.model.mutate.SectionMutation
 
 interface SectionRepository {
-    fun getById(sectionId: String): Either<DomainError, Option<SectionModel>>
+    fun getByIds(sectionIds: List<String>): Either<DomainError, Map<String, Option<SectionModel>>>
     fun getByCollection(collectionId: String): Either<DomainError, List<SectionModel>>
     fun getAll(): Either<DomainError, List<SectionModel>>
     fun flowByCollection(collectionId: String): Flow<List<SectionModel>>
     fun update(sectionId: String, data: SectionMutation): Either<DomainError, SectionModel>
     fun updateComputed(sectionId: String, data: SectionComputedMutation): Either<DomainError, SectionModel>
+    fun getById(sectionId: String): Either<DomainError, Option<SectionModel>>
 }

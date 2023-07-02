@@ -1,9 +1,12 @@
 package space.compoze.hiero.data.section
 
 import app.cash.sqldelight.coroutines.asFlow
+import arrow.core.Either
+import arrow.core.Option
 import arrow.core.getOrElse
 import arrow.core.raise.catch
 import arrow.core.raise.either
+import arrow.core.singleOrNone
 import arrow.core.toOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -26,6 +29,21 @@ class SectionRepository(
                 .toOption()
         }) {
             raise(DomainError("SectionRepository::getById(sectionId: $sectionId) error", it))
+        }
+    }
+
+    override fun getByIds(sectionIds: List<String>): Either<DomainError, Map<String, Option<SectionModel>>> = either {
+        catch({
+            database.sectionQueries.getByIds(sectionIds)
+                .executeAsList()
+                .groupBy { it.id }
+                .let { sections ->
+                    sectionIds.associateWith {
+                        sections[it].orEmpty().singleOrNone().map { it.toDomainModel() }
+                    }
+                }
+        }) {
+            raise(DomainError("SectionRepository::getById(sectionIds: ${sectionIds.joinToString()}) error", it))
         }
     }
 

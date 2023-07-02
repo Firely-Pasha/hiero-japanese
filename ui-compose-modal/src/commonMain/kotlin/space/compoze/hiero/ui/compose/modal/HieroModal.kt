@@ -133,7 +133,6 @@ fun HieroModalProvider(
             measurePolicy = { measurables, constraints ->
                 val text =
                     measurables.getOrNull(0)?.measure(constraints) ?: return@Layout layout(0, 0) {}
-                println(text.width)
                 layout(
                     constraints.minWidth,
                     constraints.minWidth

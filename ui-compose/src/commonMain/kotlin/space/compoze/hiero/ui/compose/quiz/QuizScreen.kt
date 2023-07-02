@@ -100,6 +100,16 @@ fun QuizContent(
                 contentAlignment = Alignment.Center,
             ) { targetState ->
                 var isFlipped by remember { mutableStateOf(false) }
+                val primaryVariant = remember {
+                    val section = state.sections.find { it.id == targetState.sectionId }
+                    val variants = state.variants.filter { it.collectionId == section?.collectionId }
+                    variants.find { it.type == 1L }
+                }
+                val secondaryVariant = remember {
+                    val section = state.sections.find { it.id == targetState.sectionId }
+                    val variants = state.variants.filter { it.collectionId == section?.collectionId }
+                    variants.find { it.type == 2L }
+                }
                 Card(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -130,7 +140,11 @@ fun QuizContent(
                             }
                         }
                         Text(
-                            text = if (isFlipped) "H" else "R",
+                            text = if (isFlipped) {
+                                targetState.variants[secondaryVariant?.id].orEmpty()
+                            } else {
+                                targetState.variants[primaryVariant?.id].orEmpty()
+                            },
                             fontSize = 112.sp,
                             modifier = Modifier
                                 .align(Alignment.Center),

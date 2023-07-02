@@ -9,3 +9,10 @@ data class CollectionItemModel(
     val sort: Long,
     val variants: Map<String, String>,
 )
+
+data class CollectionItemVariantModel(
+    val id: String,
+    val collectionId: String,
+    val name: String,
+    val type: Long?,
+)

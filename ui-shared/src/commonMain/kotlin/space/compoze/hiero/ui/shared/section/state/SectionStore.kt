@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collection.model.data.CollectionModel
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemVariantModel
 import space.compoze.hiero.domain.section.model.data.SectionModel
 
 interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing> {
@@ -17,6 +18,8 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
         data class Content(
             val collection: CollectionModel,
             val section: SectionModel,
+            val primaryVariant: CollectionItemVariantModel,
+            val secondaryVariant: CollectionItemVariantModel,
             val items: List<CollectionItemModel>,
             val selectionMode: Boolean,
         ) : State
@@ -31,6 +34,7 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
         data class Loaded(
             val collection: CollectionModel,
             val section: SectionModel,
+            val variants: List<CollectionItemVariantModel>,
             val items: List<CollectionItemModel>,
         ) : Action
 
@@ -69,6 +73,8 @@ interface SectionStore : Store<SectionStore.Intent, SectionStore.State, Nothing>
         data class Init(
             val collection: CollectionModel,
             val section: SectionModel,
+            val primaryVariant: CollectionItemVariantModel,
+            val secondaryVariant: CollectionItemVariantModel,
             val items: List<CollectionItemModel>,
         ) : Message
 

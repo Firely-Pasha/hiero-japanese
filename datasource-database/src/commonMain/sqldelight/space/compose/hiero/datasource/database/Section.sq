@@ -27,8 +27,13 @@ SELECT Section.* FROM Section
 
 getById:
 SELECT Section.* FROM Section
-    WHERE Section.id = :sectionId
+    WHERE Section.id = :sectionIds
     LIMIT 1
+;
+
+getByIds:
+SELECT Section.* FROM Section
+    WHERE Section.id IN :sectionIds
 ;
 
 getOfCollection:

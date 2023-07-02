@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.Option
 import space.compoze.hiero.domain.base.exceptions.DomainError
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemVariantModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 
 interface CollectionItemRepository {
@@ -17,4 +18,5 @@ interface CollectionItemRepository {
     ): Either<DomainError, CollectionItemModel>
     fun countOfCollection(collectionIds: List<String>): Either<DomainError, Map<String, Long>>
     fun countOfSection(sectionIds: List<String>): Either<DomainError, Map<String, Long>>
+    fun getVariantsOfCollection(collectionIds: List<String>): Either<DomainError, Map<String, List<CollectionItemVariantModel>>>
 }

@@ -34,6 +34,7 @@ import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemModel
 import space.compoze.hiero.domain.collectionitem.model.mutation.CollectionItemMutationData
 import space.compoze.hiero.domain.section.interactor.SectionGetById
 import space.compoze.hiero.domain.section.interactor.SectionGetOfCollection
+import space.compoze.hiero.domain.variant.VariantGetOfCollection
 import space.compoze.hiero.ui.shared.utils.applyState
 import space.compoze.hiero.ui.shared.utils.with
 
@@ -46,11 +47,11 @@ class SectionStoreProvider(
 
     private val collectionGetById: CollectionGetById by inject()
     private val sectionGetById: SectionGetById by inject()
-    private val sectionGetOfCollection: SectionGetOfCollection by inject()
     private val collectionItemGetOfSection: CollectionItemGetOfSection by inject()
     private val collectionItemUpdateById: CollectionItemUpdateById by inject()
     private val collectionItemUpdateBySectionId: CollectionItemUpdateBySectionId by inject()
     private val collectionItemNotificationGetFlow: CollectionItemNotificationGetFlow by inject()
+    private val variantGetOfCollection: VariantGetOfCollection by inject()
 
     fun create(
         sectionId: String,
@@ -67,10 +68,12 @@ class SectionStoreProvider(
                         val collection = collectionGetById(section.collectionId).bind()
                             .getOrElse { raise(DomainError("Collection not found :(")) }
                         val sectionItems = collectionItemGetOfSection(sectionId).bind()
+                        val variants = variantGetOfCollection(collection).bind()
                         dispatch(
                             SectionStore.Action.Loaded(
                                 collection = collection,
                                 section = section,
+                                variants = variants,
                                 items = sectionItems
                             )
                         )
@@ -87,6 +90,8 @@ class SectionStoreProvider(
                             SectionStore.Message.Init(
                                 collection = it.collection,
                                 section = it.section,
+                                primaryVariant = it.variants.find { it.type == 1L }!!,
+                                secondaryVariant = it.variants.find { it.type == 2L }!!,
                                 items = it.items,
                             )
                         )
@@ -213,6 +218,8 @@ class SectionStoreProvider(
                         is SectionStore.Message.Init -> SectionStore.State.Content(
                             collection = msg.collection,
                             section = msg.section,
+                            primaryVariant = msg.primaryVariant,
+                            secondaryVariant = msg.secondaryVariant,
                             items = msg.items,
                             selectionMode = true
                         )

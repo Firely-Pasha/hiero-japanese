@@ -1807,7 +1807,13 @@ SELECT Section.collectionId, count(CollectionItem.id)
     GROUP BY Section.collectionId
 ;
 
-getVariants:
+getVariantsOfCollection:
+SELECT CollectionItemVariant.*
+    FROM CollectionItemVariant
+    WHERE CollectionItemVariant.collectionId IN :collectionItemIds
+;
+
+getVariantsOfCollectionItem:
 SELECT CollectionItemVariantItem.*
     FROM CollectionItemVariantItem
     WHERE CollectionItemVariantItem.collectionItemId IN :collectionItemIds
