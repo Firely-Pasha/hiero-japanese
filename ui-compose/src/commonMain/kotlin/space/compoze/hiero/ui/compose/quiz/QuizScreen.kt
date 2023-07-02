@@ -5,6 +5,8 @@ package space.compoze.hiero.ui.compose.quiz
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,10 +28,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -103,12 +107,15 @@ fun QuizContent(
                 val primaryVariant = remember {
                     val section = state.sections.find { it.id == targetState.sectionId }
                     val variants = state.variants.filter { it.collectionId == section?.collectionId }
-                    variants.find { it.type == 1L }
+                    variants.find { it.type == 1L }!!
                 }
                 val secondaryVariant = remember {
                     val section = state.sections.find { it.id == targetState.sectionId }
                     val variants = state.variants.filter { it.collectionId == section?.collectionId }
-                    variants.find { it.type == 2L }
+                    variants.find { it.type == 2L }!!
+                }
+                val currentVariant by derivedStateOf {
+                    if (isFlipped) secondaryVariant else primaryVariant
                 }
                 Card(
                     modifier = Modifier
@@ -140,15 +147,27 @@ fun QuizContent(
                             }
                         }
                         Text(
-                            text = if (isFlipped) {
-                                targetState.variants[secondaryVariant?.id].orEmpty()
-                            } else {
-                                targetState.variants[primaryVariant?.id].orEmpty()
-                            },
+                            text = targetState.variants[currentVariant.id].orEmpty(),
                             fontSize = 112.sp,
                             modifier = Modifier
                                 .align(Alignment.Center),
                         )
+                        Surface(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(8.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                            onClick = {}
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(vertical = 4.dp, horizontal = 8.dp)
+                                ,
+                                text = currentVariant.name,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                            )
+                        }
                     }
                 }
             }
