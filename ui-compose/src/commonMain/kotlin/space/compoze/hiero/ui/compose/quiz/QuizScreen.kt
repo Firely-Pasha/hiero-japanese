@@ -3,11 +3,10 @@
 package space.compoze.hiero.ui.compose.quiz
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
@@ -27,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -43,9 +40,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import space.compoze.hiero.domain.collectionitem.model.data.isPrimary
+import space.compoze.hiero.domain.collectionitem.model.data.isSecondary
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.quiz.store.QuizStore
+import kotlin.reflect.KFunction0
 
 @Composable
 fun QuizScreen(component: QuizComponent) {
@@ -59,7 +59,8 @@ fun QuizScreen(component: QuizComponent) {
             state = state,
             onNavigateBack = component::navigateBack,
             onNextItemClick = component::nextItem,
-            onBookmark = component::bookmarkCurrentItem
+            onBookmark = component::bookmarkCurrentItem,
+            onSwapVariants = component::swapVariants,
         )
     }
 }
@@ -70,6 +71,7 @@ fun QuizContent(
     onNavigateBack: () -> Unit,
     onNextItemClick: () -> Unit,
     onBookmark: () -> Unit,
+    onSwapVariants: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -104,70 +106,75 @@ fun QuizContent(
                 contentAlignment = Alignment.Center,
             ) { targetState ->
                 var isFlipped by remember { mutableStateOf(false) }
-                val primaryVariant = remember {
+                val primaryVariant by derivedStateOf {
                     val section = state.sections.find { it.id == targetState.sectionId }
-                    val variants = state.variants.filter { it.collectionId == section?.collectionId }
-                    variants.find { it.type == 1L }!!
+                    val variants =
+                        state.variants.filter { it.collectionId == section?.collectionId }
+                    variants.find { if (state.areVariantsSwapped) it.isSecondary() else it.isPrimary() }!!
                 }
-                val secondaryVariant = remember {
+                val secondaryVariant by derivedStateOf {
                     val section = state.sections.find { it.id == targetState.sectionId }
-                    val variants = state.variants.filter { it.collectionId == section?.collectionId }
-                    variants.find { it.type == 2L }!!
+                    val variants =
+                        state.variants.filter { it.collectionId == section?.collectionId }
+                    variants.find { if (state.areVariantsSwapped) it.isPrimary() else it.isSecondary() }!!
                 }
                 val currentVariant by derivedStateOf {
                     if (isFlipped) secondaryVariant else primaryVariant
                 }
-                Card(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxWidth(0.8f)
-                        .aspectRatio(1f),
-                    shape = RoundedCornerShape(26.dp),
-                    onClick = {
-                        isFlipped = !isFlipped
-                    }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .aspectRatio(1f),
+                        shape = RoundedCornerShape(26.dp),
+                        onClick = {
+                            isFlipped = !isFlipped
+                        }
                     ) {
                         Box(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .offset(x = (-8).dp, y = (8).dp)
+                            modifier = Modifier.fillMaxSize(),
                         ) {
-                            IconButton(onBookmark) {
-                                AnimatedContent(
-                                    state.currentItem.isBookmarked,
-                                ) { state ->
-                                    Icon(
-                                        if (state) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
-                                        "Not bookmarked"
-                                    )
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .offset(x = (-8).dp, y = (8).dp)
+                            ) {
+                                IconButton(onBookmark) {
+                                    AnimatedContent(
+                                        state.currentItem.isBookmarked,
+                                    ) { state ->
+                                        Icon(
+                                            if (state) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                                            "Not bookmarked"
+                                        )
+                                    }
                                 }
                             }
-                        }
-                        Text(
-                            text = targetState.variants[currentVariant.id].orEmpty(),
-                            fontSize = 112.sp,
-                            modifier = Modifier
-                                .align(Alignment.Center),
-                        )
-                        Surface(
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(8.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-                            onClick = {}
-                        ) {
                             Text(
+                                text = targetState.variants[currentVariant.id].orEmpty(),
+                                fontSize = 112.sp,
                                 modifier = Modifier
-                                    .padding(vertical = 4.dp, horizontal = 8.dp)
-                                ,
-                                text = currentVariant.name,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                    .align(Alignment.Center),
                             )
                         }
+                    }
+                    Surface(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                        onClick = { onSwapVariants() }
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(vertical = 4.dp, horizontal = 8.dp),
+                            text = currentVariant.name,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        )
                     }
                 }
             }

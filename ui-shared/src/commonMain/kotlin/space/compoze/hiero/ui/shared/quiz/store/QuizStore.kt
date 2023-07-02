@@ -32,6 +32,7 @@ interface QuizStore : Store<QuizStore.Intent, QuizStore.State, Nothing> {
             val items: List<CollectionItemModel>,
             val itemPool: List<CollectionItemModel>,
             val currentItem: CollectionItemModel,
+            val areVariantsSwapped: Boolean,
         ): State
         @Immutable
         object Error: State
@@ -40,6 +41,7 @@ interface QuizStore : Store<QuizStore.Intent, QuizStore.State, Nothing> {
     sealed interface Intent {
         object NextItem : Intent
         object BookmarkCurrentItem : Intent
+        object SwapVariants : Intent
     }
 
     sealed interface Message {
@@ -58,6 +60,9 @@ interface QuizStore : Store<QuizStore.Intent, QuizStore.State, Nothing> {
         ) : Message
         data class SetItem(
             val item: CollectionItemModel,
+        ) : Message
+        data class SetSwapVariants(
+            val isSwapped: Boolean,
         ) : Message
     }
 

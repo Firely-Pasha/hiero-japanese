@@ -100,6 +100,15 @@ class QuizStoreProvider(
                             }
                         }
                     }
+                    onIntent<QuizStore.Intent.SwapVariants> {
+                        state.with { content: QuizStore.State.Content ->
+                            dispatch(
+                                QuizStore.Message.SetSwapVariants(
+                                    !content.areVariantsSwapped
+                                )
+                            )
+                        }
+                    }
                 },
                 reducer = {
                     when {
@@ -109,6 +118,7 @@ class QuizStoreProvider(
                             items = it.items,
                             currentItem = it.currentItem,
                             itemPool = it.itemPull,
+                            areVariantsSwapped = false,
                         )
 
                         this is QuizStore.State.Content -> when (val msg = it) {
@@ -129,8 +139,11 @@ class QuizStoreProvider(
                                     set(index, msg.item)
                                 }.toList()
                             )
-                        }
 
+                            is QuizStore.Message.SetSwapVariants -> copy(
+                                areVariantsSwapped = msg.isSwapped
+                            )
+                        }
                         else -> this
                     }
                 }

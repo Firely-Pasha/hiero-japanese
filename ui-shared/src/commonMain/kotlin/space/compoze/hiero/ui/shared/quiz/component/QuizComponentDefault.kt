@@ -54,4 +54,8 @@ class QuizComponentDefault(
         store.accept(QuizStore.Intent.BookmarkCurrentItem)
     }
 
+    override fun swapVariants() {
+        store.accept(QuizStore.Intent.SwapVariants)
+    }
+
 }

@@ -16,3 +16,6 @@ data class CollectionItemVariantModel(
     val name: String,
     val type: Long?,
 )
+
+fun CollectionItemVariantModel.isPrimary() = type == 1L
+fun CollectionItemVariantModel.isSecondary() = type == 2L
