@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.arkivanov.essenty.backhandler.BackDispatcher
 
 data class HieroModalData(
     val position: Offset,
@@ -86,6 +87,9 @@ fun HieroModalProvider(
         modalData?.let {
             modalDataNotNullable = it
         }
+    }
+    ModalBackHandler(enabled = modalData != null) {
+        modal.dismiss()
     }
     Box {
         AnimatedVisibility(

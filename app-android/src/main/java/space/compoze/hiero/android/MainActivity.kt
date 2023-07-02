@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
