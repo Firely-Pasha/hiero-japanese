@@ -36,157 +36,103 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.backhandler.BackDispatcher
+import space.compoze.hiero.ui.compose.modal.types.HieroModalPopup
 
-data class HieroModalData(
-    val position: Offset,
-    val containerSize: IntSize,
-    val anchor: Anchor,
-    val alignment: Anchor,
-    val offset: Offset,
-    val width: Dp?,
-    val background: (@Composable () -> Unit)?,
-    val content: @Composable () -> Unit,
-)
+sealed interface HieroModal {
 
-class HieroModal {
+    val anchor: Anchor
+    val alignment: Anchor
 
-    val state = mutableStateOf<HieroModalData?>(null)
+    data class Popup(
+        override val anchor: Anchor,
+        override val alignment: Anchor,
+        val position: Offset,
+        val containerSize: IntSize,
+        val offset: Offset,
+        val width: Dp?,
+        val height: Dp?,
+        val background: (@Composable () -> Unit)?,
+        val content: @Composable () -> Unit,
+    ) : HieroModal
 
-    fun show(data: HieroModalData) {
-        state.value = data
+    data class Dialog(
+        override val anchor: Anchor,
+        override val alignment: Anchor,
+        val containerSize: IntSize,
+        val width: Dp?,
+        val height: Dp?,
+        val background: (@Composable () -> Unit)?,
+        val content: @Composable () -> Unit,
+    ) : HieroModal
+}
+
+class HieroModalController {
+
+    val popup = mutableStateOf<HieroModal.Popup?>(null)
+    val dialog = mutableStateOf<HieroModal.Dialog?>(null)
+
+    fun showDialog(data: HieroModal.Dialog) {
+        dialog.value = data
     }
 
-    fun dismiss() {
-        state.value = null
+    fun showPopup(data: HieroModal.Popup) {
+        popup.value = data
+    }
+
+    fun dismissDialog() {
+        popup.value = null
+        dialog.value = null
+    }
+
+    fun dismissPopup() {
+        popup.value = null
     }
 }
 
-val LocalHieroModal = compositionLocalOf { HieroModal() }
+val LocalHieroModal = compositionLocalOf { HieroModalController() }
 
 @Composable
 fun HieroModalProvider(
     content: @Composable () -> Unit,
 ) {
-    val modal = remember { HieroModal() }
-    CompositionLocalProvider(LocalHieroModal provides modal) {
+    val controller = remember { HieroModalController() }
+    CompositionLocalProvider(LocalHieroModal provides controller) {
         content()
     }
-    val modalData by modal.state
-    var modalDataNotNullable by remember {
-        mutableStateOf(modalData ?: HieroModalData(
-            Offset.Zero,
-            IntSize.Zero,
-            Anchor.Center,
-            Anchor.Center,
-            Offset.Zero,
-            0.dp,
-            null
-        ) {})
-    }
-    LaunchedEffect(modalData) {
-        modalData?.let {
-            modalDataNotNullable = it
-        }
-    }
-    ModalBackHandler(enabled = modalData != null) {
-        modal.dismiss()
-    }
-    Box {
-        AnimatedVisibility(
-            visible = modalData != null,
-            enter = fadeIn(),
-            exit = fadeOut(),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            modal.dismiss()
-                        }
-                    }
-            ) {
-                modalDataNotNullable.background?.invoke()
-            }
-        }
-        Layout(
-            content = {
-                AnimatedVisibility(
-                    visible = modalData != null,
-                    enter = fadeIn() + scaleIn(
-                        animationSpec = spring(
-                            Spring.DampingRatioMediumBouncy,
-                            Spring.StiffnessMediumLow
-                        ),
-                        initialScale = 0.8f
-                    ),
-                    exit = fadeOut() + slideOut(targetOffset = { IntOffset(0, 50) }),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .run {
-                                modalDataNotNullable.width?.let {
-                                    width(it)
-                                } ?: this
-                            }
-                    ) {
-                        modalDataNotNullable.content()
-                    }
-                }
-            },
-            measurePolicy = { measurables, constraints ->
-                val text =
-                    measurables.getOrNull(0)?.measure(constraints) ?: return@Layout layout(0, 0) {}
-                layout(
-                    constraints.minWidth,
-                    constraints.minWidth
-                ) { //Change these per your needs
-                    val anchorPosition = modalDataNotNullable.position
-                    val containerSize = modalDataNotNullable.containerSize
-                    val containerAnchor = modalDataNotNullable.anchor
-                    val modalAnchor = modalDataNotNullable.alignment
-                    val modalOffset = modalDataNotNullable.offset
-                    val alignmentX = anchorPosition.x.toInt() - text.width / 2 - modalAnchor.x * text.width / 2 +
-                            containerSize.width / 2 + containerSize.width / 2 * containerAnchor.x + modalOffset.x
-                    text.placeRelative(
-                        alignmentX.toInt(),
-                        anchorPosition.y.toInt()
-                    )
-                }
-            })
-
-    }
+    HieroModalPopup(controller)
 }
 
 class HieroModalConsumerScope(
-    private val modal: HieroModal,
+    private val controller: HieroModalController,
     private val position: Offset,
     private val containerSize: IntSize,
 ) {
-    fun show(
+    fun showPopup(
         anchor: Anchor = Anchor.Center,
         alignment: Anchor = Anchor.Center,
         offset: Offset = Offset.Zero,
         width: Dp,
+        height: Dp? = null,
         background: (@Composable () -> Unit)? = null,
         content: @Composable () -> Unit,
     ) {
-        modal.show(
-            HieroModalData(
-                position,
-                containerSize,
-                anchor,
-                alignment,
-                offset,
-                width,
-                background,
-                content
+        controller.showPopup(
+            HieroModal.Popup(
+                anchor = anchor,
+                alignment = alignment,
+                position = position,
+                containerSize = containerSize,
+                offset = offset,
+                width = width,
+                height = height,
+                background = background,
+                content = content
             )
         )
     }
 
-    fun dismiss() {
-        modal.dismiss()
+    fun dismissPopup() {
+        controller.dismissPopup()
     }
 }
 
@@ -218,20 +164,28 @@ data class Anchor(
         // 2D Alignments.
         @Stable
         val TopStart: Anchor = Anchor(-1f, -1f)
+
         @Stable
         val TopCenter: Anchor = Anchor(0f, -1f)
+
         @Stable
         val TopEnd: Anchor = Anchor(1f, -1f)
+
         @Stable
         val CenterStart: Anchor = Anchor(-1f, 0f)
+
         @Stable
         val Center: Anchor = Anchor(0f, 0f)
+
         @Stable
         val CenterEnd: Anchor = Anchor(1f, 0f)
+
         @Stable
         val BottomStart: Anchor = Anchor(-1f, 1f)
+
         @Stable
         val BottomCenter: Anchor = Anchor(0f, 1f)
+
         @Stable
         val BottomEnd: Anchor = Anchor(1f, 1f)
     }

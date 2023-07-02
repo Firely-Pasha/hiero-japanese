@@ -36,7 +36,7 @@ class MenuScope {
                 .clickable(
                     onClick = {
                         onClick()
-                        dismiss()
+                        dismissPopup()
                     }
                 ),
             headlineText = title,
@@ -54,7 +54,7 @@ fun HieroModalConsumerScope.showMenu(
     content: @Composable MenuScope.() -> Unit,
 ) {
     val cardElevation = 8.dp
-    show(
+    showPopup(
         anchor = anchor,
         alignment = alignment,
         offset = offset,
