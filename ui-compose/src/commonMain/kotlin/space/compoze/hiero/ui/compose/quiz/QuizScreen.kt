@@ -270,9 +270,7 @@ private fun VariantLabel(
                     ChangeVariantDialog(
                         primaryVariant = primaryVariant,
                         secondaryVariant = secondaryVariant,
-                        onOk = {
-                            onSwapVariants()
-                        }
+                        onOk = onSwapVariants
                     )
                 }
             }
