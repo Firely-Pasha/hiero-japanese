@@ -53,10 +53,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemVariantModel
 import space.compoze.hiero.domain.collectionitem.model.data.isPrimary
 import space.compoze.hiero.domain.collectionitem.model.data.isSecondary
+import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
 import space.compoze.hiero.ui.compose.modal.Anchor
 import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
+import space.compoze.hiero.ui.compose.modal.HieroModalConsumerScope
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.quiz.store.QuizStore
@@ -153,53 +156,20 @@ fun QuizContent(
                         Box(
                             modifier = Modifier.fillMaxSize(),
                         ) {
-                            Box(
+                            BookmarkIcon(
                                 modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .offset(x = (-8).dp, y = (8).dp)
-                            ) {
-                                IconButton(onBookmark) {
-                                    AnimatedContent(
-                                        state.currentItem.isBookmarked,
-                                    ) { state ->
-                                        Icon(
-                                            if (state) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
-                                            "Not bookmarked"
-                                        )
-                                    }
-                                }
-                            }
-                            Box(
+                                    .align(Alignment.TopEnd),
+                                isBookmarked = state.currentItem.isBookmarked,
+                                onBookmark = onBookmark
+                            )
+                            CardSideIcon(
                                 modifier = Modifier
-                                    .align(Alignment.TopStart)
-                                    .offset(x = 8.dp, y = 8.dp)
-                            ) {
-                                IconButton({ isFlipped = !isFlipped }) {
-                                    Box(
-                                        modifier = Modifier
-                                            .width(14.dp)
-                                            .aspectRatio(3 / 4f)
-                                            .clip(shape = RoundedCornerShape(2.dp))
-                                            .run {
-                                                if (isFlipped) {
-                                                    background(LocalContentColor.current)
-                                                } else {
-                                                    this
-                                                }
-                                            }
-                                            .border(
-                                                width = 1.5.dp,
-                                                color = LocalContentColor.current
-                                            )
-                                    ) {
-//                                        Text(
-//                                            modifier = Modifier.align(Alignment.Center),
-//                                            text = if (isFlipped) "2" else "1",
-//                                            style = MaterialTheme.typography.bodySmall,
-//                                        )
-                                    }
+                                    .align(Alignment.TopStart),
+                                isFlipped = isFlipped,
+                                onFlip = {
+                                    isFlipped = !isFlipped
                                 }
-                            }
+                            )
                             Text(
                                 text = targetState.variants[currentVariant.id].orEmpty(),
                                 fontSize = 112.sp,
@@ -208,76 +178,162 @@ fun QuizContent(
                             )
                         }
                     }
-                    HieroModalConsumer {
-                        Surface(
-                            modifier = Modifier
-                                .padding(8.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
-                            onClick = {
-                                showDialogue(
-                                    alignment = Anchor.Center,
-                                    width = 300.dp
-                                ) {
-                                    Card {
-                                        Column(
-                                            modifier = Modifier
-                                                .padding(16.dp),
-                                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                                        ) {
-                                            Text(
-                                                "Sides will be swapped",
-                                                style = MaterialTheme.typography.titleLarge
-                                            )
-                                            Row(
-                                                horizontalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text(
-                                                    "Primary",
-                                                    style = MaterialTheme.typography.titleMedium
-                                                )
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                // Swapping it manually,
-                                                // because they are not swapping... for some reasons
-                                                // TODO: Investigate it later
-                                                Text(secondaryVariant.name)
-                                            }
-                                            Row {
-                                                Text(
-                                                    "Secondary",
-                                                    style = MaterialTheme.typography.titleMedium
-                                                )
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Text(primaryVariant.name)
-                                            }
-                                            Row(
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                TextButton({ dismissDialogue() }) {
-                                                    Text("Cancel")
-                                                }
-                                                Button({
-                                                    onSwapVariants()
-                                                    isFlipped = false
-                                                    dismissDialogue()
-                                                }) {
-                                                    Text("OK")
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 4.dp, horizontal = 8.dp),
-                                text = currentVariant.name,
-                                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
-                            )
+                    VariantLabel(
+                        primaryVariant = primaryVariant,
+                        secondaryVariant = secondaryVariant,
+                        currentVariant = currentVariant,
+                        onSwapVariants = {
+                            onSwapVariants()
+                            isFlipped = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookmarkIcon(
+    modifier: Modifier,
+    isBookmarked: Boolean,
+    onBookmark: () -> Unit,
+) {
+
+    Box(
+        modifier = modifier
+            .offset(x = (-8).dp, y = (8).dp)
+    ) {
+        IconButton(onBookmark) {
+            AnimatedContent(
+                isBookmarked,
+            ) { state ->
+                Icon(
+                    if (state) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                    "Not bookmarked"
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CardSideIcon(
+    modifier: Modifier,
+    isFlipped: Boolean,
+    onFlip: () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .offset(x = 8.dp, y = 8.dp)
+    ) {
+        IconButton(onFlip) {
+            Box(
+                modifier = Modifier
+                    .width(14.dp)
+                    .aspectRatio(3 / 4f)
+                    .clip(shape = RoundedCornerShape(2.dp))
+                    .run {
+                        if (isFlipped) {
+                            background(LocalContentColor.current)
+                        } else {
+                            this
                         }
                     }
+                    .border(
+                        width = 1.95.dp,
+                        color = LocalContentColor.current
+                    )
+            )
+        }
+    }
+}
+
+@Composable
+private fun VariantLabel(
+    primaryVariant: CollectionItemVariantModel,
+    secondaryVariant: CollectionItemVariantModel,
+    currentVariant: CollectionItemVariantModel,
+    onSwapVariants: () -> Unit,
+) {
+    HieroModalConsumer {
+        Surface(
+            modifier = Modifier
+                .padding(8.dp),
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
+            onClick = {
+                showDialogue(
+                    alignment = Anchor.Center,
+                    width = 300.dp
+                ) {
+                    ChangeVariantDialog(
+                        primaryVariant = primaryVariant,
+                        secondaryVariant = secondaryVariant,
+                        onOk = {
+                            onSwapVariants()
+                        }
+                    )
+                }
+            }
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(vertical = 4.dp, horizontal = 8.dp),
+                text = currentVariant.name,
+                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun HieroModalConsumerScope.ChangeVariantDialog(
+    primaryVariant: CollectionItemVariantModel,
+    secondaryVariant: CollectionItemVariantModel,
+    onCancel: (() -> Unit)? = null,
+    onOk: () -> Unit,
+) {
+    Card {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                "Sides will be swapped",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    "Primary",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                // Swapping it manually,
+                // because they are not swapping... for some reasons
+                // TODO: Investigate it later
+                Text(secondaryVariant.name)
+            }
+            Row {
+                Text(
+                    "Secondary",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(primaryVariant.name)
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                TextButton({ onCancel?.invoke(); dismissDialogue() }) {
+                    Text("Cancel")
+                }
+                Button({ onOk(); dismissDialogue() }) {
+                    Text("OK")
                 }
             }
         }
