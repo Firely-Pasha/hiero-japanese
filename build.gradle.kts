@@ -1,10 +1,10 @@
 plugins {
-    //trick: for the same plugin versions in all sub-modules
-    id("com.android.application").version("8.0.0").apply(false)
-    id("com.android.library").version("8.0.0").apply(false)
-    kotlin("android").version("1.8.20").apply(false)
-    kotlin("multiplatform").version("1.8.20").apply(false)
-    id("app.cash.sqldelight").version("2.0.0-alpha05").apply(false)
+    id("com.android.application") version space.compose.hiero.Versions.AndroidApplication apply false
+    id("com.android.library") version space.compose.hiero.Versions.AndroidApplication apply false
+    kotlin("android") version space.compose.hiero.Versions.Kotlin apply false
+    kotlin("multiplatform") version space.compose.hiero.Versions.Kotlin apply false
+    id("org.jetbrains.compose") version space.compose.hiero.Versions.JetbrainsCompose apply false
+    id("app.cash.sqldelight") version space.compose.hiero.Versions.SqlDelight apply false
 }
 
 tasks.register("clean", Delete::class) {
