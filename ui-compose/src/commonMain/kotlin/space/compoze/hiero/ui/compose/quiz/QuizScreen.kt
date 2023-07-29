@@ -14,18 +14,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.CropPortrait
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
-import androidx.compose.material.icons.rounded.CropPortrait
 import androidx.compose.material.icons.rounded.NavigateNext
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -56,14 +52,12 @@ import androidx.compose.ui.unit.sp
 import space.compoze.hiero.domain.collectionitem.model.data.CollectionItemVariantModel
 import space.compoze.hiero.domain.collectionitem.model.data.isPrimary
 import space.compoze.hiero.domain.collectionitem.model.data.isSecondary
-import space.compoze.hiero.domain.section.model.mutate.SectionComputedMutation
 import space.compoze.hiero.ui.compose.modal.Anchor
 import space.compoze.hiero.ui.compose.modal.HieroModalConsumer
 import space.compoze.hiero.ui.compose.modal.HieroModalConsumerScope
 import space.compoze.hiero.ui.compose.utils.subscribeAsState
 import space.compoze.hiero.ui.shared.quiz.component.QuizComponent
 import space.compoze.hiero.ui.shared.quiz.store.QuizStore
-import kotlin.reflect.KFunction0
 
 @Composable
 fun QuizScreen(component: QuizComponent) {
@@ -75,10 +69,7 @@ fun QuizScreen(component: QuizComponent) {
         QuizStore.State.Error -> Text("EERRRIR")
         is QuizStore.State.Content -> QuizContent(
             state = state,
-            onNavigateBack = component::navigateBack,
-            onNextItemClick = component::nextItem,
-            onBookmark = component::bookmarkCurrentItem,
-            onSwapVariants = component::swapVariants,
+            onAction = component::onAction
         )
     }
 }
@@ -86,16 +77,13 @@ fun QuizScreen(component: QuizComponent) {
 @Composable
 fun QuizContent(
     state: QuizStore.State.Content,
-    onNavigateBack: () -> Unit,
-    onNextItemClick: () -> Unit,
-    onBookmark: () -> Unit,
-    onSwapVariants: () -> Unit,
+    onAction: (QuizComponent.Action) -> Unit,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onNavigateBack) {
+                    IconButton({ onAction(QuizComponent.Action.NavigateBack) }) {
                         Icon(Icons.Rounded.ArrowBack, "Back")
                     }
                 },
@@ -106,7 +94,7 @@ fun QuizContent(
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                onClick = onNextItemClick
+                onClick = { onAction(QuizComponent.Action.NextItem) }
             ) {
                 Icon(Icons.Rounded.NavigateNext, "Next")
             }
@@ -160,7 +148,7 @@ fun QuizContent(
                                 modifier = Modifier
                                     .align(Alignment.TopEnd),
                                 isBookmarked = state.currentItem.isBookmarked,
-                                onBookmark = onBookmark
+                                onBookmark = { onAction(QuizComponent.Action.BookmarkCurrentItem) }
                             )
                             CardSideIcon(
                                 modifier = Modifier
@@ -183,7 +171,7 @@ fun QuizContent(
                         secondaryVariant = secondaryVariant,
                         currentVariant = currentVariant,
                         onSwapVariants = {
-                            onSwapVariants()
+                            onAction(QuizComponent.Action.SwapVariants)
                             isFlipped = false
                         }
                     )

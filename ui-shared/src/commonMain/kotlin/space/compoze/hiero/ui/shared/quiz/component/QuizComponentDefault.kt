@@ -8,6 +8,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -42,20 +44,13 @@ class QuizComponentDefault(
         state.value = newState
     }
 
-    override fun navigateBack() {
-        navigationComponent.navigateBack()
-    }
-
-    override fun nextItem() {
-        store.accept(QuizStore.Intent.NextItem)
-    }
-
-    override fun bookmarkCurrentItem() {
-        store.accept(QuizStore.Intent.BookmarkCurrentItem)
-    }
-
-    override fun swapVariants() {
-        store.accept(QuizStore.Intent.SwapVariants)
+    override fun onAction(action: QuizComponent.Action) {
+        when (action) {
+            QuizComponent.Action.NavigateBack -> navigationComponent.navigateBack()
+            QuizComponent.Action.BookmarkCurrentItem -> store.accept(QuizStore.Intent.BookmarkCurrentItem)
+            QuizComponent.Action.NextItem -> store.accept(QuizStore.Intent.NextItem)
+            QuizComponent.Action.SwapVariants -> store.accept(QuizStore.Intent.SwapVariants)
+        }
     }
 
 }
